@@ -21,7 +21,19 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="BagOfWords.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="NeuralNet.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="NeuralNetLFEThemes.py" />
+    <Compile Include="PreProcessor.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="TextRank.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
