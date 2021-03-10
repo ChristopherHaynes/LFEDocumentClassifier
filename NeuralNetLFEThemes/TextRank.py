@@ -2,8 +2,9 @@ import numpy as np
 from summa import keywords
 from collections import OrderedDict
 
+
 class TextRank:
-    def __init__(self, kernelSize = 4, dampening = 0.85, steps = 20, threshold = 1e-5):
+    def __init__(self, kernelSize=4, dampening=0.85, steps=20, threshold=1e-5):
         self.KERNEL_SIZE = kernelSize
         self.DAMPENING = dampening
         self.STEPS = steps
@@ -24,7 +25,7 @@ class TextRank:
 
         # Iterate through the matricies, performing the pagerank equation on each step to update the node weights
         lastNodeMatrixSum = 0
-        for epoch in range (self.STEPS):
+        for epoch in range(self.STEPS):
             nodeMatrix = (1 - self.DAMPENING) + self.DAMPENING * np.dot(edgeMatrix, nodeMatrix)
             if abs(lastNodeMatrixSum - sum(nodeMatrix)) < self.THRESHOLD:
                 break
@@ -59,24 +60,24 @@ class TextRank:
                     if pair not in wordPairs:
                         wordPairs.append(pair)
         return wordPairs
-    
-    def generateEdgeMatrix(self, vocab, wordPairs):        
+
+    def generateEdgeMatrix(self, vocab, wordPairs):
         # Create empty matrix for the edge weights (vocab * vocab size)
         vocabCount = len(vocab)
-        edgeMatrix = np.zeros((vocabCount, vocabCount), dtype ='float')
+        edgeMatrix = np.zeros((vocabCount, vocabCount), dtype='float')
         for word1, word2 in wordPairs:
             i, j = vocab[word1], vocab[word2]
             edgeMatrix[i][j] = 1
 
         # Make the matrix symmetric so the connections are undirected
-        edgeMatrix = self.symmetrize(edgeMatrix)
+        edgeMatrix = self.makeSymmetric(edgeMatrix)
 
         # Normalise the matrix by columns (sum of weights per node = 1)
-        columnSum = np.sum(edgeMatrix, axis = 0)
-        edgeMatrix = np.divide(edgeMatrix, columnSum, where = (columnSum != 0) )
+        columnSum = np.sum(edgeMatrix, axis=0)
+        edgeMatrix = np.divide(edgeMatrix, columnSum, where=(columnSum != 0))
 
         return edgeMatrix
 
-    def symmetrize(self, a):
+    @staticmethod
+    def makeSymmetric(a):
         return a + a.T - np.diag(a.diagonal())
-       
