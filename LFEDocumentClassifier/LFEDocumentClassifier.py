@@ -1,9 +1,8 @@
 import pandas as pd
-from summa import keywords
 from rake_nltk import Rake
 from collections import OrderedDict
 
-from PreProcessor import PreProcessor
+from Preprocessor import PreProcessor
 from TextRank import TextRank
 from BagOfWords import BagOfWords
 from NeuralNet import NeuralNet
@@ -23,19 +22,16 @@ def printOrderedKeywords(wordWeight, number=10):
 print("Reading File...")
 dataFile = pd.read_excel("C:\\Users\\Chris\\Desktop\\Data\\lfeData.xlsx", engine='openpyxl')
 print("File Loaded.")
+
 pp = PreProcessor(dataFile)
 
 if MODE_TYPE == 1:
-    pp.extractThemePairs(MODE_TYPE)
-
     r = Rake()
     for i in range(len(pp.themePairs)):
         r.extract_keywords_from_text(pp.themePairs[i][0])
         pp.themePairs[i][0] = r.get_ranked_phrases_with_scores()
 
 if MODE_TYPE == 2:
-    pp.extractThemePairs(MODE_TYPE)
-
     print("Theme Pairs Length: " + str(len(pp.themePairs)))
     print(pp.themePairs[3][0])
 

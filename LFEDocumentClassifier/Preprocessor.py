@@ -1,9 +1,4 @@
 import pandas as pd
-import nltk as nltk
-import spacy
-import string
-
-nlp = spacy.load('en_core_web_sm')
 
 ALL_THEMES_LIST = ['above and beyond', 'adaptability', 'communication', 'coping with pressure', 'dedicated',
                    'education', 'efficient', 'hard work', 'initiative', 'innovative', 'kindness', 'leadership',
@@ -21,7 +16,21 @@ class PreProcessor:
         self.totalEntries = 0  # TESTING - Keep track of the total original number of entries
         self.totalCulledEntries = 0  # TESTING - Keep track of how many entries are invalid and removed
 
-    def extractThemePairs(self, mode):
+        # Generate the theme pair list and discard any invalid entries
+        self.extractThemePairs()
+
+        # Convert the raw theme string into a list of strings in the theme pairs list
+        self.convertThemesToList()
+
+        # TODO - Add options for clean the text (features) such as removing numerical values and words like "Dr"
+
+        # Remove any further entries which are now empty or invalid (lacking in either valid feature text or category)
+        self.cullEmptyEntries()
+
+        # Process the counts of all themes and primary themes for each pair in the theme pairs list
+        self.getThemesCounts()
+
+    def extractThemePairs(self):
         print("Extracting theme pairs.")
         fullTexts = pd.DataFrame(self.rawDataFile, columns=['excellenceText'])
         themesDataFrame = pd.DataFrame(self.rawDataFile, columns=['themeExcellence'])
@@ -35,59 +44,6 @@ class PreProcessor:
                 self.themePairs.append([fullText.lower(), theme])
             else:
                 self.totalCulledEntries = self.totalCulledEntries + 1
-
-        self.convertThemesToList()
-        self.cullEmptyEntries()
-        self.getThemesCounts()
-
-        if mode == 2:
-            self.themePairs = self.splitOnSentenceAndWords(self.themePairs)
-            self.themePairs = self.removeStopWords(self.themePairs)
-            self.themePairs = self.stemText(self.themePairs)
-
-    def splitOnSentenceAndWords(self, themePairs):
-        print("Spliting sentences and words.")
-        for i in range(len(themePairs)):
-            doc = nlp(themePairs[i][0])
-
-            sentences = []
-            for sent in doc.sents:
-                selectedWords = []
-                for token in sent:
-                    if str(token) not in string.punctuation:
-                        selectedWords.append(token)
-                sentences.append(selectedWords)
-            themePairs[i][0] = sentences
-        return themePairs
-
-    def stemText(self, themePairs):
-        print("Stemming.")
-        stemmer = nltk.stem.PorterStemmer()
-
-        for i in range(len(themePairs)):
-            newText = []
-            for sentence in themePairs[i][0]:
-                newSentence = []
-                for word in sentence:
-                    newSentence.append(stemmer.stem(str(word)))
-                newText.append(newSentence)
-            themePairs[i][0] = newText
-        return themePairs
-
-    def removeStopWords(self, themePairs):
-        print("Removing stop words.")
-        stopWords = set(nltk.corpus.stopwords.words('english'))
-
-        for i in range(len(themePairs)):
-            filteredText = []
-            for sentence in themePairs[i][0]:
-                newSentence = []
-                for word in sentence:
-                    if str(word) not in stopWords:
-                        newSentence.append(str(word))
-                filteredText.append(newSentence)
-            themePairs[i][0] = filteredText
-        return themePairs
 
     def convertThemesToList(self):
         for pair in self.themePairs:

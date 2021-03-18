@@ -1,7 +1,10 @@
 import numpy as np
-from summa import keywords
+import nltk as nltk
+import spacy
+import string
 from collections import OrderedDict
 
+nlp = spacy.load('en_core_web_sm')
 
 class TextRank:
     def __init__(self, kernelSize=4, dampening=0.85, steps=20, threshold=1e-5):
@@ -38,6 +41,50 @@ class TextRank:
             wordWeight[word] = nodeMatrix[index]
 
         return wordWeight
+
+    def splitOnSentenceAndWords(self, themePairs):
+        print("Spliting sentences and words.")
+        for i in range(len(themePairs)):
+            doc = nlp(themePairs[i][0])
+
+            sentences = []
+            for sent in doc.sents:
+                selectedWords = []
+                for token in sent:
+                    if str(token) not in string.punctuation:
+                        selectedWords.append(token)
+                sentences.append(selectedWords)
+            themePairs[i][0] = sentences
+        return themePairs
+
+    def stemText(self, themePairs):
+        print("Stemming.")
+        stemmer = nltk.stem.PorterStemmer()
+
+        for i in range(len(themePairs)):
+            newText = []
+            for sentence in themePairs[i][0]:
+                newSentence = []
+                for word in sentence:
+                    newSentence.append(stemmer.stem(str(word)))
+                newText.append(newSentence)
+            themePairs[i][0] = newText
+        return themePairs
+
+    def removeStopWords(self, themePairs):
+        print("Removing stop words.")
+        stopWords = set(nltk.corpus.stopwords.words('english'))
+
+        for i in range(len(themePairs)):
+            filteredText = []
+            for sentence in themePairs[i][0]:
+                newSentence = []
+                for word in sentence:
+                    if str(word) not in stopWords:
+                        newSentence.append(str(word))
+                filteredText.append(newSentence)
+            themePairs[i][0] = filteredText
+        return themePairs
 
     def buildVocabDict(self, sentences):
         vocab = OrderedDict()
