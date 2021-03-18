@@ -57,9 +57,9 @@ if MODE_TYPE == 2:
 
 # printOrderedKeywords(wordWeight)
 
-pp.themes.sort()
-print(pp.themes)
-print(len(pp.themes))
+pp.themesCount.sort()
+print(pp.themesCount)
+print(len(pp.themesCount))
 
-nn = NeuralNet(len(keywordsSet), len(pp.themes))
+nn = NeuralNet(len(keywordsSet), len(pp.themesCount))
 nn.createModel()
