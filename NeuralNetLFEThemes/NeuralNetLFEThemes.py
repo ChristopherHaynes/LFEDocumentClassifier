@@ -1,11 +1,15 @@
 import pandas as pd
 from summa import keywords
+from rake_nltk import Rake
 from collections import OrderedDict
 
 from PreProcessor import PreProcessor
 from TextRank import TextRank
 from BagOfWords import BagOfWords
 from NeuralNet import NeuralNet
+
+# Mode 1 for RAKE, Mode 2 for bespoke implementation
+MODE_TYPE = 1
 
 
 def printOrderedKeywords(wordWeight, number=10):
@@ -19,30 +23,37 @@ def printOrderedKeywords(wordWeight, number=10):
 print("Reading File...")
 dataFile = pd.read_excel("C:\\Users\\Chris\\Desktop\\Data\\lfeData.xlsx", engine='openpyxl')
 print("File Loaded.")
-
 pp = PreProcessor(dataFile)
-pp.extractThemePairs()
 
-print("Theme Pairs Length: " + str(len(pp.themePairs)))
-print(pp.themePairs[3][0])
+if MODE_TYPE == 1:
+    pp.extractThemePairs(MODE_TYPE)
 
-tr = TextRank()
-themePairKeywords = []
-print("Using TextRank to extract keywords.")
-for i in range(len(pp.themePairs)):
-    textKeywords = []
-    wordWeight = tr.getKeywords(pp.themePairs[i][0])
-    textKeywords = list(wordWeight.keys())
-    themePairKeywords.append(textKeywords)
+    r = Rake()
+    for i in range(len(pp.themePairs)):
+        r.extract_keywords_from_text(pp.themePairs[i][0])
+        pp.themePairs[i][0] = r.get_ranked_phrases_with_scores()
 
-keywordsList = [item for sublist in themePairKeywords for item in sublist]
-keywordsSet = set(keywordsList)
-print(keywordsSet)
-print(len(keywordsSet))
+if MODE_TYPE == 2:
+    pp.extractThemePairs(MODE_TYPE)
 
-bow = BagOfWords(keywordsList)
-bagOfWords = bow.generateBagOfWords()
-print(bagOfWords)
+    print("Theme Pairs Length: " + str(len(pp.themePairs)))
+    print(pp.themePairs[3][0])
+
+    tr = TextRank()
+    themePairKeywords = []
+    print("Using TextRank to extract keywords.")
+    for i in range(len(pp.themePairs)):
+        wordWeight = tr.getKeywords(pp.themePairs[i][0])
+        themePairKeywords.append(wordWeight)
+
+    keywordsList = [item for sublist in themePairKeywords for item in sublist]
+    keywordsSet = set(keywordsList)
+    print(keywordsSet)
+    print(len(keywordsSet))
+
+#bow = BagOfWords(keywordsList)
+#bagOfWords = bow.generateBagOfWords()
+#print(bagOfWords)
 
 # printOrderedKeywords(wordWeight)
 

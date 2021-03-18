@@ -4,8 +4,6 @@ import spacy
 import string
 
 nlp = spacy.load('en_core_web_sm')
-
-
 # nltk.download('all')
 
 class PreProcessor:
@@ -13,7 +11,7 @@ class PreProcessor:
         self.rawDataFile = dataFile
         self.themes = []
 
-    def extractThemePairs(self):
+    def extractThemePairs(self, mode):
         print("Extracting theme pairs.")
         fullTexts = pd.DataFrame(self.rawDataFile, columns=['excellenceText'])
         themes = pd.DataFrame(self.rawDataFile, columns=['themeExcellence'])
@@ -25,11 +23,14 @@ class PreProcessor:
             if isinstance(fullText, str) and len(fullText) > 0 and isinstance(theme, str) and len(theme) > 0:
                 self.themePairs.append([fullText.lower(), theme])
 
-        self.themePairs = self.splitOnSentenceAndWords(self.themePairs)
-        self.themePairs = self.removeStopWords(self.themePairs)
-        self.themePairs = self.stemText(self.themePairs)
+        self.setThemesAsList()
 
-        self.getFirstThemes()
+        if mode == 2:
+            self.themePairs = self.splitOnSentenceAndWords(self.themePairs)
+            self.themePairs = self.removeStopWords(self.themePairs)
+            self.themePairs = self.stemText(self.themePairs)
+
+        #self.getFirstThemesList()
 
     def splitOnSentenceAndWords(self, themePairs):
         print("Spliting sentences and words.")
@@ -75,7 +76,7 @@ class PreProcessor:
             themePairs[i][0] = filteredText
         return themePairs
 
-    def getFirstThemes(self):
+    def getFirstThemesList(self):
         print("Cleaning themes and selecting first theme.")
         for pair in self.themePairs:
             if type(pair[1]) is str:
@@ -87,3 +88,23 @@ class PreProcessor:
                         break
             else:
                 self.themePairs[i].remove
+
+    def setThemesAsList(self):
+        print("Splitting theme string into list of themes.")
+
+        for pair in self.themePairs:
+            themeList = []
+            lastBreakIndex = -1
+            themeString = pair[1]
+
+            if type(themeString) is str:
+                for i in range(0, len(themeString) - 1):
+                    if themeString[i] is '\n':
+                        themeList.append(themeString[lastBreakIndex + 1:i].lower().strip())
+                        lastBreakIndex = i
+                        if pair[1] not in self.themes:
+                            self.themes.append(pair[1])
+                themeList.append(themeString[lastBreakIndex + 1:i].lower().strip())
+                pair[1] = themeList
+            #else:
+                #self.themePairs.remove(pair)

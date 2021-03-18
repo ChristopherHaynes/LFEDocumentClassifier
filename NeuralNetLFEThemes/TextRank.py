@@ -23,7 +23,7 @@ class TextRank:
         # Init a weight matrix for each node/word (All nodes start with a weight of 1)
         nodeMatrix = np.array([1] * len(vocab))
 
-        # Iterate through the matricies, performing the pagerank equation on each step to update the node weights
+        # Iterate through the matrices, performing the pagerank equation on each step to update the node weights
         lastNodeMatrixSum = 0
         for epoch in range(self.STEPS):
             nodeMatrix = (1 - self.DAMPENING) + self.DAMPENING * np.dot(edgeMatrix, nodeMatrix)
@@ -78,6 +78,5 @@ class TextRank:
 
         return edgeMatrix
 
-    @staticmethod
-    def makeSymmetric(a):
-        return a + a.T - np.diag(a.diagonal())
+    def makeSymmetric(self, matrix):
+        return matrix + matrix.T - np.diag(matrix.diagonal())
