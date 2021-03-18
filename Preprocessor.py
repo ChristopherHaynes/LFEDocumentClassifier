@@ -93,11 +93,7 @@ class PreProcessor:
                     self.themesCount[theme] = self.themesCount[theme] + 1
 
     def cullEmptyEntries(self):
-        culledThemePairs = self.themePairs.copy()
         for pair in self.themePairs:
             if not isinstance(pair[0], str) or len(pair[0]) == 0 or pair[0].lower() == 'x' or len(pair[1]) == 0:
-                culledThemePairs.remove(pair)
+                self.themePairs.remove(pair)
                 self.totalCulledEntries = self.totalCulledEntries + 1
-
-        self.themePairs = culledThemePairs
-
