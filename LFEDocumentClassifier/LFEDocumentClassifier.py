@@ -1,45 +1,42 @@
 import pandas as pd
 from rake_nltk import Rake
-from collections import OrderedDict
 
 from Preprocessor import PreProcessor
 from TextRank import TextRank
 from BagOfWords import BagOfWords
 from NeuralNet import NeuralNet
 
-# Mode 1 for RAKE, Mode 2 for bespoke implementation
-MODE_TYPE = 1
+# CONSTANTS
+KEYWORD_ID_METHOD = 'rake'  # Options: 'rake' 'textrank'
 
+# GLOBAL VARIABLES
+themePairs = []  # List of tuples, where the first item contains features and the second contains categories (themes)
 
-def printOrderedKeywords(wordWeight, number=10):
-    nodeWeight = OrderedDict(sorted(wordWeight.items(), key=lambda t: t[1], reverse=True))
-    for i, (key, value) in enumerate(nodeWeight.items()):
-        print(key + ' - ' + str(value))
-        if i > number:
-            break
-
-
-print("Reading File...")
+# Read raw .XLSX file and store as pandas data-frame
 dataFile = pd.read_excel("C:\\Users\\Chris\\Desktop\\Data\\lfeData.xlsx", engine='openpyxl')
-print("File Loaded.")
 
-pp = PreProcessor(dataFile)
+# Apply all pre-processing to clean text and themes
+# TODO: Add further pipeline options for text cleaning (perhaps controlled with init parameters?)
+pp = PreProcessor(dataFile, themePairs)
 
-if MODE_TYPE == 1:
+# TODO: [PIPELINE SPLIT 1] - Determine stop list and stemming method (or disable these options)
+
+# TODO: [PIPELINE SPLIT 2] - Finish determination of keyword IDing method
+if KEYWORD_ID_METHOD == 'rake':
     r = Rake()
-    for i in range(len(pp.themePairs)):
-        r.extract_keywords_from_text(pp.themePairs[i][0])
-        pp.themePairs[i][0] = r.get_ranked_phrases_with_scores()
+    for i in range(len(themePairs)):
+        r.extract_keywords_from_text(themePairs[i][0])
+        themePairs[i][0] = r.get_ranked_phrases_with_scores()
 
-if MODE_TYPE == 2:
-    print("Theme Pairs Length: " + str(len(pp.themePairs)))
-    print(pp.themePairs[3][0])
+if KEYWORD_ID_METHOD == 'text_rank':
+    print("Theme Pairs Length: " + str(len(themePairs)))
+    print(themePairs[3][0])
 
     tr = TextRank()
     themePairKeywords = []
     print("Using TextRank to extract keywords.")
-    for i in range(len(pp.themePairs)):
-        wordWeight = tr.getKeywords(pp.themePairs[i][0])
+    for i in range(len(themePairs)):
+        wordWeight = tr.getKeywords(themePairs[i][0])
         themePairKeywords.append(wordWeight)
 
     keywordsList = [item for sublist in themePairKeywords for item in sublist]
@@ -47,6 +44,7 @@ if MODE_TYPE == 2:
     print(keywordsSet)
     print(len(keywordsSet))
 
+# TODO: [PIPELINE SPLIT 3] - Build features from keywords/text
 #bow = BagOfWords(keywordsList)
 #bagOfWords = bow.generateBagOfWords()
 #print(bagOfWords)
@@ -57,5 +55,6 @@ pp.themesCount.sort()
 print(pp.themesCount)
 print(len(pp.themesCount))
 
+# TODO: [PIPELINE SPLIT 4] - Determine which classifier to use and how to store results
 nn = NeuralNet(len(keywordsSet), len(pp.themesCount))
 nn.createModel()

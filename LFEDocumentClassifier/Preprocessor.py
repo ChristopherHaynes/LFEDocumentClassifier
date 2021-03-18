@@ -7,9 +7,9 @@ ALL_THEMES_LIST = ['above and beyond', 'adaptability', 'communication', 'coping 
 
 
 class PreProcessor:
-    def __init__(self, dataFile):
+    def __init__(self, dataFile, themePairs):
         self.rawDataFile = dataFile
-        self.themePairs = []  # List of tuples, first item is the text (features), second item is the theme (categories)
+        self.themePairs = themePairs  # List of tuples, first item is the text (features), second item is the theme (categories)
         self.themesCount = dict()  # Key is theme, value is number of occurrences
         self.primaryThemesCount = dict()  # Key is theme, value is the number of occurrences as the first theme
         self.unclassifiedThemes = []  # TESTING - Holding list for any strings that don't match approved themes

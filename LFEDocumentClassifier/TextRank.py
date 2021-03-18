@@ -127,3 +127,10 @@ class TextRank:
 
     def makeSymmetric(self, matrix):
         return matrix + matrix.T - np.diag(matrix.diagonal())
+
+    def printOrderedKeywords(wordWeight, number=10):
+        nodeWeight = OrderedDict(sorted(wordWeight.items(), key=lambda t: t[1], reverse=True))
+        for i, (key, value) in enumerate(nodeWeight.items()):
+            print(key + ' - ' + str(value))
+            if i > number:
+                break
