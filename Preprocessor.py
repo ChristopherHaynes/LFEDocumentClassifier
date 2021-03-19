@@ -1,10 +1,6 @@
 import pandas as pd
 import string
-
-ALL_THEMES_LIST = ['above and beyond', 'adaptability', 'communication', 'coping with pressure', 'dedicated',
-                   'education', 'efficient', 'hard work', 'initiative', 'innovative', 'kindness', 'leadership',
-                   'morale', 'patient focus', 'positive attitude', 'reliable', 'safe care', 'staffing', 'supportive',
-                   'teamwork', 'technical excellence', 'time', 'thank you', 'well being']
+from constants.ALL_THEMES_LIST import ALL_THEMES_LIST
 
 
 class PreProcessor:
@@ -40,7 +36,6 @@ class PreProcessor:
             self.removeExtraSpacesFromText()
 
     def extractThemePairs(self):
-        print("Extracting theme pairs.")
         fullTexts = pd.DataFrame(self.rawDataFile, columns=['excellenceText'])
         themesDataFrame = pd.DataFrame(self.rawDataFile, columns=['themeExcellence'])
         self.totalEntries = len(themesDataFrame.index)

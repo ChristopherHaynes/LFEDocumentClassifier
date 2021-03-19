@@ -1,3 +1,5 @@
+from constants.ALL_THEMES_LIST import ALL_THEMES_LIST
+
 
 def generateBagOfWords(documentList):
     bagOfWords = set()
@@ -24,3 +26,25 @@ def generateFeatureMask(bagOfWords, scoredText):
         else:
             featureMask.append(0)
     return featureMask
+
+
+def encodeThemesToValues(themes):
+    targetMask = []
+
+    for theme in themes:
+        for i in range(len(ALL_THEMES_LIST)):
+            if ALL_THEMES_LIST[i] == theme:
+                targetMask.append(i)
+                break
+
+    # ERROR CHECK
+    if len(targetMask) != len(themes):
+        print("ERROR - some themes could not be encoded")
+    return targetMask
+
+
+def encodePrimaryThemeToValue(themes):
+    for i in range(len(ALL_THEMES_LIST)):
+        if ALL_THEMES_LIST[i] == themes[0]:
+            return i
+
