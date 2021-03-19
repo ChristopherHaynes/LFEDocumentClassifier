@@ -139,8 +139,8 @@ class PreProcessor:
             pair[0] = newText
 
     def removeKeywordsFromText(self):
-        pass
         #  TODO - Create method for removing certain keywords (also consider keyword list generation (names, titles))
+        pass
 
     def removeExtraSpacesFromText(self):
         punctuationWithoutPrecedingSpaces = [',', '.', '!', '?']

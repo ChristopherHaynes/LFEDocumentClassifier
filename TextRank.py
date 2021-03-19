@@ -8,11 +8,16 @@ nlp = spacy.load('en_core_web_sm')
 
 
 class TextRank:
-    def __init__(self, kernelSize=4, dampening=0.85, steps=20, threshold=1e-5):
+    def __init__(self, themePairs, kernelSize=4, dampening=0.85, steps=20, threshold=1e-5):
+        self.themePairs = themePairs.copy()  # Copy of the global theme pair list to avoid changes to original
         self.KERNEL_SIZE = kernelSize
         self.DAMPENING = dampening
         self.STEPS = steps
         self.THRESHOLD = threshold
+
+        self.splitOnSentenceAndWords()
+        self.removeStopWords()
+        self.stemText()
 
     def getKeywords(self, sentences):
         # Determine the full vocab list for the text
@@ -36,17 +41,16 @@ class TextRank:
             else:
                 lastNodeMatrixSum = sum(nodeMatrix)
 
-        # Create a dict between the words and the calculated weight
-        wordWeight = dict()
+        # Create a sorted list from highest ranked word to lowest
+        wordWeight = []
         for word, index, in vocab.items():
-            wordWeight[word] = nodeMatrix[index]
+            wordWeight.append([nodeMatrix[index], word])
 
         return wordWeight
 
-    def splitOnSentenceAndWords(self, themePairs):
-        print("Spliting sentences and words.")
-        for i in range(len(themePairs)):
-            doc = nlp(themePairs[i][0])
+    def splitOnSentenceAndWords(self):
+        for i in range(len(self.themePairs)):
+            doc = nlp(self.themePairs[i][0])
 
             sentences = []
             for sent in doc.sents:
@@ -55,37 +59,32 @@ class TextRank:
                     if str(token) not in string.punctuation:
                         selectedWords.append(token)
                 sentences.append(selectedWords)
-            themePairs[i][0] = sentences
-        return themePairs
+            self.themePairs[i][0] = sentences
 
-    def stemText(self, themePairs):
-        print("Stemming.")
+    def stemText(self):
         stemmer = nltk.stem.PorterStemmer()
 
-        for i in range(len(themePairs)):
+        for i in range(len(self.themePairs)):
             newText = []
-            for sentence in themePairs[i][0]:
+            for sentence in self.themePairs[i][0]:
                 newSentence = []
                 for word in sentence:
                     newSentence.append(stemmer.stem(str(word)))
                 newText.append(newSentence)
-            themePairs[i][0] = newText
-        return themePairs
+            self.themePairs[i][0] = newText
 
-    def removeStopWords(self, themePairs):
-        print("Removing stop words.")
+    def removeStopWords(self):
         stopWords = set(nltk.corpus.stopwords.words('english'))
 
-        for i in range(len(themePairs)):
+        for i in range(len(self.themePairs)):
             filteredText = []
-            for sentence in themePairs[i][0]:
+            for sentence in self.themePairs[i][0]:
                 newSentence = []
                 for word in sentence:
                     if str(word) not in stopWords:
                         newSentence.append(str(word))
                 filteredText.append(newSentence)
-            themePairs[i][0] = filteredText
-        return themePairs
+            self.themePairs[i][0] = filteredText
 
     def buildVocabDict(self, sentences):
         vocab = OrderedDict()
@@ -129,7 +128,7 @@ class TextRank:
     def makeSymmetric(self, matrix):
         return matrix + matrix.T - np.diag(matrix.diagonal())
 
-    def printOrderedKeywords(wordWeight, number=10):
+    def printOrderedKeywords(self, wordWeight, number=10):
         nodeWeight = OrderedDict(sorted(wordWeight.items(), key=lambda t: t[1], reverse=True))
         for i, (key, value) in enumerate(nodeWeight.items()):
             print(key + ' - ' + str(value))
