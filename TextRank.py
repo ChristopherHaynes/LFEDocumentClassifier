@@ -6,6 +6,7 @@ from collections import OrderedDict
 
 nlp = spacy.load('en_core_web_sm')
 
+
 class TextRank:
     def __init__(self, kernelSize=4, dampening=0.85, steps=20, threshold=1e-5):
         self.KERNEL_SIZE = kernelSize

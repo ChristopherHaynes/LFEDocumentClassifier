@@ -7,7 +7,11 @@ from BagOfWords import BagOfWords
 from NeuralNet import NeuralNet
 
 # CONSTANTS
-KEYWORD_ID_METHOD = 'rake'  # Options: 'rake' 'textrank'
+KEYWORD_ID_METHOD = 'rake'    # Options: 'rake' 'textrank'
+REMOVE_NUMERIC = True         # Remove any numeric characters or numeric punctuation from the text
+REMOVE_SINGLE_LETTERS = True  # Remove any single letters (name abbreviations and prepositions) from the text
+REMOVE_KEYWORDS = False       # Remove any listed keywords from the text
+REMOVE_EXTRA_SPACES = True    # Remove any extra spaces, new line characters etc from the text
 
 # GLOBAL VARIABLES
 themePairs = []  # List of tuples, where the first item contains features and the second contains categories (themes)
@@ -16,8 +20,9 @@ themePairs = []  # List of tuples, where the first item contains features and th
 dataFile = pd.read_excel("C:\\Users\\Chris\\Desktop\\Data\\lfeData.xlsx", engine='openpyxl')
 
 # Apply all pre-processing to clean text and themes
-# TODO: Add further pipeline options for text cleaning (perhaps controlled with init parameters?)
+# TODO: Add further pipeline options for text cleaning (Single character and keyword removal)
 pp = PreProcessor(dataFile, themePairs)
+pp.cleanText(REMOVE_NUMERIC, REMOVE_SINGLE_LETTERS, REMOVE_KEYWORDS, REMOVE_EXTRA_SPACES)
 
 # TODO: [PIPELINE SPLIT 1] - Determine stop list and stemming method (or disable these options)
 

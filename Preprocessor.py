@@ -1,4 +1,5 @@
 import pandas as pd
+import string
 
 ALL_THEMES_LIST = ['above and beyond', 'adaptability', 'communication', 'coping with pressure', 'dedicated',
                    'education', 'efficient', 'hard work', 'initiative', 'innovative', 'kindness', 'leadership',
@@ -16,19 +17,27 @@ class PreProcessor:
         self.totalEntries = 0  # TESTING - Keep track of the total original number of entries
         self.totalCulledEntries = 0  # TESTING - Keep track of how many entries are invalid and removed
 
-        # Generate the theme pair list and discard any invalid entries
+        # Generate the theme pair list from the data file and discard any invalid entries
         self.extractThemePairs()
 
         # Convert the raw theme string into a list of strings in the theme pairs list
         self.convertThemesToList()
-
-        # TODO - Add options for clean the text (features) such as removing numerical values and words like "Dr"
 
         # Remove any further entries which are now empty or invalid (lacking in either valid feature text or category)
         self.cullEmptyEntries()
 
         # Process the counts of all themes and primary themes for each pair in the theme pairs list
         self.getThemesCounts()
+
+    def cleanText(self, removeNumeric=True, removeSingleLetters=True, removeKeywords=True, removeExtraSpaces=True):
+        if removeNumeric:
+            self.removeNumericCharactersFromText()
+        if removeSingleLetters:
+            self.removeSingleLettersFromText()
+        if removeKeywords:
+            self.removeKeywordsFromText()
+        if removeExtraSpaces:
+            self.removeExtraSpacesFromText()
 
     def extractThemePairs(self):
         print("Extracting theme pairs.")
@@ -97,3 +106,51 @@ class PreProcessor:
             if not isinstance(pair[0], str) or len(pair[0]) == 0 or pair[0].lower() == 'x' or len(pair[1]) == 0:
                 self.themePairs.remove(pair)
                 self.totalCulledEntries = self.totalCulledEntries + 1
+
+    def removeNumericCharactersFromText(self):
+        for pair in self.themePairs:
+            rawText = pair[0]
+            newText = ''
+
+            for i in range(0, len(rawText)):
+                character = rawText[i]
+
+                if character.isnumeric():
+                    continue
+
+                # Check the next character for being a decimal point or other numeric punctuation
+                if character in string.punctuation and i + 1 < len(rawText) and rawText[i + 1].isnumeric():
+                    continue
+
+                newText = newText + character
+            pair[0] = newText
+
+    def removeSingleLettersFromText(self):
+        for pair in self.themePairs:
+            rawText = pair[0]
+            newText = ''
+
+            for i in range(0, len(rawText)):
+                # If the character is a valid letter and surrounded by whitespace then remove it
+                if rawText[i] in string.ascii_letters and i + 1 < len(rawText):
+                    if rawText[i - 1].isspace() and rawText[i + 1].isspace():
+                        continue
+                newText = newText + rawText[i]
+            pair[0] = newText
+
+    def removeKeywordsFromText(self):
+        pass
+        #  TODO - Create method for removing certain keywords (also consider keyword list generation (names, titles))
+
+    def removeExtraSpacesFromText(self):
+        punctuationWithoutPrecedingSpaces = [',', '.', '!', '?']
+        for pair in self.themePairs:
+            rawText = pair[0]
+            newText = ''
+
+            for i in range(0, len(rawText)):
+                if rawText[i].isspace() and i + 1 < len(rawText):
+                    if rawText[i + 1].isspace() or rawText[i + 1] in punctuationWithoutPrecedingSpaces:
+                        continue
+                newText = newText + rawText[i]
+            pair[0] = newText
