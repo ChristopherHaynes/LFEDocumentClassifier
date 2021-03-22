@@ -1,4 +1,5 @@
 from sklearn import neighbors, model_selection
+from StatisticsAndResultsGenerator import *
 import numpy as np
 
 
@@ -9,16 +10,19 @@ def getNeighbors(featureMask, targets):
     X = np.array(featureMask)
     y = np.array(targets)
 
-    XTrain, XTest, y_Train, y_Test = model_selection.train_test_split(X, y, test_size=0.25, random_state=42)
+    XTrain, XTest, yTrain, yTest = model_selection.train_test_split(X, y, test_size=0.25, random_state=42)
 
     knnClassifier = neighbors.KNeighborsClassifier(nNeighbours, weights='uniform')
-    knnClassifier.fit(XTrain, y_Train)
+    knnClassifier.fit(XTrain, yTrain)
     predictions = knnClassifier.predict(XTest)
 
     correctPredictions = 0
     for i in range(len(predictions)):
-        if predictions[i] == y_Test[i]:
+        if predictions[i] == yTest[i]:
             correctPredictions = correctPredictions + 1
 
-    percentCorrect = (correctPredictions / len(predictions)) * 100
+    percentCorrect = getPercentageCorrect(correctPredictions, len(predictions))
+
+    actualThemesBreakdown = getFractionOfAllThemes(yTest)
+    predictionsBreakdown = getFractionOfAllThemes(predictions)
     pass

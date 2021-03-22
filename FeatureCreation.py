@@ -1,12 +1,16 @@
 from constants.ALL_THEMES_LIST import ALL_THEMES_LIST
 
 
-def generateBagOfWords(documentList):
+def generateBagOfWords(documentList, useThreshold=False, keywordPerItemThreshold=10):
     bagOfWords = set()
 
     for featureList in documentList:
-        for featureTuple in featureList:
-            bagOfWords.add(featureTuple[1])
+        for i in range(len(featureList)):
+            if useThreshold:
+                if i < keywordPerItemThreshold:
+                    bagOfWords.add(featureList[i][1])
+            else:
+                bagOfWords.add(featureList[i][1])
 
     return bagOfWords
 
@@ -37,7 +41,7 @@ def encodeThemesToValues(themes):
                 targetMask.append(i)
                 break
 
-    # ERROR CHECK
+    # TESTING - ERROR CHECK
     if len(targetMask) != len(themes):
         print("ERROR - some themes could not be encoded")
     return targetMask

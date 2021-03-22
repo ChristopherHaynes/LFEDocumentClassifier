@@ -37,9 +37,7 @@ if KEYWORD_ID_METHOD == 'rake':
 
 elif KEYWORD_ID_METHOD == 'text_rank':
     tr = TextRank(themePairs)
-    for i in range(len(themePairs)):
-        wordWeight = tr.getKeywords(themePairs[i][0])
-        wordEmbeddings.append(wordWeight)
+    wordEmbeddings = tr.getAllKeywords()
 
 else:
     print("ERROR - Invalid Keyword IDing method chosen")

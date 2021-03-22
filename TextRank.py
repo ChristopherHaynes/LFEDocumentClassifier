@@ -2,6 +2,7 @@ import numpy as np
 import nltk as nltk
 import spacy
 import string
+import copy
 from collections import OrderedDict
 
 nlp = spacy.load('en_core_web_sm')
@@ -9,7 +10,7 @@ nlp = spacy.load('en_core_web_sm')
 
 class TextRank:
     def __init__(self, themePairs, kernelSize=4, dampening=0.85, steps=20, threshold=1e-5):
-        self.themePairs = themePairs.copy()  # Copy of the global theme pair list to avoid changes to original
+        self.themePairs = copy.deepcopy(themePairs)  # Copy of the global theme pair list to avoid changes to original
         self.KERNEL_SIZE = kernelSize
         self.DAMPENING = dampening
         self.STEPS = steps
@@ -18,6 +19,14 @@ class TextRank:
         self.splitOnSentenceAndWords()
         self.removeStopWords()
         self.stemText()
+
+    def getAllKeywords(self):
+        allKeywords = []
+        for pair in self.themePairs:
+            wordWeight = self.getKeywords(pair[0])
+            wordWeight.sort(key=lambda keywordTuple: keywordTuple[0], reverse=True)
+            allKeywords.append(wordWeight)
+        return allKeywords
 
     def getKeywords(self, sentences):
         # Determine the full vocab list for the text
@@ -32,7 +41,7 @@ class TextRank:
         # Init a weight matrix for each node/word (All nodes start with a weight of 1)
         nodeMatrix = np.array([1] * len(vocab))
 
-        # Iterate through the matrices, performing the pagerank equation on each step to update the node weights
+        # Iterate through the matrices, performing the page rank equation on each step to update the node weights
         lastNodeMatrixSum = 0
         for epoch in range(self.STEPS):
             nodeMatrix = (1 - self.DAMPENING) + self.DAMPENING * np.dot(edgeMatrix, nodeMatrix)
@@ -49,17 +58,13 @@ class TextRank:
         return wordWeight
 
     def splitOnSentenceAndWords(self):
-        for i in range(len(self.themePairs)):
-            doc = nlp(self.themePairs[i][0])
-
-            sentences = []
-            for sent in doc.sents:
-                selectedWords = []
-                for token in sent:
-                    if str(token) not in string.punctuation:
-                        selectedWords.append(token)
-                sentences.append(selectedWords)
-            self.themePairs[i][0] = sentences
+        for pair in self.themePairs:
+            wordAndSentence = []
+            sentences = nltk.sent_tokenize(pair[0])
+            for sentence in sentences:
+                words = nltk.word_tokenize(sentence)
+                wordAndSentence.append([word for word in words if word.isalnum()])
+            pair[0] = wordAndSentence
 
     def stemText(self):
         stemmer = nltk.stem.PorterStemmer()
@@ -134,3 +139,16 @@ class TextRank:
             print(key + ' - ' + str(value))
             if i > number:
                 break
+
+    def DEPRECIATED_splitOnSentenceAndWords(self):
+        for i in range(len(self.themePairs)):
+            doc = nlp(self.themePairs[i][0])
+
+            sentences = []
+            for sent in doc.sents:
+                selectedWords = []
+                for token in sent:
+                    if str(token) not in string.punctuation:
+                        selectedWords.append(token)
+                sentences.append(selectedWords)
+            self.themePairs[i][0] = sentences
