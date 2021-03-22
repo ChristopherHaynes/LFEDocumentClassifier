@@ -55,6 +55,11 @@ class TextRank:
         for word, index, in vocab.items():
             wordWeight.append([nodeMatrix[index], word])
 
+        # Error catching for when values get too small and become NaN when transferred to numpy
+        for pair in wordWeight:
+            if np.any(np.isnan(pair[0])):
+                pair[0] = 0
+
         return wordWeight
 
     def splitOnSentenceAndWords(self):

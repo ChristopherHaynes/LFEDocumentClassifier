@@ -5,6 +5,7 @@ from Preprocessor import PreProcessor
 from TextRank import TextRank
 from FeatureCreation import *
 from KNearestNeighbor import *
+from StatisticsAndResultsGenerator import *
 
 # GLOBAL CONSTANTS
 KEYWORD_ID_METHOD = 'text_rank'  # Options: 'rake' 'text_rank'
@@ -56,4 +57,11 @@ for pair in themePairs:
     targetMasks.append(encodePrimaryThemeToValue(pair[1]))
 
 # TODO: [PIPELINE SPLIT 4] - Determine which classifier to use and how to store results
-getNeighbors(featuresMasks, targetMasks)
+classifier = KNNClassifier(featuresMasks, targetMasks)
+
+correctPercents = []
+for i in range(1, 30):
+    classifier.classify(i, randomState=0)
+    correctPercents.append(getPercentageCorrect(classifier.predictions, classifier.actualResults))
+
+pass

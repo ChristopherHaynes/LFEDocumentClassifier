@@ -3,12 +3,17 @@ import copy
 from constants.ALL_THEMES_LIST import ALL_THEMES_LIST
 
 
-def getPercentageCorrect(correctCount, totalCount):
-    return (correctCount / totalCount) * 100
-
-
 def convertThemeValueToString(themeValue):
     return ALL_THEMES_LIST[themeValue]
+
+
+def getPercentageCorrect(predictions, actualResults):
+    correctPredictions = 0
+    for i in range(len(predictions)):
+        if predictions[i] == actualResults[i]:
+            correctPredictions = correctPredictions + 1
+
+    return (correctPredictions / len(predictions)) * 100
 
 
 def getSortedAggregatedThemes(numericThemesList, descending=True):

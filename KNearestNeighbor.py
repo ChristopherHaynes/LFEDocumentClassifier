@@ -1,28 +1,25 @@
 from sklearn import neighbors, model_selection
-from StatisticsAndResultsGenerator import *
 import numpy as np
 
 
-def getNeighbors(featureMask, targets):
-    nNeighbours = 15
+class KNNClassifier:
+    def __init__(self, featureData, targetData):
+        # Classifier initialisation variables (only mutable on construction)
+        self.X = np.array(featureData)  # Convert the feature mask to a numpy array [item, feature mask]
+        self.y = np.array(targetData)
 
-    # Convert the feature mask to a numpy array [item, feature mask]
-    X = np.array(featureMask)
-    y = np.array(targets)
+        # Single classification variables (mutable on every call of "classify")
+        self.actualResults = []  # Empty array pre-reserved for testing set classifications
+        self.predictions = []    # Empty array pre-reserved for holding results
 
-    XTrain, XTest, yTrain, yTest = model_selection.train_test_split(X, y, test_size=0.25, random_state=42)
+    def classify(self, nNeighbours=15, weights='uniform', algorithm='auto', testSize=0.25, randomState=42):
+        self.knnClassifier = neighbors.KNeighborsClassifier(nNeighbours, weights=weights, algorithm=algorithm)
 
-    knnClassifier = neighbors.KNeighborsClassifier(nNeighbours, weights='uniform')
-    knnClassifier.fit(XTrain, yTrain)
-    predictions = knnClassifier.predict(XTest)
+        XTrain, XTest, yTrain, yTest = model_selection.train_test_split(self.X,
+                                                                        self.y,
+                                                                        test_size=testSize,
+                                                                        random_state=randomState)
 
-    correctPredictions = 0
-    for i in range(len(predictions)):
-        if predictions[i] == yTest[i]:
-            correctPredictions = correctPredictions + 1
-
-    percentCorrect = getPercentageCorrect(correctPredictions, len(predictions))
-
-    actualThemesBreakdown = getFractionOfAllThemes(yTest)
-    predictionsBreakdown = getFractionOfAllThemes(predictions)
-    pass
+        self.knnClassifier.fit(XTrain, yTrain)
+        self.predictions = self.knnClassifier.predict(XTest)
+        self.actualResults = yTest
