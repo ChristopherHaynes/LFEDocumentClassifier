@@ -4,7 +4,7 @@ from rake_nltk import Rake
 from Preprocessor import PreProcessor
 from TextRank import TextRank
 from FeatureCreation import *
-from KNearestNeighbor import *
+from Classifiers import *
 from StatisticsAndResultsGenerator import *
 
 # GLOBAL CONSTANTS
@@ -64,4 +64,6 @@ for i in range(1, 30):
     classifier.classify(i, randomState=0)
     correctPercents.append(getPercentageCorrect(classifier.predictions, classifier.actualResults))
 
+#TEST_gaussianMixture(featuresMasks, targetMasks)
+#TEST_kmeans(featuresMasks, targetMasks)
 pass
