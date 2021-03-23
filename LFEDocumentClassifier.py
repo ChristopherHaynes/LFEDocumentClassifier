@@ -5,14 +5,8 @@ from Preprocessor import PreProcessor
 from TextRank import TextRank
 from FeatureCreation import *
 from Classifiers import *
+from Constants import *
 from StatisticsAndResultsGenerator import *
-
-# GLOBAL CONSTANTS
-KEYWORD_ID_METHOD = 'text_rank'  # Options: 'rake' 'text_rank'
-REMOVE_NUMERIC = True            # Remove any numeric characters or numeric punctuation from the text
-REMOVE_SINGLE_LETTERS = True     # Remove any single letters (name abbreviations and prepositions) from the text
-REMOVE_KEYWORDS = False          # Remove any listed keywords from the text
-REMOVE_EXTRA_SPACES = True       # Remove any extra spaces, new line characters etc from the text
 
 # GLOBAL VARIABLES
 themePairs = []      # List of tuples, where the first item contains text and the second contains corresponding themes
@@ -59,10 +53,15 @@ for pair in themePairs:
 # TODO: [PIPELINE SPLIT 4] - Determine which classifier to use and how to store results
 classifier = KNNClassifier(featuresMasks, targetMasks)
 
-correctPercents = []
-for i in range(1, 30):
-    classifier.classify(i, randomState=0)
-    correctPercents.append(getPercentageCorrect(classifier.predictions, classifier.actualResults))
+fullResults = []
+for epoch in range(1, EPOCHS):
+    correctPercents = []
+    for i in range(1, 30):
+        classifier.classify(i, randomState=RANDOM_STATE)
+        correctPercents.append(getPercentageCorrect(classifier.predictions, classifier.actualResults))
+    fullResults.append(correctPercents)
+    print("Epoch " + str(epoch) + " completed")
+
 
 #TEST_gaussianMixture(featuresMasks, targetMasks)
 #TEST_kmeans(featuresMasks, targetMasks)

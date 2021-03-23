@@ -9,7 +9,7 @@ nlp = spacy.load('en_core_web_sm')
 
 
 class TextRank:
-    def __init__(self, themePairs, kernelSize=4, dampening=0.85, steps=20, threshold=1e-5):
+    def __init__(self, themePairs, kernelSize=4, dampening=0.85, steps=10, threshold=1e-5):
         self.themePairs = copy.deepcopy(themePairs)  # Copy of the global theme pair list to avoid changes to original
         self.KERNEL_SIZE = kernelSize
         self.DAMPENING = dampening

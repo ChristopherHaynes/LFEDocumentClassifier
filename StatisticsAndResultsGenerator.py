@@ -1,6 +1,6 @@
 import copy
 
-from Constants.ALL_THEMES_LIST import ALL_THEMES_LIST
+from Constants.AllThemes import ALL_THEMES_LIST
 
 
 def convertThemeValueToString(themeValue):
