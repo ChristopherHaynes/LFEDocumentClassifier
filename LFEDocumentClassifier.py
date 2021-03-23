@@ -5,7 +5,7 @@ from Preprocessor import PreProcessor
 from TextRank import TextRank
 from FeatureCreation import *
 from Classifiers import *
-from Constants import *
+from Parameters import *
 from StatisticsAndResultsGenerator import *
 
 # GLOBAL VARIABLES
@@ -34,12 +34,21 @@ elif KEYWORD_ID_METHOD == 'text_rank':
     tr = TextRank(themePairs)
     wordEmbeddings = tr.getAllKeywords()
 
+elif KEYWORD_ID_METHOD == 'none':
+    processedPairs = PreProcessor.splitOnSentenceAndWords(themePairs)
+    if REMOVE_STOPWORDS:
+        processedPairs = PreProcessor.removeStopWords(processedPairs)
+    if STEM_TEXT:
+        processedPairs = PreProcessor.stemText(processedPairs)
+    for pair in processedPairs:
+        wordEmbeddings.append(generateWordOccurrenceList(pair[0]))
+
 else:
     print("ERROR - Invalid Keyword IDing method chosen")
     breakpoint()
 
 # TODO: [PIPELINE SPLIT 3] - Build features from keywords/text
-bagOfWords = generateBagOfWords(wordEmbeddings)
+bagOfWords = generateBagOfWords(wordEmbeddings, USE_THRESHOLD, KEYWORD_THRESHOLD)
 print(len(bagOfWords))
 
 # Generate the feature masks which will make up the training features for classification
@@ -53,16 +62,15 @@ for pair in themePairs:
 # TODO: [PIPELINE SPLIT 4] - Determine which classifier to use and how to store results
 classifier = KNNClassifier(featuresMasks, targetMasks)
 
-fullResults = []
-for epoch in range(1, EPOCHS):
-    correctPercents = []
-    for i in range(1, 30):
-        classifier.classify(i, randomState=RANDOM_STATE)
-        correctPercents.append(getPercentageCorrect(classifier.predictions, classifier.actualResults))
-    fullResults.append(correctPercents)
-    print("Epoch " + str(epoch) + " completed")
+correctPercents = []
+for epoch in range(0, EPOCHS):
+    classifier.classify(N_NEIGHBOURS, randomState=RANDOM_STATE)
+    correctPercents.append(getPercentageCorrect(classifier.predictions, classifier.actualResults))
+    print("Epoch " + str(epoch + 1) + " completed")
 
+averageRes = sum(correctPercents) / len(correctPercents)
+print("Average accuracy of " + str(averageRes) + "%")
 
-#TEST_gaussianMixture(featuresMasks, targetMasks)
-#TEST_kmeans(featuresMasks, targetMasks)
+# TEST_gaussianMixture(featuresMasks, targetMasks)
+# TEST_kmeans(featuresMasks, targetMasks)
 pass

@@ -1,4 +1,4 @@
-from Constants.AllThemes import ALL_THEMES_LIST
+from Parameters.AllThemes import ALL_THEMES_LIST
 
 
 def generateBagOfWords(documentList, useThreshold=False, keywordPerItemThreshold=10):
@@ -13,6 +13,24 @@ def generateBagOfWords(documentList, useThreshold=False, keywordPerItemThreshold
                 bagOfWords.add(featureList[i][1])
 
     return bagOfWords
+
+
+def generateWordOccurrenceList(text):
+    wordCountDict = dict()
+
+    for sentence in text:
+        for word in sentence:
+            if word not in wordCountDict.keys():
+                wordCountDict[word] = 1
+            else:
+                wordCountDict[word] = wordCountDict[word] + 1
+
+    wordCountList = []
+    for word, count, in wordCountDict.items():
+        wordCountList.append([count, word])
+
+    wordCountList.sort(key=lambda keywordTuple: keywordTuple[0], reverse=True)
+    return wordCountList
 
 
 def generateFeatureMask(bagOfWords, scoredText):

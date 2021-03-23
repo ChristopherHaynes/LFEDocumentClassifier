@@ -1,11 +1,8 @@
 import numpy as np
-import nltk as nltk
-import spacy
-import string
-import copy
 from collections import OrderedDict
 
-nlp = spacy.load('en_core_web_sm')
+from Preprocessor import *
+from Parameters import *
 
 
 class TextRank:
@@ -16,9 +13,11 @@ class TextRank:
         self.STEPS = steps
         self.THRESHOLD = threshold
 
-        self.splitOnSentenceAndWords()
-        self.removeStopWords()
-        self.stemText()
+        self.themePairs = PreProcessor.splitOnSentenceAndWords(self.themePairs)
+        if REMOVE_STOPWORDS:
+            self.themePairs = PreProcessor.removeStopWords(self.themePairs)
+        if STEM_TEXT:
+            self.themePairs = PreProcessor.stemText(self.themePairs)
 
     def getAllKeywords(self):
         allKeywords = []
@@ -50,7 +49,7 @@ class TextRank:
             else:
                 lastNodeMatrixSum = sum(nodeMatrix)
 
-        # Create a sorted list from highest ranked word to lowest
+        # Convert dictionary into list of [score, word]
         wordWeight = []
         for word, index, in vocab.items():
             wordWeight.append([nodeMatrix[index], word])
@@ -61,40 +60,6 @@ class TextRank:
                 pair[0] = 0
 
         return wordWeight
-
-    def splitOnSentenceAndWords(self):
-        for pair in self.themePairs:
-            wordAndSentence = []
-            sentences = nltk.sent_tokenize(pair[0])
-            for sentence in sentences:
-                words = nltk.word_tokenize(sentence)
-                wordAndSentence.append([word for word in words if word.isalnum()])
-            pair[0] = wordAndSentence
-
-    def stemText(self):
-        stemmer = nltk.stem.PorterStemmer()
-
-        for i in range(len(self.themePairs)):
-            newText = []
-            for sentence in self.themePairs[i][0]:
-                newSentence = []
-                for word in sentence:
-                    newSentence.append(stemmer.stem(str(word)))
-                newText.append(newSentence)
-            self.themePairs[i][0] = newText
-
-    def removeStopWords(self):
-        stopWords = set(nltk.corpus.stopwords.words('english'))
-
-        for i in range(len(self.themePairs)):
-            filteredText = []
-            for sentence in self.themePairs[i][0]:
-                newSentence = []
-                for word in sentence:
-                    if str(word) not in stopWords:
-                        newSentence.append(str(word))
-                filteredText.append(newSentence)
-            self.themePairs[i][0] = filteredText
 
     def buildVocabDict(self, sentences):
         vocab = OrderedDict()
@@ -144,16 +109,3 @@ class TextRank:
             print(key + ' - ' + str(value))
             if i > number:
                 break
-
-    def DEPRECIATED_splitOnSentenceAndWords(self):
-        for i in range(len(self.themePairs)):
-            doc = nlp(self.themePairs[i][0])
-
-            sentences = []
-            for sent in doc.sents:
-                selectedWords = []
-                for token in sent:
-                    if str(token) not in string.punctuation:
-                        selectedWords.append(token)
-                sentences.append(selectedWords)
-            self.themePairs[i][0] = sentences
