@@ -40,9 +40,14 @@ elif KEYWORD_ID_METHOD == 'none':
         processedPairs = PreProcessor.removeStopWords(processedPairs)
     if STEM_TEXT:
         processedPairs = PreProcessor.stemText(processedPairs)
-    for pair in processedPairs:
-        wordEmbeddings.append(generateWordOccurrenceList(pair[0]))
-
+    if EMBEDDING_SCORE_METHOD == 'word_count':
+        for pair in processedPairs:
+            wordEmbeddings.append(generateTermCountList(pair[0]))
+    elif EMBEDDING_SCORE_METHOD == 'tf_idf':
+        wordEmbeddings = generateAllTFIDFValues(processedPairs)
+    else:
+        print("ERROR - Invalid Embedding method chosen")
+        breakpoint()
 else:
     print("ERROR - Invalid Keyword IDing method chosen")
     breakpoint()
@@ -62,15 +67,18 @@ for pair in themePairs:
 # TODO: [PIPELINE SPLIT 4] - Determine which classifier to use and how to store results
 classifier = KNNClassifier(featuresMasks, targetMasks)
 
-correctPercents = []
-for epoch in range(0, EPOCHS):
-    classifier.classify(N_NEIGHBOURS, randomState=RANDOM_STATE)
-    correctPercents.append(getPercentageCorrect(classifier.predictions, classifier.actualResults))
-    print("Epoch " + str(epoch + 1) + " completed")
+averageResults = []
+for test in range(0, 10):
+    correctPercents = []
+    for epoch in range(0, EPOCHS):
+        results = TEST_naiveBayesMultinomial(featuresMasks, targetMasks)
+        correctPercents.append(getPercentageCorrect(results[0], results[1]))
 
-averageRes = sum(correctPercents) / len(correctPercents)
-print("Average accuracy of " + str(averageRes) + "%")
+    averageRes = sum(correctPercents) / len(correctPercents)
+    averageResults.append(averageRes)
+    print("Test " + str(test + 1) + " average accuracy of " + str(averageRes) + "%")
 
 # TEST_gaussianMixture(featuresMasks, targetMasks)
 # TEST_kmeans(featuresMasks, targetMasks)
+
 pass
