@@ -70,8 +70,8 @@ classifier = KNNClassifier(featuresMasks, targetMasks)
 precisionRecalls = []
 correctPercents = []
 for epoch in range(0, EPOCHS):
-    # results = TEST_naiveBayesMultinomial(featuresMasks, targetMasks)
-    results = classifier.classify(N_NEIGHBOURS, WEIGHTS, ALGORITHM, TEST_SIZE, RANDOM_STATE)
+    results = TEST_naiveBayesMultinomial(featuresMasks, targetMasks)
+    # results = classifier.classify(N_NEIGHBOURS, WEIGHTS, ALGORITHM, TEST_SIZE, RANDOM_STATE)
     correctPercents.append(getPercentageCorrect(results[0], results[1]))
     precisionRecalls.append(getAveragePrecisionRecall(results[0], results[1]))
 

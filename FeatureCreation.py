@@ -73,6 +73,7 @@ def getTermFrequency(inputWord, document):
     return termFrequency / totalWordCount
 
 
+# TODO: Optimise this method, O(n^3) is far too slow. Look up table/dictionary options?
 def getInverseDocumentFrequency(inputWord, corpus, corpusSize):
     # The total number of documents divided by the number of documents containing the term. Log taken of result.
     documentsContainingWord = 0

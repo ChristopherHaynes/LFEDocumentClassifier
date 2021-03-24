@@ -23,3 +23,4 @@ class KNNClassifier:
         self.knnClassifier.fit(XTrain, yTrain)
         self.predictions = self.knnClassifier.predict(XTest)
         self.actualResults = yTest
+        return [self.predictions, self.actualResults]
