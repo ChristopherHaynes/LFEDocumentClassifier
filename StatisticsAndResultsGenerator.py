@@ -47,9 +47,18 @@ def getFractionOfAllThemes(numericThemesList):
     return fractionalThemes
 
 
-def getF1Score(predictions, actualResults):
-    avgPR = getAveragePrecisionRecall(predictions, actualResults)
-    return 2 * ((avgPR[0] * avgPR[1]) / (avgPR[0] + avgPR[1]))
+def getAverageF1Score(predictions, actualResults):
+    precisionRecalls = getPrecisionRecall(predictions, actualResults)
+    sumF1 = 0
+    for pr in precisionRecalls:
+        sumF1 += getF1Score(pr[0], pr[1])
+    return sumF1 / len(precisionRecalls)
+
+
+def getF1Score(precision, recall):
+    if precision + recall == 0:
+        return 0.0
+    return 2 * ((precision * recall) / (precision + recall))
 
 
 # TODO: Final returned values for average precision and recall appear to always be the same. Why?
@@ -69,16 +78,15 @@ def getAveragePrecisionRecall(predictions, actualResults):
     return [averagePrecision, averageRecall]
 
 
-# TODO: In this method it is possible to end up dividing by zero resulting in NaNs, needs resolving
 def getPrecisionRecall(predictions, actualResults):
     confusionMatrix = computeConfusionMatrix(predictions, actualResults)
     allPrecisionRecall = []
 
-    for themeIndex in range(len(ALL_THEMES_LIST)):
+    for iTheme in range(len(ALL_THEMES_LIST)):
         # True positives divided by true positives and false positives
-        precision = confusionMatrix[themeIndex, themeIndex] / sum(confusionMatrix[themeIndex, :])
+        precision = confusionMatrix[iTheme, iTheme] / sum(confusionMatrix[iTheme, :]) if sum(confusionMatrix[iTheme, :]) != 0 else 0
         # True positives divided by true positives and false negatives
-        recall = confusionMatrix[themeIndex, themeIndex] / sum(confusionMatrix[:, themeIndex])
+        recall = confusionMatrix[iTheme, iTheme] / sum(confusionMatrix[:, iTheme]) if sum(confusionMatrix[:, iTheme]) != 0 else 0
         allPrecisionRecall.append([precision, recall])
     return allPrecisionRecall
 

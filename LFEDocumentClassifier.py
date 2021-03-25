@@ -65,20 +65,22 @@ for pair in themePairs:
     targetMasks.append(encodePrimaryThemeToValue(pair[1]))
 
 # TODO: [PIPELINE SPLIT 4] - Determine which classifier to use and how to store results
-classifier = KNNClassifier(featuresMasks, targetMasks)
+classifier = KNNClassifier(featuresMasks, targetMasks, TEST_SIZE, RANDOM_STATE, N_NEIGHBOURS, WEIGHTS, ALGORITHM)
+classifier.generateTestTrainData()
+classifier.train()
 
 precisionRecalls = []
 correctPercents = []
 for epoch in range(0, EPOCHS):
-    results = TEST_naiveBayesMultinomial(featuresMasks, targetMasks)
-    # results = classifier.classify(N_NEIGHBOURS, WEIGHTS, ALGORITHM, TEST_SIZE, RANDOM_STATE)
+    # results = TEST_naiveBayesMultinomial(featuresMasks, targetMasks)
+    results = classifier.classifySingleClass()
     correctPercents.append(getPercentageCorrect(results[0], results[1]))
-    precisionRecalls.append(getAveragePrecisionRecall(results[0], results[1]))
+    precisionRecalls.append(getAverageF1Score(results[0], results[1]))
 
 averageRes = sum(correctPercents) / len(correctPercents)
-
+averageF1 = sum(precisionRecalls) / len(precisionRecalls)
 print("Average accuracy of " + str(averageRes) + "%")
-
+print("Average F1 of " + str(averageF1))
 # TEST_gaussianMixture(featuresMasks, targetMasks)
 # TEST_kmeans(featuresMasks, targetMasks)
 
