@@ -1,20 +1,24 @@
 import math
+import copy
 
-from ..Preprocessor import *
+from .PreProcessingMethods import *
 
 
 class TermFrequency:
-    def __init__(self, themePairs, removeStopWords, stemWords):
+    def __init__(self, themePairs, REMOVE_STOPWORDS, STEM_TEXT):
         self.themePairs = copy.deepcopy(themePairs)
-        if removeStopWords:
-            self.themePairs = PreProcessor.removeStopWords(self.themePairs)
-        if stemWords:
-            self.themePairs = PreProcessor.stemText(self.themePairs)
+
+        self.themePairs = splitOnSentenceAndWords(self.themePairs)
+        if REMOVE_STOPWORDS:
+            self.themePairs = removeStopWords(self.themePairs)
+        if STEM_TEXT:
+            self.themePairs = stemText(self.themePairs)
 
     def getAllTermCountsPerDocument(self):
         wordEmbeddings = []
         for pair in self.themePairs:
             wordEmbeddings.append(self.generateTermCountList(pair[0]))
+        return wordEmbeddings
 
     def generateAllTFIDFValues(self):
         # Separate out all the text from themes to form a corpus and track the total document count (corpus size)

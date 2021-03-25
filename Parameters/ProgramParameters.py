@@ -6,18 +6,18 @@ REMOVE_KEYWORDS = False          # Remove any listed keywords from the text
 REMOVE_EXTRA_SPACES = True       # Remove any extra spaces, new line characters etc from the text
 
 # --------------------------------------- WORD EMBEDDING PARAMETERS ----------------------------------------------
-KEYWORD_ID_METHOD = 'text_rank'       # VALID: 'rake', 'text_rank', 'word_count', 'tf_idf'
-REMOVE_STOPWORDS = False         # Use the chosen stop word list to purge these words from the text (not for rake)
-STEM_TEXT = False                # Use the chosen stemming algorithm to stem the text (not for rake)
+KEYWORD_ID_METHOD = 'tf_idf'        # VALID: 'rake', 'text_rank', 'word_count', 'tf_idf'
+REMOVE_STOPWORDS = False            # Use the chosen stop word list to purge these words from the text (not for rake)
+STEM_TEXT = False                   # Use the chosen stemming algorithm to stem the text (not for rake)
 
 # -------------------------------------- FEATURE CREATION PARAMETERS ---------------------------------------------
 # Bag of words parameters
 USE_THRESHOLD = False     # Should words/keywords be ignored after a certain threshold
-KEYWORD_THRESHOLD = 4    # Value for the threshold at which keywords will be ignored
+KEYWORD_THRESHOLD = 4     # Value for the threshold at which keywords will be ignored
 
 # ----------------------------------------- CLASSIFIER PARAMETERS ------------------------------------------------
 # General Classifier parameters
-CLASSIFIER_NAME = 'cnb'     # Type of classifier to use. Valid: 'knn', 'cnb'
+CLASSIFIER_NAME = 'cnb'     # Type of classifier to use. VALID: 'knn', 'cnb'
 EPOCHS = 100
 
 # K-NN parameters

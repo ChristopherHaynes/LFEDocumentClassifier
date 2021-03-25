@@ -1,7 +1,7 @@
 import numpy as np
 from collections import OrderedDict
 
-from Preprocessor import *
+from .PreProcessingMethods import *
 from Parameters import *
 
 
@@ -13,11 +13,11 @@ class TextRank:
         self.STEPS = steps
         self.THRESHOLD = threshold
 
-        self.themePairs = PreProcessor.splitOnSentenceAndWords(self.themePairs)
+        self.themePairs = splitOnSentenceAndWords(self.themePairs)
         if REMOVE_STOPWORDS:
-            self.themePairs = PreProcessor.removeStopWords(self.themePairs)
+            self.themePairs = removeStopWords(self.themePairs)
         if STEM_TEXT:
-            self.themePairs = PreProcessor.stemText(self.themePairs)
+            self.themePairs = stemText(self.themePairs)
 
     def getAllKeywords(self):
         allKeywords = []
