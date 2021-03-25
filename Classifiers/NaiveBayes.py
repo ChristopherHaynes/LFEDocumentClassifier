@@ -1,15 +1,23 @@
-from sklearn import naive_bayes, model_selection
-import numpy as np
+from .AbstractClassifier import *
+from sklearn import naive_bayes
 
 
-def TEST_naiveBayesMultinomial(featureData, targetData):
-    X = np.array(featureData)  # Convert the feature mask to a numpy array [item, feature mask]
-    y = np.array(targetData)
+class ComplementNaiveBayes(AbstractClassifier):
+    def __init__(self,
+                 featureData,
+                 targetData,
+                 testSize=0.25,
+                 randomState=None):
+        super().__init__(featureData, targetData, testSize, randomState)
 
-    XTrain, XTest, yTrain, yTest = model_selection.train_test_split(X, y, test_size=0.25, random_state=None)
+    def train(self):
+        super().train()
+        self.classifier = naive_bayes.ComplementNB()
+        self.classifier.fit(self.XTrain, self.yTrain)
 
-    mNB = naive_bayes.ComplementNB()
-    mNB.fit(XTrain, yTrain)
-    predictions = mNB.predict(XTest)
-    # predictionProbs = mNB.predict_log_proba(XTest)
-    return [predictions, yTest]
+    def classifySingleClass(self):
+        return super().classifySingleClass()
+
+    def classifyMultiClass(self):
+        self.predictions = self.classifier.predict_log_proba(self.XTest)
+        return self.packageResults()

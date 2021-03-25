@@ -1,8 +1,6 @@
-import pandas as pd
 from rake_nltk import Rake
 
-from Preprocessor import PreProcessor
-from TextRank import TextRank
+from WordEmbedding import *
 from FeatureCreation import *
 from Classifiers import *
 from Parameters import *
@@ -34,20 +32,14 @@ elif KEYWORD_ID_METHOD == 'text_rank':
     tr = TextRank(themePairs)
     wordEmbeddings = tr.getAllKeywords()
 
-elif KEYWORD_ID_METHOD == 'none':
-    processedPairs = PreProcessor.splitOnSentenceAndWords(themePairs)
-    if REMOVE_STOPWORDS:
-        processedPairs = PreProcessor.removeStopWords(processedPairs)
-    if STEM_TEXT:
-        processedPairs = PreProcessor.stemText(processedPairs)
-    if EMBEDDING_SCORE_METHOD == 'word_count':
-        for pair in processedPairs:
-            wordEmbeddings.append(generateTermCountList(pair[0]))
-    elif EMBEDDING_SCORE_METHOD == 'tf_idf':
-        wordEmbeddings = generateAllTFIDFValues(processedPairs)
-    else:
-        print("ERROR - Invalid Embedding method chosen")
-        breakpoint()
+elif KEYWORD_ID_METHOD == 'word_count':
+    tf = TermFrequency(themePairs, REMOVE_STOPWORDS, STEM_TEXT)
+    wordEmbeddings = tf.getAllTermCountsPerDocument()
+
+elif KEYWORD_ID_METHOD == 'tf_idf':
+    tf = TermFrequency(themePairs, REMOVE_STOPWORDS, STEM_TEXT)
+    wordEmbeddings = tf.generateAllTFIDFValues()
+
 else:
     print("ERROR - Invalid Keyword IDing method chosen")
     breakpoint()
@@ -65,14 +57,18 @@ for pair in themePairs:
     targetMasks.append(encodePrimaryThemeToValue(pair[1]))
 
 # TODO: [PIPELINE SPLIT 4] - Determine which classifier to use and how to store results
-classifier = KNNClassifier(featuresMasks, targetMasks, TEST_SIZE, RANDOM_STATE, N_NEIGHBOURS, WEIGHTS, ALGORITHM)
+classifier = None
+if CLASSIFIER_NAME == 'knn':
+    classifier = KNNClassifier(featuresMasks, targetMasks, TEST_SIZE, RANDOM_STATE, N_NEIGHBOURS, WEIGHTS, ALGORITHM)
+elif CLASSIFIER_NAME == 'cnb':
+    classifier = ComplementNaiveBayes(featuresMasks, targetMasks)
+
 classifier.generateTestTrainData()
 classifier.train()
 
 precisionRecalls = []
 correctPercents = []
 for epoch in range(0, EPOCHS):
-    # results = TEST_naiveBayesMultinomial(featuresMasks, targetMasks)
     results = classifier.classifySingleClass()
     correctPercents.append(getPercentageCorrect(results[0], results[1]))
     precisionRecalls.append(getAverageF1Score(results[0], results[1]))

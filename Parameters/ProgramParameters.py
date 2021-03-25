@@ -1,17 +1,14 @@
 # --------------------------------------- PRE PROCESSING PARAMETERS ----------------------------------------------
 # General Preprocessing parameters
-KEYWORD_ID_METHOD = 'text_rank'       # VALID: 'rake' 'text_rank' 'none'
 REMOVE_NUMERIC = True            # Remove any numeric characters or numeric punctuation from the text
 REMOVE_SINGLE_LETTERS = True     # Remove any single letters (name abbreviations and prepositions) from the text
 REMOVE_KEYWORDS = False          # Remove any listed keywords from the text
 REMOVE_EXTRA_SPACES = True       # Remove any extra spaces, new line characters etc from the text
 
-# Parameters only applying to "Text Rank" and "None" keyword selection
-REMOVE_STOPWORDS = False         # Use the chosen stop word list to purge these words from the text
-STEM_TEXT = False                # Use the chosen stemming algorithm to stem the text
-
 # --------------------------------------- WORD EMBEDDING PARAMETERS ----------------------------------------------
-EMBEDDING_SCORE_METHOD = 'word_count'  # The algorithm to use to determine word scores. VALID: 'word_count', 'tf_idf'
+KEYWORD_ID_METHOD = 'text_rank'       # VALID: 'rake', 'text_rank', 'word_count', 'tf_idf'
+REMOVE_STOPWORDS = False         # Use the chosen stop word list to purge these words from the text (not for rake)
+STEM_TEXT = False                # Use the chosen stemming algorithm to stem the text (not for rake)
 
 # -------------------------------------- FEATURE CREATION PARAMETERS ---------------------------------------------
 # Bag of words parameters
@@ -20,6 +17,7 @@ KEYWORD_THRESHOLD = 4    # Value for the threshold at which keywords will be ign
 
 # ----------------------------------------- CLASSIFIER PARAMETERS ------------------------------------------------
 # General Classifier parameters
+CLASSIFIER_NAME = 'cnb'     # Type of classifier to use. Valid: 'knn', 'cnb'
 EPOCHS = 100
 
 # K-NN parameters
