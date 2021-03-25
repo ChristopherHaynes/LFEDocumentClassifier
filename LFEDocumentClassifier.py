@@ -5,8 +5,8 @@ from PreProcessor import *
 from WordEmbedding import *
 from FeatureCreation import *
 from Classifiers import *
-from Parameters import *
-from StatisticsAndResultsGenerator import *
+from TestManager import *
+from StatisticsGenerator import *
 
 # GLOBAL VARIABLES
 themePairs = []      # List of tuples, where the first item contains text and the second contains corresponding themes
@@ -14,9 +14,10 @@ wordEmbeddings = []  # List of words and their embedded scores per entry (words,
 bagOfWords = []      # List of all the words making up the bag of words (for feature creation)
 featuresMasks = []   # Feature mask per entry to match with the bagOfWords structure/order
 targetMasks = []     # Target value (class) per entry, aligns with features mask
+classifier = None    # Placeholder for the classifier object generated later in the pipeline
 
 # Read raw .XLSX file and store as pandas data-frame
-dataFile = pd.read_excel("C:\\Users\\Chris\\Desktop\\Data\\lfeData.xlsx", engine='openpyxl')
+dataFile = pd.read_excel(DATA_FILE_PATH, engine='openpyxl')
 
 # TODO: [PIPELINE SPLIT 1] - Determine stop list and stemming method (or disable these options)
 # Apply all pre-processing to clean text and themes
@@ -58,22 +59,26 @@ for scoredPairs in wordEmbeddings:
 for pair in themePairs:
     targetMasks.append(encodePrimaryThemeToValue(pair[1]))
 
-# TODO: [PIPELINE SPLIT 4] - Determine which classifier to use and how to store results
-classifier = None
+# TODO: [PIPELINE SPLIT 4] - Determine which classifier to use and how to initialise it
+# Populate "classifier" with the chosen classifier and initialise any hyper-parameters
 if CLASSIFIER_NAME == 'knn':
     classifier = KNNClassifier(featuresMasks, targetMasks, TEST_SIZE, RANDOM_STATE, N_NEIGHBOURS, WEIGHTS, ALGORITHM)
+
 elif CLASSIFIER_NAME == 'cnb':
     classifier = ComplementNaiveBayes(featuresMasks, targetMasks)
 
-classifier.generateTestTrainData()
-classifier.train()
+else:
+    print("ERROR - Invalid classifier name chosen")
+    breakpoint()
+
+# TODO: [PIPELINE SPLIT 5] - Run tests using the classifier, output results and statistics
+results = runTests(classifier, PRINT_PROGRESS)
 
 precisionRecalls = []
 correctPercents = []
-for epoch in range(0, EPOCHS):
-    results = classifier.classifySingleClass()
-    correctPercents.append(getPercentageCorrect(results[0], results[1]))
-    precisionRecalls.append(getAverageF1Score(results[0], results[1]))
+for result in results:
+    correctPercents.append(getAccuracyPercent(result[0], result[1]))
+    precisionRecalls.append(getAverageF1Score(result[0], result[1]))
 
 averageRes = sum(correctPercents) / len(correctPercents)
 averageF1 = sum(precisionRecalls) / len(precisionRecalls)

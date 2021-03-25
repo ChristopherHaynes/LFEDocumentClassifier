@@ -1,7 +1,6 @@
 import copy
 import numpy as np
 
-
 from Parameters.AllThemes import ALL_THEMES_LIST
 
 
@@ -9,7 +8,7 @@ def convertThemeValueToString(themeValue):
     return ALL_THEMES_LIST[themeValue]
 
 
-def getPercentageCorrect(predictions, actualResults):
+def getAccuracyPercent(predictions, actualResults):
     correctPredictions = 0
     for i in range(len(predictions)):
         if predictions[i] == actualResults[i]:

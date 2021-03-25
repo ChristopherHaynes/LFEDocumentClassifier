@@ -9,6 +9,7 @@ class ComplementNaiveBayes(AbstractClassifier):
                  testSize=0.25,
                  randomState=None):
         super().__init__(featureData, targetData, testSize, randomState)
+        self.name = "Complement Naive Bayes"
 
     def train(self):
         super().train()

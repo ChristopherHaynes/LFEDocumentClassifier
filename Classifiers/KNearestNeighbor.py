@@ -12,6 +12,7 @@ class KNNClassifier(AbstractClassifier):
                  weights='uniform',
                  algorithm='auto'):
         super().__init__(featureData, targetData, testSize, randomState)
+        self.name = "K Nearest Neighbor"
         self.nNeighbours = nNeighbours
         self.weights = weights
         self.algorithm = algorithm
