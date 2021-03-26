@@ -14,36 +14,30 @@ def runTests(classifier, printProgress=False):
     return results
 
 
-# TODO: ALL THIS IS UNTESTED!!!!!!!!!
-def getTestStats(results,
-                 usePrecisionRecall=True,
-                 useF1Score=True,
-                 useMinMax=True,
-                 useAverageF1=True):
+def getTestStats(results):
     testStats = dict()
 
     accuracyPercents = []
     precisionRecalls = []
-    F1Scores = []
     for result in results:
         accuracyPercents.append(getAccuracyPercent(result[0], result[1]))
-        if usePrecisionRecall:
-            precisionRecalls.append(getAveragePrecisionRecall(result[0], result[1]))
-        if useF1Score:
-            F1Scores.append(getAverageF1Score(result[0], result[1]))
+        precisionRecalls.append(getPrecisionRecall(result[0], result[1]))
 
+    precisionAverages, recallAverages = getAveragePrecisionRecallPerClass(precisionRecalls)
+    averageF1 = []
+    for i in range(len(precisionAverages)):
+        averageF1.append(round(getF1Score(precisionAverages[i], recallAverages[i]), 3))
+
+    # Per TEST stats
     testStats["Epochs"] = EPOCHS
-    testStats["AverageAccuracy"] = sum(accuracyPercents) / len(accuracyPercents)
-    testStats["AccuracyList"] = accuracyPercents
-    if usePrecisionRecall:
-        testStats["Precision"] = precisionRecalls[0, :]  # TODO: ARE THESE SLICES THE CORRECT WAY ROUND? CHECK IT!!!
-        testStats["Recall"] = precisionRecalls[1, :]  # TODO: ARE THESE SLICES THE CORRECT WAY ROUND? CHECK IT!!!
-    if useF1Score:
-        testStats["F1List"] = F1Scores
-    if useMinMax:
-        testStats["MaxAccuracy"] = max(accuracyPercents)
-        testStats["MinAccuracy"] = min(accuracyPercents)
-    if useAverageF1:
-        testStats["AverageF1"] = sum(precisionRecalls) / len(precisionRecalls)
+    testStats["AverageAccuracy"] = round(sum(accuracyPercents) / len(accuracyPercents), 3)
+    testStats["AccuracyVariance"] = round(getAccuracyVariance(accuracyPercents), 3)
+    testStats["MaxAccuracy"] = round(max(accuracyPercents), 3)
+    testStats["MinAccuracy"] = round(min(accuracyPercents), 3)
+    # Per CLASS stats
+    testStats["PrecisionAverages"] = precisionAverages
+    testStats["RecallAverages"] = recallAverages
+    testStats["AverageF1"] = averageF1
+    testStats["AverageClassSize"] = getAverageClassDistribution([x[1] for x in results])
 
     return testStats

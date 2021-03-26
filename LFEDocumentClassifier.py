@@ -74,6 +74,8 @@ else:
 # TODO: [PIPELINE SPLIT 5] - Run tests using the classifier, output results and statistics
 results = runTests(classifier, PRINT_PROGRESS)
 
+testStats = getTestStats(results)
+
 precisionRecalls = []
 correctPercents = []
 for result in results:

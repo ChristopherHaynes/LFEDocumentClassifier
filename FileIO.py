@@ -5,7 +5,7 @@ import csv
 from StatisticsGenerator import *
 
 
-def  writeResultsToFile(results):
+def writeResultsToFile(results):
     # If an "Output" directory doesn't exist in the working directory, then create one
     outputDirPath = '/Output'
     try:
@@ -21,4 +21,5 @@ def  writeResultsToFile(results):
             pass
         else:
             pass
+
 

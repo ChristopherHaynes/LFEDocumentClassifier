@@ -1,4 +1,5 @@
 import copy
+import math
 import numpy as np
 
 from Parameters.AllThemes import ALL_THEMES_LIST
@@ -15,6 +16,16 @@ def getAccuracyPercent(predictions, actualResults):
             correctPredictions = correctPredictions + 1
 
     return (correctPredictions / len(predictions)) * 100
+
+
+def getAccuracyVariance(accuracyPerTest):
+    averageAccuracy = sum(accuracyPerTest) / len(accuracyPerTest)
+
+    squaredSumDifferences = 0
+    for accuracy in accuracyPerTest:
+        squaredSumDifferences += math.pow(accuracy - averageAccuracy, 2)
+
+    return squaredSumDifferences / len(accuracyPerTest)
 
 
 def getSortedAggregatedThemes(numericThemesList, descending=True):
@@ -46,6 +57,19 @@ def getFractionOfAllThemes(numericThemesList):
     return fractionalThemes
 
 
+def getAverageClassDistribution(actualResultsPerTest):
+    classCount = list(np.zeros(shape=(len(ALL_THEMES_LIST))))
+    for actualResults in actualResultsPerTest:
+        for result in actualResults:
+            classCount[result] += 1
+
+    averageClassCount = []
+    for count in classCount:
+        averageClassCount.append(round(count / len(actualResultsPerTest), 3))
+
+    return averageClassCount
+
+
 def getAverageF1Score(predictions, actualResults):
     precisionRecalls = getPrecisionRecall(predictions, actualResults)
     sumF1 = 0
@@ -60,7 +84,7 @@ def getF1Score(precision, recall):
     return 2 * ((precision * recall) / (precision + recall))
 
 
-# TODO: Final returned values for average precision and recall appear to always be the same. Why?
+# TODO: Final returned values for average precision and recall appear to always be the same. DON'T TRUST THIS METHOD.
 def getAveragePrecisionRecall(predictions, actualResults):
     confusionMatrix = computeConfusionMatrix(predictions, actualResults)
     sumTruePositives = 0
@@ -75,6 +99,22 @@ def getAveragePrecisionRecall(predictions, actualResults):
     averagePrecision = sumTruePositives / (sumTruePositives + sumFalsePositives)
     averageRecall = sumTruePositives / (sumTruePositives + sumFalseNegatives)
     return [averagePrecision, averageRecall]
+
+
+def getAveragePrecisionRecallPerClass(precisionRecallsPerTest):
+    precisionAverages = list(np.zeros(shape=(len(ALL_THEMES_LIST))))
+    recallAverages = list(np.zeros(shape=(len(ALL_THEMES_LIST))))
+
+    for precisionRecallPerClass in precisionRecallsPerTest:
+        for i in range(len(precisionRecallPerClass)):
+            precisionAverages[i] += precisionRecallPerClass[i][0]
+            recallAverages[i] += precisionRecallPerClass[i][1]
+
+    for i in range(len(precisionAverages)):
+        precisionAverages[i] = round(precisionAverages[i] / len(precisionRecallsPerTest), 3)
+        recallAverages[i] = round(recallAverages[i] / len(precisionRecallsPerTest), 3)
+
+    return precisionAverages, recallAverages
 
 
 def getPrecisionRecall(predictions, actualResults):
