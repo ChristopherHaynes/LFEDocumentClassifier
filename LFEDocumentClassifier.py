@@ -7,6 +7,7 @@ from FeatureCreation import *
 from Classifiers import *
 from TestManager import *
 from StatisticsGenerator import *
+from FileIO import *
 
 # GLOBAL VARIABLES
 themePairs = []      # List of tuples, where the first item contains text and the second contains corresponding themes
@@ -62,7 +63,7 @@ for pair in themePairs:
 # TODO: [PIPELINE SPLIT 4] - Determine which classifier to use and how to initialise it
 # Populate "classifier" with the chosen classifier and initialise any hyper-parameters
 if CLASSIFIER_NAME == 'knn':
-    classifier = KNNClassifier(featuresMasks, targetMasks, TEST_SIZE, RANDOM_STATE, N_NEIGHBOURS, WEIGHTS, ALGORITHM)
+    classifier = KNNClassifier(featuresMasks, targetMasks, TEST_GROUP_SIZE, RANDOM_STATE, N_NEIGHBOURS, WEIGHTS, ALGORITHM)
 
 elif CLASSIFIER_NAME == 'cnb':
     classifier = ComplementNaiveBayes(featuresMasks, targetMasks)
@@ -72,21 +73,15 @@ else:
     breakpoint()
 
 # TODO: [PIPELINE SPLIT 5] - Run tests using the classifier, output results and statistics
-results = runTests(classifier, PRINT_PROGRESS)
+for test in range(TEST_RUNS):
+    results = runTests(classifier, PRINT_PROGRESS)
+    testStats = getTestStats(results)
 
-testStats = getTestStats(results)
+    if PRINT_PROGRESS:
+        for name, value in testStats.items():
+            print(name + ": " + str(value))
 
-precisionRecalls = []
-correctPercents = []
-for result in results:
-    correctPercents.append(getAccuracyPercent(result[0], result[1]))
-    precisionRecalls.append(getAverageF1Score(result[0], result[1]))
-
-averageRes = sum(correctPercents) / len(correctPercents)
-averageF1 = sum(precisionRecalls) / len(precisionRecalls)
-print("Average accuracy of " + str(averageRes) + "%")
-print("Average F1 of " + str(averageF1))
-# TEST_gaussianMixture(featuresMasks, targetMasks)
-# TEST_kmeans(featuresMasks, targetMasks)
+    if SAVE_STATS_TO_FILE:
+        writeStatsToFile(testStats, SAVE_FILE_NAME)
 
 pass
