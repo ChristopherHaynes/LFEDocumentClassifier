@@ -5,13 +5,13 @@ from .PreProcessingMethods import *
 
 
 class TermFrequency:
-    def __init__(self, themePairs, REMOVE_STOPWORDS, STEM_TEXT):
+    def __init__(self, themePairs, deleteStopWords, stemmingOnText):
         self.themePairs = copy.deepcopy(themePairs)
 
         self.themePairs = splitOnSentenceAndWords(self.themePairs)
-        if REMOVE_STOPWORDS:
+        if deleteStopWords:
             self.themePairs = removeStopWords(self.themePairs)
-        if STEM_TEXT:
+        if stemmingOnText:
             self.themePairs = stemText(self.themePairs)
 
     def getAllTermCountsPerDocument(self):

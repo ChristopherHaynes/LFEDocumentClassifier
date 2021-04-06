@@ -19,9 +19,10 @@ KEYWORD_THRESHOLD = 4     # Value for the threshold at which keywords will be ig
 
 # ----------------------------------------- CLASSIFIER PARAMETERS ------------------------------------------------
 # General Classifier parameters
-CLASSIFIER_NAME = 'cnb'     # Type of classifier to use. VALID: 'knn', 'cnb'
-TEST_GROUP_SIZE = 0.25        # Fraction to split into the test group when performing a test/train split
-RANDOM_STATE = None     # Seed used for random number generation VALID: None, Int
+CLASSIFIER_NAME = 'cnb'                # Type of classifier to use. VALID: 'knn', 'cnb'
+USE_MULTI_LABEL_CLASSIFICATION = True  # Allow multiple labels to be assigned per item
+TEST_GROUP_SIZE = 0.25                 # Fraction to split into the test group when performing a test/train split
+RANDOM_STATE = None                    # Seed used for random number generation VALID: None, Int
 
 # K-NN parameters
 N_NEIGHBOURS = 15       # Number of neighbours used when classifying.
@@ -35,4 +36,4 @@ PRINT_PROGRESS = True   # Print the current test progress details to the console
 
 # ------------------------------------- RESULTS AND STATS PARAMETERS --------------------------------------------
 SAVE_STATS_TO_FILE = True          # Should the resultant statistics be written to a CSV file
-SAVE_FILE_NAME = "testStats.csv"   # Filename to write the results to (found in "./Output/<SAVE_FILE_NAME>)
+SAVE_FILE_NAME = "testStats.csv"   # Filename where results are written (found in "./Output/<SAVE_FILE_NAME>)

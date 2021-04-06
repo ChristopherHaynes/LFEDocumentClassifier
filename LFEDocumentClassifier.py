@@ -25,7 +25,7 @@ dataFile = pd.read_excel(DATA_FILE_PATH, engine='openpyxl')
 pp = PreProcessor(dataFile, themePairs)
 pp.cleanText(REMOVE_NUMERIC, REMOVE_SINGLE_LETTERS, REMOVE_KEYWORDS, REMOVE_EXTRA_SPACES)
 
-# TODO: [PIPELINE SPLIT 2] - Finish determination of keyword IDing method
+# TODO: [PIPELINE SPLIT 2] - Finish determination of word embedding method
 if KEYWORD_ID_METHOD == 'rake':
     r = Rake()
     for i in range(len(themePairs)):
@@ -56,17 +56,23 @@ print(len(bagOfWords))
 for scoredPairs in wordEmbeddings:
     featuresMasks.append(generateFeatureMask(bagOfWords, scoredPairs))
 
+# TODO: Add pipeline option for multi theme training (Maybe not required?)
 # Encode the target themes into numeric values for classification
 for pair in themePairs:
-    targetMasks.append(encodePrimaryThemeToValue(pair[1]))
+    if USE_MULTI_LABEL_CLASSIFICATION:
+        targetMasks.append(encodeThemesToValues(pair[1]))
+    else:
+        targetMasks.append(encodePrimaryThemeToValue(pair[1]))
+
 
 # TODO: [PIPELINE SPLIT 4] - Determine which classifier to use and how to initialise it
 # Populate "classifier" with the chosen classifier and initialise any hyper-parameters
 if CLASSIFIER_NAME == 'knn':
+    # TODO: Add multi-label classification to KNN
     classifier = KNNClassifier(featuresMasks, targetMasks, TEST_GROUP_SIZE, RANDOM_STATE, N_NEIGHBOURS, WEIGHTS, ALGORITHM)
 
 elif CLASSIFIER_NAME == 'cnb':
-    classifier = ComplementNaiveBayes(featuresMasks, targetMasks)
+    classifier = ComplementNaiveBayes(featuresMasks, targetMasks, USE_MULTI_LABEL_CLASSIFICATION)
 
 else:
     print("ERROR - Invalid classifier name chosen")

@@ -26,6 +26,7 @@ def writeStatsToFile(testStats, fileName='testStats.csv'):
             csvWriter.writerow(headers)
         for row in range(1, 5):
             csvWriter.writerow(generateRowData(testStats, row))
+        csvWriter.writerow("")
 
 
 def generateRowData(testStats, rowID):

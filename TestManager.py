@@ -2,13 +2,15 @@ from StatisticsGenerator import *
 from Parameters import *
 
 
+# TODO: Add multi class classifier branching options
 def runTests(classifier, printProgress=False):
     results = []
     print("Starting " + str(EPOCHS) + " epochs using " + classifier.name + " classifier.")
     for epoch in range(0, EPOCHS):
         classifier.splitTestTrainData()
         classifier.train()
-        results.append(classifier.classifySingleClass())
+        # results.append(classifier.classifySingleClass())
+        results.append(classifier.classifyMultiClass())
         if printProgress:
             print("Completed epoch " + str(epoch + 1))
     return results
