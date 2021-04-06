@@ -74,6 +74,9 @@ if CLASSIFIER_NAME == 'knn':
 elif CLASSIFIER_NAME == 'cnb':
     classifier = ComplementNaiveBayes(featuresMasks, targetMasks, USE_MULTI_LABEL_CLASSIFICATION)
 
+elif CLASSIFIER_NAME == 'nn':
+    classifier = NeuralNet(featuresMasks, targetMasks)
+
 else:
     print("ERROR - Invalid classifier name chosen")
     breakpoint()
@@ -81,7 +84,11 @@ else:
 # TODO: [PIPELINE SPLIT 5] - Run tests using the classifier, output results and statistics
 for test in range(TEST_RUNS):
     results = runTests(classifier, PRINT_PROGRESS)
-    testStats = getTestStats(results)
+
+    if USE_MULTI_LABEL_CLASSIFICATION:
+        testStats = getMultiLabelTestStats(results)
+    else:
+        testStats = getTestStats(results)
 
     if PRINT_PROGRESS:
         for name, value in testStats.items():

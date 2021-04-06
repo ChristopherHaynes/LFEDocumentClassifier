@@ -9,11 +9,30 @@ def runTests(classifier, printProgress=False):
     for epoch in range(0, EPOCHS):
         classifier.splitTestTrainData()
         classifier.train()
-        # results.append(classifier.classifySingleClass())
-        results.append(classifier.classifyMultiClass())
+        if USE_MULTI_LABEL_CLASSIFICATION:
+            results.append(classifier.classifyMultiClass())
+        else:
+            results.append(classifier.classifySingleClass())
         if printProgress:
             print("Completed epoch " + str(epoch + 1))
     return results
+
+
+def getMultiLabelTestStats(results):
+    testStats = dict()
+
+    accuracyPercents = []
+    for result in results:
+        accuracyPercents.append(getMultiThemeAccuracy(result[0], result[1]))
+
+    # Per TEST stats
+    testStats["Epochs"] = EPOCHS
+    testStats["AverageAccuracy"] = round(sum(accuracyPercents) / len(accuracyPercents), 3)
+    testStats["AccuracyVariance"] = round(getAccuracyVariance(accuracyPercents), 3)
+    testStats["MaxAccuracy"] = round(max(accuracyPercents), 3)
+    testStats["MinAccuracy"] = round(min(accuracyPercents), 3)
+
+    return testStats
 
 
 def getTestStats(results):

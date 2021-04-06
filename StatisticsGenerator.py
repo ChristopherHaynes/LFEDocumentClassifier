@@ -139,3 +139,14 @@ def computeConfusionMatrix(predictions, actualResults):
         confusionMatrix[predictions[i], actualResults[i]] += 1
 
     return confusionMatrix
+
+
+def getMultiThemeAccuracy(predictions, actualResults):
+    correctPredictions = 0
+    for i in range(len(predictions)):
+        for prediction in predictions[i]:
+            if prediction in actualResults[i]:
+                correctPredictions += 1
+                break
+
+    return (correctPredictions / len(predictions)) * 100

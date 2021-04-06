@@ -26,6 +26,7 @@ class ComplementNaiveBayes(AbstractClassifier):
 
     def classifyMultiClass(self):
         logPredictionValues = self.classifier.predict_log_proba(self.XTest)
+        self.predictions = []
         for testNumber in range(len(logPredictionValues[:, 0])):
             topThreeClasses = []
             testResults = logPredictionValues[testNumber]
