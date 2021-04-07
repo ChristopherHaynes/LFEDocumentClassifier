@@ -65,6 +65,8 @@ def convertClassifierAbbreviation():
         return "K Nearest Neighbors"
     elif CLASSIFIER_NAME == "cnb":
         return "Compliment Naive Bayes"
+    elif CLASSIFIER_NAME == "nn":
+        return "Sequential Neural Network"
     else:
         return "UNDEFINED"
 

@@ -72,10 +72,10 @@ if CLASSIFIER_NAME == 'knn':
     classifier = KNNClassifier(featuresMasks, targetMasks, TEST_GROUP_SIZE, RANDOM_STATE, N_NEIGHBOURS, WEIGHTS, ALGORITHM)
 
 elif CLASSIFIER_NAME == 'cnb':
-    classifier = ComplementNaiveBayes(featuresMasks, targetMasks, USE_MULTI_LABEL_CLASSIFICATION)
+    classifier = ComplementNaiveBayes(featuresMasks, targetMasks, USE_MULTI_LABEL_CLASSIFICATION, TEST_GROUP_SIZE, RANDOM_STATE)
 
 elif CLASSIFIER_NAME == 'nn':
-    classifier = NeuralNet(featuresMasks, targetMasks)
+    classifier = NeuralNet(featuresMasks, targetMasks, TEST_GROUP_SIZE, RANDOM_STATE, NN_BATCH_SIZE, NN_INTERNAL_EPOCHS, NN_BIAS)
 
 else:
     print("ERROR - Invalid classifier name chosen")
