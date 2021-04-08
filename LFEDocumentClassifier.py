@@ -7,7 +7,6 @@ from WordEmbedding import *
 from FeatureCreation import *
 from Classifiers import *
 from TestManager import *
-from StatisticsGenerator import *
 from FileIO import *
 
 # Handle command line arguments and set program parameters
@@ -28,7 +27,7 @@ if USE_CLI_ARGUMENTS:
     NN_INTERNAL_EPOCHS = args.nnEpochs
     SVM_KERNEL = args.svmKernel
     SVM_DEGREE = args.svmDegree
-    SVM_CLASS_WEIGHT = args.svmClassWeight
+    SVM_CLASS_WEIGHT = None if args.svmClassWeight is False else 'balanced'
 
 # GLOBAL VARIABLES
 themePairs = []      # List of tuples, where the first item contains text and the second contains corresponding themes
@@ -71,7 +70,7 @@ else:
 
 # TODO: [PIPELINE SPLIT 3] - Build features from keywords/text
 bagOfWords = generateBagOfWords(wordEmbeddings, USE_THRESHOLD, KEYWORD_THRESHOLD)
-print("Total Features: " + len(bagOfWords))
+print("Total Features: " + str(len(bagOfWords)))
 
 # Generate the feature masks which will make up the training features for classification
 for scoredPairs in wordEmbeddings:
