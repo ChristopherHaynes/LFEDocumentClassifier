@@ -1,5 +1,6 @@
 # ------------------------------------------ GENERAL PARAMETERS --------------------------------------------------
 DATA_FILE_PATH = "C:\\Users\\Chris\\Desktop\\Data\\lfeData.xlsx"
+USE_CLI_ARGUMENTS = True      # Enable/Disable the CLI argument parser for overwriting these parameters
 
 # --------------------------------------- PRE PROCESSING PARAMETERS ----------------------------------------------
 REMOVE_NUMERIC = True            # Remove any numeric characters or numeric punctuation from the text

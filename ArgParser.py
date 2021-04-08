@@ -1,7 +1,5 @@
 import argparse
 
-from .Parameters import *
-
 classifierNames = ['knn', 'cnb', 'nn', 'svm']
 wordEmbeddingMethods = ['rake', 'text_rank', 'word_count', 'tf_idf']
 knnWeights = ['uniform', 'distance']
@@ -20,6 +18,8 @@ def validateInput(userInput, validOptions):
         userInput = input('')
         if userInput in validOptions:
             valid = True
+
+    return userInput
 
 
 def collectCommandLineArguments():
@@ -50,6 +50,9 @@ def collectCommandLineArguments():
                         default=False,
                         action='store_const',
                         const=True)
+    parser.add_argument('-fn', '--fileName',
+                        help='The name of the CSV file holding the results',
+                        default='testStats.csv')
 
     # Preprocessing argument flags
     # parser.add_argument('-rn', '--removeNumeric',
@@ -112,7 +115,7 @@ def collectCommandLineArguments():
                         help='The initial degree used with the polynomial kernel',
                         type=int,
                         default=3)
-    parser.add_argument('-sw', '--svmClassWeight',
+    parser.add_argument('-sc', '--svmClassWeight',
                         help='Should the class weights be proportional balanced',
                         default=False,
                         action='store_const',
@@ -122,9 +125,9 @@ def collectCommandLineArguments():
     args = parser.parse_args()
 
     # Check validity of all inputs
-    validateInput(args.classifier, classifierNames)
-    validateInput(args.wordEmbedding, wordEmbeddingMethods)
-    validateInput(args.knnWeight, knnWeights)
-    validateInput(args.svmKernel, svmKernels)
+    args.classifier = validateInput(args.classifier, classifierNames)
+    args.wordEmbedding = validateInput(args.wordEmbedding, wordEmbeddingMethods)
+    args.knnWeight = validateInput(args.knnWeight, knnWeights)
+    args.svmKernel = validateInput(args.svmKernel, svmKernels)
 
     return args

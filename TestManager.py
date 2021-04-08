@@ -1,15 +1,14 @@
 from StatisticsGenerator import *
-from Parameters import *
 
 
 # TODO: Add multi class classifier branching options
-def runTests(classifier, printProgress=False):
+def runTests(classifier, epochs, useMultiLabelClassification, printProgress=False):
     results = []
-    print("Starting " + str(EPOCHS) + " epochs using " + classifier.name + " classifier.")
-    for epoch in range(0, EPOCHS):
+    print("Starting " + str(epochs) + " epochs using " + classifier.name + " classifier.")
+    for epoch in range(0, epochs):
         classifier.splitTestTrainData()
         classifier.train()
-        if USE_MULTI_LABEL_CLASSIFICATION:
+        if useMultiLabelClassification:
             results.append(classifier.classifyMultiClass())
         else:
             results.append(classifier.classifySingleClass())
@@ -18,7 +17,7 @@ def runTests(classifier, printProgress=False):
     return results
 
 
-def getMultiLabelTestStats(results):
+def getMultiLabelTestStats(results, epochs):
     testStats = dict()
 
     accuracyPercents = []
@@ -26,7 +25,7 @@ def getMultiLabelTestStats(results):
         accuracyPercents.append(getMultiThemeAccuracy(result[0], result[1]))
 
     # Per TEST stats
-    testStats["Epochs"] = EPOCHS
+    testStats["Epochs"] = epochs
     testStats["AverageAccuracy"] = round(sum(accuracyPercents) / len(accuracyPercents), 3)
     testStats["AccuracyVariance"] = round(getAccuracyVariance(accuracyPercents), 3)
     testStats["MaxAccuracy"] = round(max(accuracyPercents), 3)
@@ -35,7 +34,7 @@ def getMultiLabelTestStats(results):
     return testStats
 
 
-def getTestStats(results):
+def getTestStats(results, epochs):
     testStats = dict()
 
     accuracyPercents = []
@@ -50,7 +49,7 @@ def getTestStats(results):
         averageF1.append(round(getF1Score(precisionAverages[i], recallAverages[i]), 3))
 
     # Per TEST stats
-    testStats["Epochs"] = EPOCHS
+    testStats["Epochs"] = epochs
     testStats["AverageAccuracy"] = round(sum(accuracyPercents) / len(accuracyPercents), 3)
     testStats["AccuracyVariance"] = round(getAccuracyVariance(accuracyPercents), 3)
     testStats["MaxAccuracy"] = round(max(accuracyPercents), 3)

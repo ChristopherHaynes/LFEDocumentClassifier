@@ -11,22 +11,24 @@ from StatisticsGenerator import *
 from FileIO import *
 
 # Handle command line arguments and set program parameters
-args = collectCommandLineArguments()
-CLASSIFIER_NAME = args.classifier
-WORD_EMBEDDING_METHOD = args.wordEmbedding
-TEST_RUNS = args.testRuns
-EPOCHS = args.epochs
-USE_MULTI_LABEL_CLASSIFICATION = args.multiLabel
-SAVE_STATS_TO_FILE = args.save
-REMOVE_STOPWORDS = args.removeStopWords
-STEM_TEXT = args.stemText
-KNN_NEIGHBOURS = args.knnNeighbours
-KNN_WEIGHTS = args.knnWeight
-NN_BATCH_SIZE = args.nnBatchSize
-NN_INTERNAL_EPOCHS = args.nnEpochs
-SVM_KERNEL = args.svmKernel
-SVM_DEGREE = args.svmDegree
-SVM_CLASS_WEIGHT = args.svmClassWeight
+if USE_CLI_ARGUMENTS:
+    args = collectCommandLineArguments()
+    CLASSIFIER_NAME = args.classifier
+    WORD_EMBEDDING_METHOD = args.wordEmbedding
+    TEST_RUNS = args.testRuns
+    EPOCHS = args.epochs
+    USE_MULTI_LABEL_CLASSIFICATION = args.multiLabel
+    SAVE_STATS_TO_FILE = args.save
+    SAVE_FILE_NAME = args.fileName
+    REMOVE_STOPWORDS = args.removeStopWords
+    STEM_TEXT = args.stemText
+    KNN_NEIGHBOURS = args.knnNeighbours
+    KNN_WEIGHTS = args.knnWeight
+    NN_BATCH_SIZE = args.nnBatchSize
+    NN_INTERNAL_EPOCHS = args.nnEpochs
+    SVM_KERNEL = args.svmKernel
+    SVM_DEGREE = args.svmDegree
+    SVM_CLASS_WEIGHT = args.svmClassWeight
 
 # GLOBAL VARIABLES
 themePairs = []      # List of tuples, where the first item contains text and the second contains corresponding themes
@@ -69,7 +71,7 @@ else:
 
 # TODO: [PIPELINE SPLIT 3] - Build features from keywords/text
 bagOfWords = generateBagOfWords(wordEmbeddings, USE_THRESHOLD, KEYWORD_THRESHOLD)
-print(len(bagOfWords))
+print("Total Features: " + len(bagOfWords))
 
 # Generate the feature masks which will make up the training features for classification
 for scoredPairs in wordEmbeddings:
@@ -125,12 +127,12 @@ else:
 
 # TODO: [PIPELINE SPLIT 5] - Run tests using the classifier, output results and statistics
 for test in range(TEST_RUNS):
-    results = runTests(classifier, PRINT_PROGRESS)
+    results = runTests(classifier, EPOCHS, USE_MULTI_LABEL_CLASSIFICATION, PRINT_PROGRESS)
 
     if USE_MULTI_LABEL_CLASSIFICATION:
-        testStats = getMultiLabelTestStats(results)
+        testStats = getMultiLabelTestStats(results, EPOCHS)
     else:
-        testStats = getTestStats(results)
+        testStats = getTestStats(results, EPOCHS)
 
     if PRINT_PROGRESS:
         for name, value in testStats.items():
