@@ -48,13 +48,13 @@ def generateRowData(testStats, rowID):
 
 
 def convertWordEmbeddingAbbreviation():
-    if KEYWORD_ID_METHOD == "rake":
+    if WORD_EMBEDDING_METHOD == "rake":
         return "Rapid Automatic Keyword Extraction"
-    elif KEYWORD_ID_METHOD == "text_rank":
+    elif WORD_EMBEDDING_METHOD == "text_rank":
         return "Text Rank"
-    elif KEYWORD_ID_METHOD == "word_count":
+    elif WORD_EMBEDDING_METHOD == "word_count":
         return "Word Count"
-    elif KEYWORD_ID_METHOD == "tf_idf":
+    elif WORD_EMBEDDING_METHOD == "tf_idf":
         return "Term Frequency Inverse Document Frequency"
     else:
         return "UNDEFINED"

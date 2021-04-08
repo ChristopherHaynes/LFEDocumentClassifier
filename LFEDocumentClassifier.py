@@ -1,6 +1,7 @@
 import pandas as pd
 from rake_nltk import Rake
 
+from ArgParser import *
 from PreProcessor import *
 from WordEmbedding import *
 from FeatureCreation import *
@@ -8,6 +9,24 @@ from Classifiers import *
 from TestManager import *
 from StatisticsGenerator import *
 from FileIO import *
+
+# Handle command line arguments and set program parameters
+args = collectCommandLineArguments()
+CLASSIFIER_NAME = args.classifier
+WORD_EMBEDDING_METHOD = args.wordEmbedding
+TEST_RUNS = args.testRuns
+EPOCHS = args.epochs
+USE_MULTI_LABEL_CLASSIFICATION = args.multiLabel
+SAVE_STATS_TO_FILE = args.save
+REMOVE_STOPWORDS = args.removeStopWords
+STEM_TEXT = args.stemText
+KNN_NEIGHBOURS = args.knnNeighbours
+KNN_WEIGHTS = args.knnWeight
+NN_BATCH_SIZE = args.nnBatchSize
+NN_INTERNAL_EPOCHS = args.nnEpochs
+SVM_KERNEL = args.svmKernel
+SVM_DEGREE = args.svmDegree
+SVM_CLASS_WEIGHT = args.svmClassWeight
 
 # GLOBAL VARIABLES
 themePairs = []      # List of tuples, where the first item contains text and the second contains corresponding themes
@@ -26,21 +45,21 @@ pp = PreProcessor(dataFile, themePairs)
 pp.cleanText(REMOVE_NUMERIC, REMOVE_SINGLE_LETTERS, REMOVE_KEYWORDS, REMOVE_EXTRA_SPACES)
 
 # TODO: [PIPELINE SPLIT 2] - Finish determination of word embedding method
-if KEYWORD_ID_METHOD == 'rake':
+if WORD_EMBEDDING_METHOD == 'rake':
     r = Rake()
     for i in range(len(themePairs)):
         r.extract_keywords_from_text(themePairs[i][0])
         wordEmbeddings.append(r.get_ranked_phrases_with_scores())
 
-elif KEYWORD_ID_METHOD == 'text_rank':
+elif WORD_EMBEDDING_METHOD == 'text_rank':
     tr = TextRank(themePairs)
     wordEmbeddings = tr.getAllKeywords()
 
-elif KEYWORD_ID_METHOD == 'word_count':
+elif WORD_EMBEDDING_METHOD == 'word_count':
     tf = TermFrequency(themePairs, REMOVE_STOPWORDS, STEM_TEXT)
     wordEmbeddings = tf.getAllTermCountsPerDocument()
 
-elif KEYWORD_ID_METHOD == 'tf_idf':
+elif WORD_EMBEDDING_METHOD == 'tf_idf':
     tf = TermFrequency(themePairs, REMOVE_STOPWORDS, STEM_TEXT)
     wordEmbeddings = tf.generateAllTFIDFValues()
 
