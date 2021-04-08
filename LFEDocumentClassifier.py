@@ -69,13 +69,36 @@ for pair in themePairs:
 # Populate "classifier" with the chosen classifier and initialise any hyper-parameters
 if CLASSIFIER_NAME == 'knn':
     # TODO: Add multi-label classification to KNN
-    classifier = KNNClassifier(featuresMasks, targetMasks, TEST_GROUP_SIZE, RANDOM_STATE, N_NEIGHBOURS, WEIGHTS, ALGORITHM)
+    classifier = KNNClassifier(featuresMasks, targetMasks,
+                               TEST_GROUP_SIZE,
+                               RANDOM_STATE,
+                               KNN_NEIGHBOURS,
+                               KNN_WEIGHTS,
+                               KNN_ALGORITHM)
 
 elif CLASSIFIER_NAME == 'cnb':
-    classifier = ComplementNaiveBayes(featuresMasks, targetMasks, USE_MULTI_LABEL_CLASSIFICATION, TEST_GROUP_SIZE, RANDOM_STATE)
+    classifier = ComplementNaiveBayes(featuresMasks, targetMasks,
+                                      USE_MULTI_LABEL_CLASSIFICATION,
+                                      TEST_GROUP_SIZE,
+                                      RANDOM_STATE)
 
 elif CLASSIFIER_NAME == 'nn':
-    classifier = NeuralNet(featuresMasks, targetMasks, TEST_GROUP_SIZE, RANDOM_STATE, NN_BATCH_SIZE, NN_INTERNAL_EPOCHS, NN_BIAS)
+    classifier = NeuralNet(featuresMasks, targetMasks,
+                           TEST_GROUP_SIZE,
+                           RANDOM_STATE,
+                           NN_BATCH_SIZE,
+                           NN_INTERNAL_EPOCHS,
+                           NN_BIAS)
+
+elif CLASSIFIER_NAME == 'svm':
+    classifier = SupportVectorMachine(featuresMasks, targetMasks,
+                                      USE_MULTI_LABEL_CLASSIFICATION,
+                                      TEST_GROUP_SIZE,
+                                      RANDOM_STATE,
+                                      SVM_KERNEL,
+                                      SVM_DEGREE,
+                                      SVM_CLASS_WEIGHT,
+                                      SVM_DECISION_SHAPE)
 
 else:
     print("ERROR - Invalid classifier name chosen")
