@@ -2,13 +2,13 @@ from pathlib import Path
 import os
 import csv
 
-from Parameters import *
+from Parameters.AllThemes import ALL_THEMES_LIST
 
 headers = ["ClassifierName", "WordEmbeddingMethod", "StopWordsRemoved", "WordsStemmed", "Epochs", "AverageAccuracy",
            "AccuracyVariance", "MaxAccuracy", "MinAccuracy", "", "CLASS STATS:"] + ALL_THEMES_LIST
 
 
-def writeStatsToFile(testStats, fileName='testStats.csv'):
+def writeStatsToFile(testStats, fileName, classifierAbbreviation, wordEmbeddingMethod, removeStopwords, stemText):
     # If an "Output" directory doesn't exist in the working directory, then create one
     rootPath = Path(__file__).parent
     outputDirPath = (rootPath / "./Output").resolve()
@@ -25,14 +25,16 @@ def writeStatsToFile(testStats, fileName='testStats.csv'):
         if not isExistingFile:
             csvWriter.writerow(headers)
         for row in range(1, 5):
-            csvWriter.writerow(generateRowData(testStats, row))
+            csvWriter.writerow(generateRowData(testStats, row, classifierAbbreviation, wordEmbeddingMethod, removeStopwords, stemText))
         csvWriter.writerow("")
 
 
-def generateRowData(testStats, rowID):
+def generateRowData(testStats, rowID, classifierAbbreviation, wordEmbeddingMethod, removeStopwords, stemText):
     if rowID == 1:
-        rowData = [convertClassifierAbbreviation(), convertWordEmbeddingAbbreviation(), str(REMOVE_STOPWORDS),
-                   str(STEM_TEXT)]
+        rowData = [convertClassifierAbbreviation(wordEmbeddingMethod),
+                   convertWordEmbeddingAbbreviation(classifierAbbreviation),
+                   str(removeStopwords),
+                   str(stemText)]
 
         for i in range(4, 9):
             rowData.append(testStats[headers[i]])
@@ -47,28 +49,28 @@ def generateRowData(testStats, rowID):
     return rowData
 
 
-def convertWordEmbeddingAbbreviation():
-    if WORD_EMBEDDING_METHOD == "rake":
+def convertWordEmbeddingAbbreviation(wordEmbeddingMethod):
+    if wordEmbeddingMethod == "rake":
         return "Rapid Automatic Keyword Extraction"
-    elif WORD_EMBEDDING_METHOD == "text_rank":
+    elif wordEmbeddingMethod == "text_rank":
         return "Text Rank"
-    elif WORD_EMBEDDING_METHOD == "word_count":
+    elif wordEmbeddingMethod == "word_count":
         return "Word Count"
-    elif WORD_EMBEDDING_METHOD == "tf_idf":
+    elif wordEmbeddingMethod == "tf_idf":
         return "Term Frequency Inverse Document Frequency"
     else:
-        return "UNDEFINED"
+        return "UNDEFINED - " + wordEmbeddingMethod
 
 
-def convertClassifierAbbreviation():
-    if CLASSIFIER_NAME == "knn":
+def convertClassifierAbbreviation(classifierAbbreviation):
+    if classifierAbbreviation == "knn":
         return "K Nearest Neighbors"
-    elif CLASSIFIER_NAME == "cnb":
+    elif classifierAbbreviation == "cnb":
         return "Compliment Naive Bayes"
-    elif CLASSIFIER_NAME == "nn":
+    elif classifierAbbreviation == "nn":
         return "Sequential Neural Network"
     else:
-        return "UNDEFINED"
+        return "UNDEFINED - " + classifierAbbreviation
 
 
 def convertRowIDToHeader(rowID):

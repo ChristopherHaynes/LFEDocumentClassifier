@@ -141,12 +141,37 @@ def computeConfusionMatrix(predictions, actualResults):
     return confusionMatrix
 
 
-def getMultiThemeAccuracy(predictions, actualResults):
+# Do ANY of the predictions match the CLASS of the actual themes (non-dependant on order)
+def getMultiThemeLooseAccuracy(predictions, actualResults):
     correctPredictions = 0
     for i in range(len(predictions)):
         for prediction in predictions[i]:
             if prediction in actualResults[i]:
                 correctPredictions += 1
                 break
+
+    return (correctPredictions / len(predictions)) * 100
+
+
+# What percentage of the predictions match any CLASS of the actual themes (non-dependant on order)
+def getMultiThemeMidAccuracy(predictions, actualResults):
+    correctPredictions = 0
+    for i in range(len(predictions)):
+        shortestListLength = len(predictions[i]) if len(predictions[i]) <= len(actualResults[i]) else len(actualResults[i])
+        for j in range(shortestListLength):
+            if predictions[i][j] in actualResults[i]:
+                correctPredictions += 1/shortestListLength
+
+    return (correctPredictions / len(predictions)) * 100
+
+
+# Does EACH prediction match the CLASS and POSITION of the actual themes (dependant on order)
+def getMultiThemePerfectAccuracy(predictions, actualResults):
+    correctPredictions = 0
+    for i in range(len(predictions)):
+        shortestListLength = len(predictions[i]) if len(predictions[i]) <= len(actualResults[i]) else len(actualResults[i])
+        for j in range(shortestListLength):
+            if predictions[i][j] == actualResults[i][j]:
+                correctPredictions += 1/shortestListLength
 
     return (correctPredictions / len(predictions)) * 100

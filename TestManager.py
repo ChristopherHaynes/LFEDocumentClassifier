@@ -20,16 +20,30 @@ def runTests(classifier, epochs, useMultiLabelClassification, printProgress=Fals
 def getMultiLabelTestStats(results, epochs):
     testStats = dict()
 
-    accuracyPercents = []
+    accuracyPercentsLoose = []
+    accuracyPercentsMid = []
+    accuracyPercentsPerfect = []
     for result in results:
-        accuracyPercents.append(getMultiThemeAccuracy(result[0], result[1]))
+        accuracyPercentsLoose.append(getMultiThemeLooseAccuracy(result[0], result[1]))
+        accuracyPercentsMid.append(getMultiThemeMidAccuracy(result[0], result[1]))
+        accuracyPercentsPerfect.append(getMultiThemePerfectAccuracy(result[0], result[1]))
 
     # Per TEST stats
     testStats["Epochs"] = epochs
-    testStats["AverageAccuracy"] = round(sum(accuracyPercents) / len(accuracyPercents), 3)
-    testStats["AccuracyVariance"] = round(getAccuracyVariance(accuracyPercents), 3)
-    testStats["MaxAccuracy"] = round(max(accuracyPercents), 3)
-    testStats["MinAccuracy"] = round(min(accuracyPercents), 3)
+    testStats["LooseAverageAccuracy"] = round(sum(accuracyPercentsLoose) / len(accuracyPercentsLoose), 3)
+    testStats["LooseAccuracyVariance"] = round(getAccuracyVariance(accuracyPercentsLoose), 3)
+    testStats["LooseMaxAccuracy"] = round(max(accuracyPercentsLoose), 3)
+    testStats["LooseMinAccuracy"] = round(min(accuracyPercentsLoose), 3)
+
+    testStats["MidAverageAccuracy"] = round(sum(accuracyPercentsMid) / len(accuracyPercentsMid), 3)
+    testStats["MidAccuracyVariance"] = round(getAccuracyVariance(accuracyPercentsMid), 3)
+    testStats["MidMaxAccuracy"] = round(max(accuracyPercentsMid), 3)
+    testStats["MidMinAccuracy"] = round(min(accuracyPercentsMid), 3)
+
+    testStats["PerfectAverageAccuracy"] = round(sum(accuracyPercentsPerfect) / len(accuracyPercentsPerfect), 3)
+    testStats["PerfectAccuracyVariance"] = round(getAccuracyVariance(accuracyPercentsPerfect), 3)
+    testStats["PerfectMaxAccuracy"] = round(max(accuracyPercentsPerfect), 3)
+    testStats["PerfectMinAccuracy"] = round(min(accuracyPercentsPerfect), 3)
 
     return testStats
 

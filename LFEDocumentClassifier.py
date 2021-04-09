@@ -138,6 +138,6 @@ for test in range(TEST_RUNS):
             print(name + ": " + str(value))
 
     if SAVE_STATS_TO_FILE:
-        writeStatsToFile(testStats, SAVE_FILE_NAME)
+        writeStatsToFile(testStats, SAVE_FILE_NAME, CLASSIFIER_NAME, WORD_EMBEDDING_METHOD, REMOVE_STOPWORDS, STEM_TEXT)
 
 pass
