@@ -1,6 +1,8 @@
 from sklearn import model_selection
 import numpy as np
 
+from Parameters import ALL_THEMES_LIST
+
 
 class AbstractClassifier:
     def __init__(self, featureData, targetData, testSize=0.25, randomState=None):

@@ -20,8 +20,8 @@ KEYWORD_THRESHOLD = 4     # Value for the threshold at which keywords will be ig
 
 # ----------------------------------------- CLASSIFIER PARAMETERS ------------------------------------------------
 # General Classifier parameters
-CLASSIFIER_NAME = 'cnb'                 # Type of classifier to use. VALID: 'knn', 'cnb', 'nn', 'svm'
-USE_MULTI_LABEL_CLASSIFICATION = True  # Allow multiple labels to be assigned per item
+CLASSIFIER_NAME = 'knn'                 # Type of classifier to use. VALID: 'knn', 'cnb', 'nn', 'svm'
+USE_MULTI_LABEL_CLASSIFICATION = True   # Allow multiple labels to be assigned per item
 TEST_GROUP_SIZE = 0.25                  # Fraction to split into the test group when performing a test/train split
 RANDOM_STATE = None                     # Seed used for random number generation VALID: None, Int
 
@@ -43,7 +43,7 @@ SVM_DECISION_SHAPE = 'ovr'    # Whether to return a "one vs rest" ('ovr') or a "
 
 # ------------------------------------------ TESTING PARAMETERS -------------------------------------------------
 TEST_RUNS = 1          # Number of tests performed in a single program run
-EPOCHS = 10           # Number of iterations within a single test (re-split data, retrain classifier, and re-predict)
+EPOCHS = 1           # Number of iterations within a single test (re-split data, retrain classifier, and re-predict)
 PRINT_PROGRESS = True   # Print the current test progress details to the console
 
 # ------------------------------------- RESULTS AND STATS PARAMETERS --------------------------------------------

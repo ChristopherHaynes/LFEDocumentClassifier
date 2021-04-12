@@ -90,6 +90,7 @@ for pair in themePairs:
 if CLASSIFIER_NAME == 'knn':
     # TODO: Add multi-label classification to KNN
     classifier = KNNClassifier(featuresMasks, targetMasks,
+                               USE_MULTI_LABEL_CLASSIFICATION,
                                TEST_GROUP_SIZE,
                                RANDOM_STATE,
                                KNN_NEIGHBOURS,

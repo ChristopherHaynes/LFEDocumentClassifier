@@ -1,7 +1,6 @@
 from keras import Sequential, optimizers, losses, initializers, callbacks
 from keras.layers import Dense, Dropout
 
-from Parameters import ALL_THEMES_LIST
 from .AbstractClassifier import *
 
 
@@ -17,7 +16,7 @@ class NeuralNet(AbstractClassifier):
 
         self.classifier = self.createModel()
         self.name = "Sequential Neural Network"
-        self.oneHotEncodeTargets()
+        self.y = self.oneHotEncodeTargets(self.y)
 
     def createModel(self):
         outputBias = initializers.Constant(self.bias)
@@ -31,18 +30,6 @@ class NeuralNet(AbstractClassifier):
 
         return model
 
-    def oneHotEncodeTargets(self):
-        oneHotTargets = []
-        for target in self.y:
-            oneHotMask = []
-            for i in range(len(ALL_THEMES_LIST)):
-                if i == target:
-                    oneHotMask.append(1)
-                else:
-                    oneHotMask.append(0)
-            oneHotTargets.append(oneHotMask)
-        self.y = np.array(oneHotTargets)
-
     def train(self):
         super().train()
         self.classifier = self.createModel()
@@ -54,6 +41,19 @@ class NeuralNet(AbstractClassifier):
     def classifySingleClass(self):
         packagedResults = super().classifySingleClass()
         return [self.getArgMaxIndex(packagedResults[0]), self.oneHotDecodeTargets(packagedResults[1])]
+
+    @staticmethod
+    def oneHotEncodeTargets(targets):
+        oneHotTargets = []
+        for target in targets:
+            oneHotMask = []
+            for i in range(len(ALL_THEMES_LIST)):
+                if i == target:
+                    oneHotMask.append(1)
+                else:
+                    oneHotMask.append(0)
+            oneHotTargets.append(oneHotMask)
+        return np.array(oneHotTargets)
 
     @staticmethod
     def oneHotDecodeTargets(yOneHot):
@@ -74,5 +74,3 @@ class NeuralNet(AbstractClassifier):
                     themeIndexList.append(i)
                     break
         return themeIndexList
-
-
