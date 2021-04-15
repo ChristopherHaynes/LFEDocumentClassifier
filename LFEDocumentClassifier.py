@@ -42,7 +42,7 @@ dataFile = pd.read_excel(DATA_FILE_PATH, engine='openpyxl')
 
 # TODO: [PIPELINE SPLIT 1] - Determine stop list and stemming method (or disable these options)
 # Apply all pre-processing to clean text and themes
-pp = PreProcessor(dataFile, themePairs)
+pp = PreProcessor(dataFile, themePairs, GENERATE_1D_THEMES)
 pp.cleanText(REMOVE_NUMERIC, REMOVE_SINGLE_LETTERS, REMOVE_KEYWORDS, REMOVE_EXTRA_SPACES)
 
 # TODO: [PIPELINE SPLIT 2] - Finish determination of word embedding method
@@ -76,7 +76,6 @@ print("Total Features: " + str(len(bagOfWords)))
 for scoredPairs in wordEmbeddings:
     featuresMasks.append(generateFeatureMask(bagOfWords, scoredPairs))
 
-# TODO: Add pipeline option for multi theme training (Maybe not required?)
 # Encode the target themes into numeric values for classification
 for pair in themePairs:
     if USE_MULTI_LABEL_CLASSIFICATION:

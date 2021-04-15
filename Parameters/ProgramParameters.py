@@ -7,6 +7,7 @@ REMOVE_NUMERIC = True            # Remove any numeric characters or numeric punc
 REMOVE_SINGLE_LETTERS = True     # Remove any single letters (name abbreviations and prepositions) from the text
 REMOVE_KEYWORDS = False          # Remove any listed keywords from the text
 REMOVE_EXTRA_SPACES = True       # Remove any extra spaces, new line characters etc from the text
+GENERATE_1D_THEMES = False       # Split multi label themes into single one dimensional pairs (duplicate X for each y)
 
 # --------------------------------------- WORD EMBEDDING PARAMETERS ----------------------------------------------
 WORD_EMBEDDING_METHOD = 'tf_idf'    # VALID: 'rake', 'text_rank', 'word_count', 'tf_idf'
@@ -20,7 +21,7 @@ KEYWORD_THRESHOLD = 4     # Value for the threshold at which keywords will be ig
 
 # ----------------------------------------- CLASSIFIER PARAMETERS ------------------------------------------------
 # General Classifier parameters
-CLASSIFIER_NAME = 'knn'                 # Type of classifier to use. VALID: 'knn', 'cnb', 'nn', 'svm'
+CLASSIFIER_NAME = 'cnb'                 # Type of classifier to use. VALID: 'knn', 'cnb', 'nn', 'svm'
 USE_MULTI_LABEL_CLASSIFICATION = True   # Allow multiple labels to be assigned per item
 TEST_GROUP_SIZE = 0.25                  # Fraction to split into the test group when performing a test/train split
 RANDOM_STATE = None                     # Seed used for random number generation VALID: None, Int
@@ -43,7 +44,7 @@ SVM_DECISION_SHAPE = 'ovr'    # Whether to return a "one vs rest" ('ovr') or a "
 
 # ------------------------------------------ TESTING PARAMETERS -------------------------------------------------
 TEST_RUNS = 1          # Number of tests performed in a single program run
-EPOCHS = 1           # Number of iterations within a single test (re-split data, retrain classifier, and re-predict)
+EPOCHS = 200            # Number of iterations within a single test (re-split data, retrain classifier, and re-predict)
 PRINT_PROGRESS = True   # Print the current test progress details to the console
 
 # ------------------------------------- RESULTS AND STATS PARAMETERS --------------------------------------------

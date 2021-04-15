@@ -4,7 +4,7 @@ from Parameters.AllThemes import ALL_THEMES_LIST
 
 
 class PreProcessor:
-    def __init__(self, dataFile, themePairs):
+    def __init__(self, dataFile, themePairs, generateOneDimensionalThemes):
         self.rawDataFile = dataFile
         self.themePairs = themePairs  # List of tuples, first item is the text (features), second item is the theme (categories)
         self.themesCount = dict()  # Key is theme, value is number of occurrences
@@ -24,6 +24,10 @@ class PreProcessor:
 
         # Process the counts of all themes and primary themes for each pair in the theme pairs list
         self.getThemesCounts()
+
+        # Split multi labels into single one dimensional pairs
+        if generateOneDimensionalThemes:
+            self.restructurePairsForMultiLabelOneDimension()
 
     def cleanText(self, removeNumeric=True, removeSingleLetters=True, removeKeywords=True, removeExtraSpaces=True):
         if removeNumeric:
@@ -149,3 +153,10 @@ class PreProcessor:
                         continue
                 newText = newText + rawText[i]
             pair[0] = newText
+
+    def restructurePairsForMultiLabelOneDimension(self):
+        newThemePairs = []
+        for pair in self.themePairs:
+            for i in range(len(pair[1])):
+                newThemePairs.append([pair[0], pair[1][i]])
+        self.themePairs = newThemePairs
