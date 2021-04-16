@@ -81,6 +81,8 @@ def convertRowIDToHeader(rowID):
     elif rowID == 3:
         return "AverageF1"
     elif rowID == 4:
-        return "AverageClassSize"
+        return "PredictionAverageClassDistribution"
+    elif rowID == 5:
+        return "ActualAverageClassDistribution"
     else:
         return "ERROR"

@@ -57,17 +57,31 @@ def getFractionOfAllThemes(numericThemesList):
     return fractionalThemes
 
 
-def getAverageClassDistribution(actualResultsPerTest):
+def getAverageClassDistribution(themeIndicesPerTest):
     classCount = list(np.zeros(shape=(len(ALL_THEMES_LIST))))
-    for actualResults in actualResultsPerTest:
-        for result in actualResults:
-            classCount[result] += 1
+    for themeIndices in themeIndicesPerTest:
+        for themeIndex in themeIndices:
+            classCount[themeIndex] += 1
 
     averageClassCount = []
     for count in classCount:
-        averageClassCount.append(round(count / len(actualResultsPerTest), 3))
+        averageClassCount.append(round(count / len(themeIndicesPerTest), 3))
 
     return averageClassCount
+
+
+def getAverageClassProportion(themeIndicesPerTest):
+    classCount = list(np.zeros(shape=(len(ALL_THEMES_LIST))))
+    totalItemCount = len(themeIndicesPerTest) * len(themeIndicesPerTest[0])
+    for themeIndices in themeIndicesPerTest:
+        for themeIndex in themeIndices:
+            classCount[themeIndex] += 1
+
+    averageClassDistribution = []
+    for count in classCount:
+        averageClassDistribution.append(round((count / totalItemCount) * 100, 3))
+
+    return averageClassDistribution
 
 
 def getAverageF1Score(predictions, actualResults):

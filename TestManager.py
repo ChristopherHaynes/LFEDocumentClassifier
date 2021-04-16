@@ -1,7 +1,6 @@
 from StatisticsGenerator import *
 
 
-# TODO: Add multi class classifier branching options
 def runTests(classifier, epochs, useMultiLabelClassification, printProgress=False):
     results = []
     print("Starting " + str(epochs) + " epochs using " + classifier.name + " classifier.")
@@ -72,6 +71,7 @@ def getTestStats(results, epochs):
     testStats["PrecisionAverages"] = precisionAverages
     testStats["RecallAverages"] = recallAverages
     testStats["AverageF1"] = averageF1
-    testStats["AverageClassSize"] = getAverageClassDistribution([x[1] for x in results])
+    testStats["PredictionAverageClassDistribution"] = getAverageClassProportion([x[0] for x in results])
+    testStats["ActualAverageClassDistribution"] = getAverageClassProportion([x[1] for x in results])
 
     return testStats
