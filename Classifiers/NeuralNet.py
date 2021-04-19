@@ -16,7 +16,7 @@ class NeuralNet(AbstractClassifier):
 
         self.classifier = self.createModel()
         self.name = "Sequential Neural Network"
-        self.y = self.oneHotEncodeTargets(self.y)
+        self.y = self.vectorEncodeTargets(self.y)
 
     def createModel(self):
         outputBias = initializers.Constant(self.bias)
@@ -40,10 +40,27 @@ class NeuralNet(AbstractClassifier):
 
     def classifySingleClass(self):
         packagedResults = super().classifySingleClass()
-        return [self.getArgMaxIndex(packagedResults[0]), self.oneHotDecodeTargets(packagedResults[1])]
+        return [self.getArgMaxIndex(packagedResults[0]), self.vectorDecodeTargets(packagedResults[1])]
+
+    # TODO: Finish the multi-class approach method (currently C&P from Naive Bayes)
+    def classifyMultiClass(self):
+        logPredictionValues = self.classifier.predict_log_proba(self.XTest)
+        self.predictions = []
+        for testNumber in range(len(logPredictionValues[:, 0])):
+            topThreeClasses = []
+            testResults = logPredictionValues[testNumber]
+            for j in range(3):
+                for i in range(len(testResults)):
+                    if testResults[i] == max(testResults):
+                        topThreeClasses.append(i)
+                        testResults[i] = min(testResults)
+                        break
+            self.predictions.append(topThreeClasses)
+
+        return self.packageResults()
 
     @staticmethod
-    def oneHotEncodeTargets(targets):
+    def vectorEncodeTargets(targets):
         oneHotTargets = []
         for target in targets:
             oneHotMask = []
@@ -56,7 +73,7 @@ class NeuralNet(AbstractClassifier):
         return np.array(oneHotTargets)
 
     @staticmethod
-    def oneHotDecodeTargets(yOneHot):
+    def vectorDecodeTargets(yOneHot):
         themeIndexList = []
         for target in yOneHot:
             for i in range(len(target)):

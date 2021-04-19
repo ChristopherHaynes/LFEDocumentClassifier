@@ -23,6 +23,8 @@ if USE_CLI_ARGUMENTS:
     STEM_TEXT = args.stemText
     KNN_NEIGHBOURS = args.knnNeighbours
     KNN_WEIGHTS = args.knnWeight
+    KM_CLUSTERS = args.kmClusters
+    KM_N_INIT = args.kmInit
     NN_BATCH_SIZE = args.nnBatchSize
     NN_INTERNAL_EPOCHS = args.nnEpochs
     SVM_KERNEL = args.svmKernel
@@ -119,6 +121,14 @@ elif CLASSIFIER_NAME == 'svm':
                                       SVM_DEGREE,
                                       SVM_CLASS_WEIGHT,
                                       SVM_DECISION_SHAPE)
+
+elif CLASSIFIER_NAME == "km":
+    classifier = KMeans(featuresMasks, targetMasks,
+                        USE_MULTI_LABEL_CLASSIFICATION,
+                        TEST_GROUP_SIZE,
+                        RANDOM_STATE,
+                        KM_CLUSTERS,
+                        KM_N_INIT)
 
 else:
     print("ERROR - Invalid classifier name chosen")

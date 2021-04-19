@@ -24,15 +24,15 @@ def writeStatsToFile(testStats, fileName, classifierAbbreviation, wordEmbeddingM
         csvWriter = csv.writer(file)
         if not isExistingFile:
             csvWriter.writerow(headers)
-        for row in range(1, 5):
+        for row in range(1, 6):
             csvWriter.writerow(generateRowData(testStats, row, classifierAbbreviation, wordEmbeddingMethod, removeStopwords, stemText))
         csvWriter.writerow("")
 
 
 def generateRowData(testStats, rowID, classifierAbbreviation, wordEmbeddingMethod, removeStopwords, stemText):
     if rowID == 1:
-        rowData = [convertClassifierAbbreviation(wordEmbeddingMethod),
-                   convertWordEmbeddingAbbreviation(classifierAbbreviation),
+        rowData = [convertClassifierAbbreviation(classifierAbbreviation),
+                   convertWordEmbeddingAbbreviation(wordEmbeddingMethod),
                    str(removeStopwords),
                    str(stemText)]
 
@@ -69,6 +69,8 @@ def convertClassifierAbbreviation(classifierAbbreviation):
         return "Compliment Naive Bayes"
     elif classifierAbbreviation == "nn":
         return "Sequential Neural Network"
+    elif classifierAbbreviation == "svm":
+        return "Support Vector Machine"
     else:
         return "UNDEFINED - " + classifierAbbreviation
 

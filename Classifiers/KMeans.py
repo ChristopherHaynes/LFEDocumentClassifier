@@ -1,10 +1,31 @@
-from sklearn import cluster, model_selection
+from sklearn import cluster
+from .AbstractClassifier import *
 
 
-def TEST_kmeans(X, y):
-    XTrain, XTest, yTrain, yTest = model_selection.train_test_split(X, y, test_size=0.25, random_state=42)
+class KMeans(AbstractClassifier):
 
-    km = cluster.KMeans(n_clusters=24, random_state=42)
-    km.fit(XTrain)
-    kmLabels = km.labels_
-    predictions = km.predict(XTest)
+    def __init__(self,
+                 featureData,
+                 targetData,
+                 useMultiLabelClassification,
+                 testSize=0.25,
+                 randomState=None,
+                 nClusters=15,
+                 nInit=10):
+        super().__init__(featureData, targetData, testSize, randomState)
+        self.name = "K Means"
+        self.useMultiLabelClassification = useMultiLabelClassification
+        self.nClusters = nClusters
+        self.nInit = nInit
+
+    def train(self):
+        super().train()
+        self.classifier = cluster.KMeans(n_clusters=self.nClusters, n_init=self.nInit)
+        self.classifier.fit(self.XTrain)
+        print("N-Clusters = " + str(self.nClusters) + ". Train Set Score = " + str(self.classifier.score(self.XTrain)))
+        print("N-Clusters = " + str(self.nClusters) + ". Test Set Score = " + str(self.classifier.score(self.XTest)))
+
+    def classifySingleClass(self):
+        return super().classifySingleClass()
+
+

@@ -4,6 +4,7 @@ from skmultilearn.adapt import MLkNN
 
 
 class KNNClassifier(AbstractClassifier):
+
     def __init__(self,
                  featureData,
                  targetData,

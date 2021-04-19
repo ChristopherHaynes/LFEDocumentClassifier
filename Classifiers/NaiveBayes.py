@@ -3,6 +3,7 @@ from sklearn import naive_bayes
 
 
 class ComplementNaiveBayes(AbstractClassifier):
+
     def __init__(self,
                  featureData,
                  targetData,

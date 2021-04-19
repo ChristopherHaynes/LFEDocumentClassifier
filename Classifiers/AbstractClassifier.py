@@ -5,6 +5,7 @@ from Parameters import ALL_THEMES_LIST
 
 
 class AbstractClassifier:
+
     def __init__(self, featureData, targetData, testSize=0.25, randomState=None):
         # Classifier initialisation variables (only mutable on construction)
         self.name = "ABSTRACT"          # Classifier name used for reference in results

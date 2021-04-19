@@ -3,6 +3,7 @@ from sklearn import svm
 
 
 class SupportVectorMachine(AbstractClassifier):
+
     def __init__(self,
                  featureData,
                  targetData,

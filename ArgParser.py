@@ -121,6 +121,16 @@ def collectCommandLineArguments():
                         action='store_const',
                         const=True)
 
+    # KM arguments
+    parser.add_argument('-mc', '--kmClusters',
+                        help='The amount of clusters to fit to',
+                        type=int,
+                        default=24)
+    parser.add_argument('-mi', '--kmInit',
+                        help='The number of times to run the algorithm with different centroids',
+                        type=int,
+                        default=10)
+
     # Collect the arguments returned by the parser
     args = parser.parse_args()
 
