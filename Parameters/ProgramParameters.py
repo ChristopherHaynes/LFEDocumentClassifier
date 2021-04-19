@@ -7,12 +7,12 @@ REMOVE_NUMERIC = True            # Remove any numeric characters or numeric punc
 REMOVE_SINGLE_LETTERS = True     # Remove any single letters (name abbreviations and prepositions) from the text
 REMOVE_KEYWORDS = False          # Remove any listed keywords from the text
 REMOVE_EXTRA_SPACES = True       # Remove any extra spaces, new line characters etc from the text
-GENERATE_1D_THEMES = True       # Split multi label themes into single one dimensional pairs (duplicate X for each y)
+GENERATE_1D_THEMES = False       # Split multi label themes into single one dimensional pairs (duplicate X for each y)
 
 # --------------------------------------- WORD EMBEDDING PARAMETERS ----------------------------------------------
 WORD_EMBEDDING_METHOD = 'tf_idf'    # VALID: 'rake', 'text_rank', 'word_count', 'tf_idf'
-REMOVE_STOPWORDS = False            # Use the chosen stop word list to purge these words from the text (not for rake)
-STEM_TEXT = False                   # Use the chosen stemming algorithm to stem the text (not for rake)
+REMOVE_STOPWORDS = True            # Use the chosen stop word list to purge these words from the text (not for rake)
+STEM_TEXT = True                   # Use the chosen stemming algorithm to stem the text (not for rake)
 
 # -------------------------------------- FEATURE CREATION PARAMETERS ---------------------------------------------
 # Bag of words parameters
@@ -21,7 +21,7 @@ KEYWORD_THRESHOLD = 4     # Value for the threshold at which keywords will be ig
 
 # ----------------------------------------- CLASSIFIER PARAMETERS ------------------------------------------------
 # General Classifier parameters
-CLASSIFIER_NAME = 'km'                 # Type of classifier to use. VALID: 'knn', 'cnb', 'nn', 'svm', 'km'
+CLASSIFIER_NAME = 'cnb'                 # Type of classifier to use. VALID: 'knn', 'cnb', 'nn', 'svm', 'km'
 USE_MULTI_LABEL_CLASSIFICATION = False   # Allow multiple labels to be assigned per item
 TEST_GROUP_SIZE = 0.25                  # Fraction to split into the test group when performing a test/train split
 RANDOM_STATE = None                     # Seed used for random number generation VALID: None, Int
@@ -47,10 +47,10 @@ KM_CLUSTERS = 15            # Number of clusters to fit to when training
 KM_N_INIT = 10             # Number of times to run the algorithm starting with different centroids
 
 # ------------------------------------------ TESTING PARAMETERS -------------------------------------------------
-TEST_RUNS = 1           # Number of tests performed in a single program run
-EPOCHS = 5           # Number of iterations within a single test (re-split data, retrain classifier, and re-predict)
+TEST_RUNS = 3           # Number of tests performed in a single program run
+EPOCHS = 200           # Number of iterations within a single test (re-split data, retrain classifier, and re-predict)
 PRINT_PROGRESS = True   # Print the current test progress details to the console
 
 # ------------------------------------- RESULTS AND STATS PARAMETERS --------------------------------------------
 SAVE_STATS_TO_FILE = False          # Should the resultant statistics be written to a CSV file
-SAVE_FILE_NAME = "testStats.csv"   # Filename where results are written (found in "./Output/<SAVE_FILE_NAME>)
+SAVE_FILE_NAME = "cnbStandford.csv"   # Filename where results are written (found in "./Output/<SAVE_FILE_NAME>)

@@ -1,23 +1,31 @@
 import nltk as nltk
+import stanza
 import string
 import copy
 import spacy
 
 nlp = spacy.load('en_core_web_sm')
+stanza.download('en')
 
 
-def stemText(themePairs):
-    stemmer = nltk.stem.PorterStemmer()
+def stanfordNLPPreProcessor(themePairs):
     themePairsClone = copy.deepcopy(themePairs)
 
+    stanfordNLP = stanza.Pipeline('en', processors='tokenize,mwt,pos,lemma', use_gpu=True)
+
     for i in range(len(themePairsClone)):
-        newText = []
-        for sentence in themePairsClone[i][0]:
-            newSentence = []
-            for word in sentence:
-                newSentence.append(stemmer.stem(str(word)))
-            newText.append(newSentence)
-        themePairsClone[i][0] = newText
+        doc = stanfordNLP(themePairsClone[i][0])
+        newSentences = []
+        for sentence in doc.sentences:
+            words = [word.lemma for word in sentence.words]
+            newWords = []
+            for word in words:
+                if word not in string.punctuation:
+                    newWords.append(word)
+            newSentences.append(newWords)
+        themePairsClone[i][0] = newSentences
+        print(i)  # TESTING SPEED OF OPERATIONS
+
     return themePairsClone
 
 
@@ -46,6 +54,21 @@ def splitOnSentenceAndWords(themePairs):
             words = nltk.word_tokenize(sentence)
             wordAndSentence.append([word for word in words if word.isalnum()])
         pair[0] = wordAndSentence
+    return themePairsClone
+
+
+def DEPRECIATED_stemText(themePairs):
+    stemmer = nltk.stem.PorterStemmer()
+    themePairsClone = copy.deepcopy(themePairs)
+
+    for i in range(len(themePairsClone)):
+        newText = []
+        for sentence in themePairsClone[i][0]:
+            newSentence = []
+            for word in sentence:
+                newSentence.append(stemmer.stem(str(word)))
+            newText.append(newSentence)
+        themePairsClone[i][0] = newText
     return themePairsClone
 
 

@@ -3,7 +3,7 @@ import string
 from Parameters.AllThemes import ALL_THEMES_LIST
 
 
-class PreProcessor:
+class InputCleaner:
     def __init__(self, dataFile, themePairs, generateOneDimensionalThemes):
         self.rawDataFile = dataFile
         self.themePairs = themePairs  # List of tuples, first item is the text (features), second item is the theme (categories)

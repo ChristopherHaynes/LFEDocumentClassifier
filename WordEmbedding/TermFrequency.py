@@ -8,11 +8,13 @@ class TermFrequency:
     def __init__(self, themePairs, deleteStopWords, stemmingOnText):
         self.themePairs = copy.deepcopy(themePairs)
 
-        self.themePairs = splitOnSentenceAndWords(self.themePairs)
+        if stemmingOnText:
+            self.themePairs = stanfordNLPPreProcessor(self.themePairs)
+        else:
+            self.themePairs = splitOnSentenceAndWords(self.themePairs)
+
         if deleteStopWords:
             self.themePairs = removeStopWords(self.themePairs)
-        if stemmingOnText:
-            self.themePairs = stemText(self.themePairs)
 
     def getAllTermCountsPerDocument(self):
         wordEmbeddings = []

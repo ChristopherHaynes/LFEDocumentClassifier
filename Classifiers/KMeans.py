@@ -1,5 +1,26 @@
+from pathlib import Path
+import os
+import csv
 from sklearn import cluster
+
 from .AbstractClassifier import *
+
+
+def writeScoresToCSV(clusters, score, fileName='kmeanScores.csv'):
+    # If an "Output" directory doesn't exist in the working directory, then create one
+    rootPath = Path(__file__).parent
+    outputDirPath = (rootPath / "./Output").resolve()
+    try:
+        os.mkdir(outputDirPath)
+    except OSError:
+        pass
+
+    # If a results file already exists then open it, otherwise create a new file and write the headers
+    filePath = (rootPath / "./Output/" / fileName).resolve()
+    isExistingFile = filePath.is_file()
+    with open(filePath, 'a', newline='') as file:
+        csvWriter = csv.writer(file)
+        csvWriter.writerow([str(clusters), str(score)])
 
 
 class KMeans(AbstractClassifier):
@@ -24,8 +45,7 @@ class KMeans(AbstractClassifier):
         self.classifier.fit(self.XTrain)
         print("N-Clusters = " + str(self.nClusters) + ". Train Set Score = " + str(self.classifier.score(self.XTrain)))
         print("N-Clusters = " + str(self.nClusters) + ". Test Set Score = " + str(self.classifier.score(self.XTest)))
+        writeScoresToCSV(self.nClusters, self.classifier.score(self.XTrain))
 
     def classifySingleClass(self):
         return super().classifySingleClass()
-
-

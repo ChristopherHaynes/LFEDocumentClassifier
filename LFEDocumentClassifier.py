@@ -2,7 +2,7 @@ import pandas as pd
 from rake_nltk import Rake
 
 from ArgParser import *
-from PreProcessor import *
+from InputCleaner import *
 from WordEmbedding import *
 from FeatureCreation import *
 from Classifiers import *
@@ -44,7 +44,7 @@ dataFile = pd.read_excel(DATA_FILE_PATH, engine='openpyxl')
 
 # TODO: [PIPELINE SPLIT 1] - Determine stop list and stemming method (or disable these options)
 # Apply all pre-processing to clean text and themes
-pp = PreProcessor(dataFile, themePairs, GENERATE_1D_THEMES)
+pp = InputCleaner(dataFile, themePairs, GENERATE_1D_THEMES)
 pp.cleanText(REMOVE_NUMERIC, REMOVE_SINGLE_LETTERS, REMOVE_KEYWORDS, REMOVE_EXTRA_SPACES)
 
 # TODO: [PIPELINE SPLIT 2] - Finish determination of word embedding method
