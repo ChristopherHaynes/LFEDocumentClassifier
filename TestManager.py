@@ -3,11 +3,12 @@ from StatisticsGenerator import *
 
 def runTests(classifier, epochs, useMultiLabelClassification, crossValidate, folds=5, printProgress=False):
     results = []
-    print("Starting " + str(epochs) + " epochs using " + classifier.name + " classifier.")
 
     if crossValidate:
+        print("Starting cross validation testing using " + classifier.name + " classifier.")
         results = classifier.crossValidate(folds)
     else:
+        print("Starting " + str(epochs) + " epochs using " + classifier.name + " classifier.")
         for epoch in range(0, epochs):
             classifier.splitTestTrainData()
             classifier.train()

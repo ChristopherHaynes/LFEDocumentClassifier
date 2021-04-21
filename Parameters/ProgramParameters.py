@@ -1,6 +1,6 @@
 # ------------------------------------------ GENERAL PARAMETERS --------------------------------------------------
 DATA_FILE_PATH = "C:\\Users\\Chris\\Desktop\\Data\\lfeDataNamesRemoved.xlsx"
-USE_CLI_ARGUMENTS = False      # Enable/Disable the CLI argument parser for overwriting these parameters
+USE_CLI_ARGUMENTS = False     # Enable/Disable the CLI argument parser for overwriting these parameters
 
 # --------------------------------------- PRE PROCESSING PARAMETERS ----------------------------------------------
 REMOVE_NUMERIC = True            # Remove any numeric characters or numeric punctuation from the text

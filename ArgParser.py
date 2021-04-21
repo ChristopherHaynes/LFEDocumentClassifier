@@ -40,6 +40,11 @@ def collectCommandLineArguments():
                         help='The number of epochs to include in a single test',
                         type=int,
                         default=100)
+    parser.add_argument('-cv', '--crossValidate',
+                        help='Should cross validation be used',
+                        default=False,
+                        action='store_const',
+                        const=True)
     parser.add_argument('-ml', '--multiLabel',
                         help='Should each item be given multiple, tiered classifications',
                         default=False,

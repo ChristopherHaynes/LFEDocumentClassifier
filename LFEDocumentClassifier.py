@@ -16,6 +16,7 @@ if USE_CLI_ARGUMENTS:
     WORD_EMBEDDING_METHOD = args.wordEmbedding
     TEST_RUNS = args.testRuns
     EPOCHS = args.epochs
+    CROSS_VALIDATE = args.crossValidate
     USE_MULTI_LABEL_CLASSIFICATION = args.multiLabel
     SAVE_STATS_TO_FILE = args.save
     SAVE_FILE_NAME = args.fileName
