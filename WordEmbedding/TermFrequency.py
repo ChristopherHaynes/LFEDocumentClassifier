@@ -16,6 +16,8 @@ class TermFrequency:
         if deleteStopWords:
             self.themePairs = removeStopWords(self.themePairs)
 
+        pass
+
     def getAllTermCountsPerDocument(self):
         wordEmbeddings = []
         for pair in self.themePairs:

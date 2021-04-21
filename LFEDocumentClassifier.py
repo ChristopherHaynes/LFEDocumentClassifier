@@ -55,7 +55,7 @@ if WORD_EMBEDDING_METHOD == 'rake':
         wordEmbeddings.append(r.get_ranked_phrases_with_scores())
 
 elif WORD_EMBEDDING_METHOD == 'text_rank':
-    tr = TextRank(themePairs)
+    tr = TextRank(themePairs, REMOVE_STOPWORDS, STEM_TEXT)
     wordEmbeddings = tr.getAllKeywords()
 
 elif WORD_EMBEDDING_METHOD == 'word_count':
@@ -136,18 +136,29 @@ else:
 
 # TODO: [PIPELINE SPLIT 5] - Run tests using the classifier, output results and statistics
 for test in range(TEST_RUNS):
-    results = runTests(classifier, EPOCHS, USE_MULTI_LABEL_CLASSIFICATION, PRINT_PROGRESS)
+    results = runTests(classifier,
+                       EPOCHS,
+                       USE_MULTI_LABEL_CLASSIFICATION,
+                       CROSS_VALIDATE,
+                       CV_FOLDS,
+                       PRINT_PROGRESS)
 
-    if USE_MULTI_LABEL_CLASSIFICATION:
-        testStats = getMultiLabelTestStats(results, EPOCHS)
+    if CROSS_VALIDATE:
+        testStats = results
     else:
-        testStats = getTestStats(results, EPOCHS)
+        if USE_MULTI_LABEL_CLASSIFICATION:
+            testStats = getMultiLabelTestStats(results, EPOCHS)
+        else:
+            testStats = getTestStats(results, EPOCHS)
 
     if PRINT_PROGRESS:
         for name, value in testStats.items():
             print(name + ": " + str(value))
 
     if SAVE_STATS_TO_FILE:
-        writeStatsToFile(testStats, SAVE_FILE_NAME, CLASSIFIER_NAME, WORD_EMBEDDING_METHOD, REMOVE_STOPWORDS, STEM_TEXT)
+        if CROSS_VALIDATE:
+            writeDictionaryToCSV(testStats, SAVE_FILE_NAME, CLASSIFIER_NAME, WORD_EMBEDDING_METHOD, REMOVE_STOPWORDS, STEM_TEXT)
+        else:
+            writeStatsToFile(testStats, SAVE_FILE_NAME, CLASSIFIER_NAME, WORD_EMBEDDING_METHOD, REMOVE_STOPWORDS, STEM_TEXT)
 
 pass

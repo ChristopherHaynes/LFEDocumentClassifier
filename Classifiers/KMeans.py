@@ -2,11 +2,12 @@ from pathlib import Path
 import os
 import csv
 from sklearn import cluster
+from sklearn.metrics import silhouette_score
 
 from .AbstractClassifier import *
 
 
-def writeScoresToCSV(clusters, score, fileName='kmeanScores.csv'):
+def writeScoresToCSV(clusters, score, fileName='kmeanSilhouettes.csv'):
     # If an "Output" directory doesn't exist in the working directory, then create one
     rootPath = Path(__file__).parent
     outputDirPath = (rootPath / "./Output").resolve()
@@ -42,10 +43,11 @@ class KMeans(AbstractClassifier):
     def train(self):
         super().train()
         self.classifier = cluster.KMeans(n_clusters=self.nClusters, n_init=self.nInit)
-        self.classifier.fit(self.XTrain)
-        print("N-Clusters = " + str(self.nClusters) + ". Train Set Score = " + str(self.classifier.score(self.XTrain)))
-        print("N-Clusters = " + str(self.nClusters) + ". Test Set Score = " + str(self.classifier.score(self.XTest)))
-        writeScoresToCSV(self.nClusters, self.classifier.score(self.XTrain))
+        clusterLabels = self.classifier.fit_predict(self.XTrain)
+
+        print("Testing Cluster Size: " + str(self.nClusters))
+        silhouetteAverage = silhouette_score(self.XTrain, clusterLabels)
+        writeScoresToCSV(self.nClusters, silhouetteAverage)
 
     def classifySingleClass(self):
         return super().classifySingleClass()

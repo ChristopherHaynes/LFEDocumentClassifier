@@ -12,7 +12,7 @@ GENERATE_1D_THEMES = False       # Split multi label themes into single one dime
 # --------------------------------------- WORD EMBEDDING PARAMETERS ----------------------------------------------
 WORD_EMBEDDING_METHOD = 'tf_idf'    # VALID: 'rake', 'text_rank', 'word_count', 'tf_idf'
 REMOVE_STOPWORDS = True            # Use the chosen stop word list to purge these words from the text (not for rake)
-STEM_TEXT = True                   # Use the chosen stemming algorithm to stem the text (not for rake)
+STEM_TEXT = False                   # Use the chosen stemming algorithm to stem the text (not for rake)
 
 # -------------------------------------- FEATURE CREATION PARAMETERS ---------------------------------------------
 # Bag of words parameters
@@ -43,14 +43,16 @@ SVM_CLASS_WEIGHT = None       # None - no balancing of classes, 'balanced' - aut
 SVM_DECISION_SHAPE = 'ovr'    # Whether to return a "one vs rest" ('ovr') or a "one vs one" ('ovo') decision function
 
 # K-Means parameters
-KM_CLUSTERS = 15            # Number of clusters to fit to when training
+KM_CLUSTERS = 50            # Number of clusters to fit to when training
 KM_N_INIT = 10             # Number of times to run the algorithm starting with different centroids
 
 # ------------------------------------------ TESTING PARAMETERS -------------------------------------------------
+CROSS_VALIDATE = True   # Should cross validation be used (False - results in a test train split)
+CV_FOLDS = 5            # Number of folds to use in k cross fold validation
 TEST_RUNS = 3           # Number of tests performed in a single program run
-EPOCHS = 200           # Number of iterations within a single test (re-split data, retrain classifier, and re-predict)
+EPOCHS = 200            # Number of iterations within a single test (re-split data, retrain classifier, and re-predict)
 PRINT_PROGRESS = True   # Print the current test progress details to the console
 
 # ------------------------------------- RESULTS AND STATS PARAMETERS --------------------------------------------
-SAVE_STATS_TO_FILE = False          # Should the resultant statistics be written to a CSV file
-SAVE_FILE_NAME = "cnbStandford.csv"   # Filename where results are written (found in "./Output/<SAVE_FILE_NAME>)
+SAVE_STATS_TO_FILE = True          # Should the resultant statistics be written to a CSV file
+SAVE_FILE_NAME = "testCVStats.csv"   # Filename where results are written (found in "./Output/<SAVE_FILE_NAME>)

@@ -21,6 +21,10 @@ class SupportVectorMachine(AbstractClassifier):
         self.degree = degree
         self.classWeight = classWeight
         self.decisionShape = decisionShape
+        self.classifier = svm.SVC(kernel=self.kernel,
+                                  degree=self.degree,
+                                  class_weight=self.classWeight,
+                                  decision_function_shape=self.decisionShape)
 
     def train(self):
         super().train()

@@ -1,18 +1,22 @@
 from StatisticsGenerator import *
 
 
-def runTests(classifier, epochs, useMultiLabelClassification, printProgress=False):
+def runTests(classifier, epochs, useMultiLabelClassification, crossValidate, folds=5, printProgress=False):
     results = []
     print("Starting " + str(epochs) + " epochs using " + classifier.name + " classifier.")
-    for epoch in range(0, epochs):
-        classifier.splitTestTrainData()
-        classifier.train()
-        if useMultiLabelClassification:
-            results.append(classifier.classifyMultiClass())
-        else:
-            results.append(classifier.classifySingleClass())
-        if printProgress:
-            print("Completed epoch " + str(epoch + 1))
+
+    if crossValidate:
+        results = classifier.crossValidate(folds)
+    else:
+        for epoch in range(0, epochs):
+            classifier.splitTestTrainData()
+            classifier.train()
+            if useMultiLabelClassification:
+                results.append(classifier.classifyMultiClass())
+            else:
+                results.append(classifier.classifySingleClass())
+            if printProgress:
+                print("Completed epoch " + str(epoch + 1))
     return results
 
 

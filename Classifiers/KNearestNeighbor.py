@@ -20,6 +20,10 @@ class KNNClassifier(AbstractClassifier):
         self.nNeighbours = nNeighbours
         self.weights = weights
         self.algorithm = algorithm
+        if self.useMultiLabelClassification:
+            self.classifier = MLkNN(self.nNeighbours)
+        else:
+            self.classifier = neighbors.KNeighborsClassifier(self.nNeighbours, weights=self.weights, algorithm=self.algorithm)
 
     def train(self):
         super().train()

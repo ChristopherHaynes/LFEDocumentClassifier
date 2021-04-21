@@ -1,6 +1,6 @@
 import argparse
 
-classifierNames = ['knn', 'cnb', 'nn', 'svm']
+classifierNames = ['knn', 'cnb', 'nn', 'svm', 'km']
 wordEmbeddingMethods = ['rake', 'text_rank', 'word_count', 'tf_idf']
 knnWeights = ['uniform', 'distance']
 svmKernels = ['rbf', 'poly', 'sigmoid', 'linear']

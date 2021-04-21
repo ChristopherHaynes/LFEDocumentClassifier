@@ -6,7 +6,7 @@ from Parameters import *
 
 
 class TextRank:
-    def __init__(self, themePairs, stemmingOnText, deleteStopWords, kernelSize=4, dampening=0.85, steps=10, threshold=1e-5):
+    def __init__(self, themePairs, deleteStopWords, stemmingOnText, kernelSize=4, dampening=0.85, steps=10, threshold=1e-5):
         self.themePairs = copy.deepcopy(themePairs)  # Copy of the global theme pair list to avoid changes to original
         self.KERNEL_SIZE = kernelSize
         self.DAMPENING = dampening

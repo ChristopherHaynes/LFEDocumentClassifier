@@ -13,10 +13,12 @@ class ComplementNaiveBayes(AbstractClassifier):
         super().__init__(featureData, targetData, testSize, randomState)
         self.name = "Complement Naive Bayes"
         self.isMultiLabelClassification = isMultiLabelClassification
+        self.classifier = naive_bayes.ComplementNB()
 
     def train(self):
         super().train()
         self.classifier = naive_bayes.ComplementNB()
+
         if self.isMultiLabelClassification:
             self.classifier.fit(self.XTrain, [item[0] for item in self.yTrain])
         else:

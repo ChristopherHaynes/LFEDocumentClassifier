@@ -1,4 +1,4 @@
-from sklearn import model_selection
+from sklearn.model_selection import cross_validate, train_test_split
 import numpy as np
 
 from Parameters import ALL_THEMES_LIST
@@ -24,7 +24,19 @@ class AbstractClassifier:
 
     def splitTestTrainData(self):
         self.XTrain, self.XTest, self.yTrain, self.yTest = \
-            model_selection.train_test_split(self.X, self.y, test_size=self.testSize, random_state=self.randomState)
+            train_test_split(self.X, self.y, test_size=self.testSize, random_state=self.randomState)
+
+    def crossValidate(self, cv):
+        scoringMetrics = ['accuracy', 'precision_macro', 'recall_macro', 'f1_macro']
+        cvResults = cross_validate(self.classifier, self.X, self.y, cv=cv, scoring=scoringMetrics)
+
+        # Take the average of each of the scoring metrics, package them together and return
+        averageResults = dict()
+        for metric in scoringMetrics:
+            metricName = "test_" + metric
+            averageResults[metric] = sum(cvResults[metricName]) / len(cvResults[metricName])
+
+        return averageResults
 
     def train(self):
         if len(self.XTrain) == 0:

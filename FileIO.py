@@ -49,6 +49,34 @@ def generateRowData(testStats, rowID, classifierAbbreviation, wordEmbeddingMetho
     return rowData
 
 
+def writeDictionaryToCSV(testStats, fileName, classifierAbbreviation, wordEmbeddingMethod, removeStopwords, stemText):
+    # If an "Output" directory doesn't exist in the working directory, then create one
+    rootPath = Path(__file__).parent
+    outputDirPath = (rootPath / "./Output").resolve()
+    try:
+        os.mkdir(outputDirPath)
+    except OSError:
+        pass
+
+    # Generate headers from fixed information and dict keys
+    generatedHeader = ["ClassifierName", "WordEmbeddingMethod", "StopWordsRemoved", "WordsStemmed"] + list(testStats.keys())
+
+    # Add the general information to the dict
+    testStats["ClassifierName"] = convertClassifierAbbreviation(classifierAbbreviation)
+    testStats["WordEmbeddingMethod"] = convertWordEmbeddingAbbreviation(wordEmbeddingMethod)
+    testStats["StopWordsRemoved"] = str(removeStopwords)
+    testStats["WordsStemmed"] = str(stemText)
+
+    # If a results file already exists then open it, otherwise create a new file and write the headers
+    filePath = (rootPath / "./Output/" / fileName).resolve()
+    isExistingFile = filePath.is_file()
+    with open(filePath, 'a', newline='') as file:
+        csvWriter = csv.DictWriter(file, fieldnames=generatedHeader)
+        if not isExistingFile:
+            csvWriter.writeheader()
+        csvWriter.writerow(testStats)
+
+
 def convertWordEmbeddingAbbreviation(wordEmbeddingMethod):
     if wordEmbeddingMethod == "rake":
         return "Rapid Automatic Keyword Extraction"

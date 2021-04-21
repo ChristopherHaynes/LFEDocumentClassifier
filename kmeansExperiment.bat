@@ -1,5 +1,42 @@
 @ECHO OFF
-python LFEDocumentClassifier.py -c km -mc 1 -tr 1 -e 10 -s -fn kmeansExperiments.csv
-
-
+python LFEDocumentClassifier.py -c km -sw -st -mc 41 -tr 1 -e 20 -s -fn kmeansExperiments.csv
+python LFEDocumentClassifier.py -c km -sw -st -mc 42 -tr 1 -e 20 -s -fn kmeansExperiments.csv
+python LFEDocumentClassifier.py -c km -sw -st -mc 43 -tr 1 -e 20 -s -fn kmeansExperiments.csv
+python LFEDocumentClassifier.py -c km -sw -st -mc 44 -tr 1 -e 20 -s -fn kmeansExperiments.csv
+python LFEDocumentClassifier.py -c km -sw -st -mc 45 -tr 1 -e 20 -s -fn kmeansExperiments.csv
+python LFEDocumentClassifier.py -c km -sw -st -mc 46 -tr 1 -e 20 -s -fn kmeansExperiments.csv
+python LFEDocumentClassifier.py -c km -sw -st -mc 47 -tr 1 -e 20 -s -fn kmeansExperiments.csv
+python LFEDocumentClassifier.py -c km -sw -st -mc 48 -tr 1 -e 20 -s -fn kmeansExperiments.csv
+python LFEDocumentClassifier.py -c km -sw -st -mc 49 -tr 1 -e 20 -s -fn kmeansExperiments.csv
+python LFEDocumentClassifier.py -c km -sw -st -mc 50 -tr 1 -e 20 -s -fn kmeansExperiments.csv
+python LFEDocumentClassifier.py -c km -sw -st -mc 55 -tr 1 -e 20 -s -fn kmeansExperiments.csv
+python LFEDocumentClassifier.py -c km -sw -st -mc 60 -tr 1 -e 20 -s -fn kmeansExperiments.csv
+python LFEDocumentClassifier.py -c km -sw -st -mc 65 -tr 1 -e 20 -s -fn kmeansExperiments.csv
+python LFEDocumentClassifier.py -c km -sw -st -mc 70 -tr 1 -e 20 -s -fn kmeansExperiments.csv
+python LFEDocumentClassifier.py -c km -sw -st -mc 75 -tr 1 -e 20 -s -fn kmeansExperiments.csv
+python LFEDocumentClassifier.py -c km -sw -st -mc 80 -tr 1 -e 20 -s -fn kmeansExperiments.csv
+python LFEDocumentClassifier.py -c km -sw -st -mc 85 -tr 1 -e 20 -s -fn kmeansExperiments.csv
+python LFEDocumentClassifier.py -c km -sw -st -mc 90 -tr 1 -e 20 -s -fn kmeansExperiments.csv
+python LFEDocumentClassifier.py -c km -sw -st -mc 95 -tr 1 -e 20 -s -fn kmeansExperiments.csv
+python LFEDocumentClassifier.py -c km -sw -st -mc 100 -tr 1 -e 20 -s -fn kmeansExperiments.csv
+python LFEDocumentClassifier.py -c km -sw -st -mc 110 -tr 1 -e 20 -s -fn kmeansExperiments.csv
+python LFEDocumentClassifier.py -c km -sw -st -mc 120 -tr 1 -e 20 -s -fn kmeansExperiments.csv
+python LFEDocumentClassifier.py -c km -sw -st -mc 130 -tr 1 -e 20 -s -fn kmeansExperiments.csv
+python LFEDocumentClassifier.py -c km -sw -st -mc 140 -tr 1 -e 20 -s -fn kmeansExperiments.csv
+python LFEDocumentClassifier.py -c km -sw -st -mc 150 -tr 1 -e 20 -s -fn kmeansExperiments.csv
+python LFEDocumentClassifier.py -c km -sw -st -mc 160 -tr 1 -e 20 -s -fn kmeansExperiments.csv
+python LFEDocumentClassifier.py -c km -sw -st -mc 170 -tr 1 -e 20 -s -fn kmeansExperiments.csv
+python LFEDocumentClassifier.py -c km -sw -st -mc 180 -tr 1 -e 20 -s -fn kmeansExperiments.csv
+python LFEDocumentClassifier.py -c km -sw -st -mc 190 -tr 1 -e 20 -s -fn kmeansExperiments.csv
+python LFEDocumentClassifier.py -c km -sw -st -mc 200 -tr 1 -e 20 -s -fn kmeansExperiments.csv
+python LFEDocumentClassifier.py -c km -sw -st -mc 250 -tr 1 -e 20 -s -fn kmeansExperiments.csv
+python LFEDocumentClassifier.py -c km -sw -st -mc 300 -tr 1 -e 20 -s -fn kmeansExperiments.csv
+python LFEDocumentClassifier.py -c km -sw -st -mc 350 -tr 1 -e 20 -s -fn kmeansExperiments.csv
+python LFEDocumentClassifier.py -c km -sw -st -mc 400 -tr 1 -e 20 -s -fn kmeansExperiments.csv
+python LFEDocumentClassifier.py -c km -sw -st -mc 450 -tr 1 -e 20 -s -fn kmeansExperiments.csv
+python LFEDocumentClassifier.py -c km -sw -st -mc 500 -tr 1 -e 20 -s -fn kmeansExperiments.csv
+python LFEDocumentClassifier.py -c km -sw -st -mc 600 -tr 1 -e 20 -s -fn kmeansExperiments.csv
+python LFEDocumentClassifier.py -c km -sw -st -mc 700 -tr 1 -e 20 -s -fn kmeansExperiments.csv
+python LFEDocumentClassifier.py -c km -sw -st -mc 800 -tr 1 -e 20 -s -fn kmeansExperiments.csv
+python LFEDocumentClassifier.py -c km -sw -st -mc 900 -tr 1 -e 20 -s -fn kmeansExperiments.csv
 PAUSE
