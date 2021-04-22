@@ -1,6 +1,7 @@
 import pandas as pd
 from rake_nltk import Rake
 
+from ReutersDataManager import *
 from ArgParser import *
 from InputCleaner import *
 from WordEmbedding import *
@@ -33,20 +34,24 @@ if USE_CLI_ARGUMENTS:
     SVM_CLASS_WEIGHT = None if args.svmClassWeight is False else 'balanced'
 
 # GLOBAL VARIABLES
-themePairs = []      # List of tuples, where the first item contains text and the second contains corresponding themes
-wordEmbeddings = []  # List of words and their embedded scores per entry (words, keywords, TF-IDF etc)
-bagOfWords = []      # List of all the words making up the bag of words (for feature creation)
-featuresMasks = []   # Feature mask per entry to match with the bagOfWords structure/order
-targetMasks = []     # Target value (class) per entry, aligns with features mask
-classifier = None    # Placeholder for the classifier object generated later in the pipeline
+themePairs = []        # List of tuples, where the first item contains text and the second contains corresponding themes
+wordEmbeddings = []    # List of words and their embedded scores per entry (words, keywords, TF-IDF etc)
+bagOfWords = []        # List of all the words making up the bag of words (for feature creation)
+featuresMasks = []     # Feature mask per entry to match with the bagOfWords structure/order
+targetMasks = []       # Target value (class) per entry, aligns with features mask
+classifier = None      # Placeholder for the classifier object generated later in the pipeline
+reutersClasses = None  # Placeholder for reuters categories (if reuters is being used, remains None otherwise)
 
-# Read raw .XLSX file and store as pandas data-frame
-dataFile = pd.read_excel(DATA_FILE_PATH, engine='openpyxl')
+if USE_REUTERS:
+    themePairs, reutersClasses = getReutersFeatureClassPairs()
+else:
+    # Read raw .XLSX file and store as pandas data-frame
+    dataFile = pd.read_excel(DATA_FILE_PATH, engine='openpyxl')
 
-# TODO: [PIPELINE SPLIT 1] - Determine stop list and stemming method (or disable these options)
-# Apply all pre-processing to clean text and themes
-pp = InputCleaner(dataFile, themePairs, GENERATE_1D_THEMES)
-pp.cleanText(REMOVE_NUMERIC, REMOVE_SINGLE_LETTERS, REMOVE_KEYWORDS, REMOVE_EXTRA_SPACES)
+    # TODO: [PIPELINE SPLIT 1] - Determine stop list and stemming method (or disable these options)
+    # Apply all pre-processing to clean text and themes
+    ic = InputCleaner(dataFile, themePairs, GENERATE_1D_THEMES)
+    ic.cleanText(REMOVE_NUMERIC, REMOVE_SINGLE_LETTERS, REMOVE_KEYWORDS, REMOVE_EXTRA_SPACES)
 
 # TODO: [PIPELINE SPLIT 2] - Finish determination of word embedding method
 if WORD_EMBEDDING_METHOD == 'rake':
@@ -76,15 +81,19 @@ bagOfWords = generateBagOfWords(wordEmbeddings, USE_THRESHOLD, KEYWORD_THRESHOLD
 print("Total Features: " + str(len(bagOfWords)))
 
 # Generate the feature masks which will make up the training features for classification
+TESTING = 0
 for scoredPairs in wordEmbeddings:
     featuresMasks.append(generateFeatureMask(bagOfWords, scoredPairs))
+    TESTING += 1
+    if TESTING % 100 == 0:
+        print(TESTING)
 
 # Encode the target themes into numeric values for classification
 for pair in themePairs:
     if USE_MULTI_LABEL_CLASSIFICATION:
         targetMasks.append(encodeThemesToValues(pair[1]))
     else:
-        targetMasks.append(encodePrimaryThemeToValue(pair[1]))
+        targetMasks.append(encodePrimaryThemeToValue(pair[1], USE_REUTERS, reutersClasses))
 
 
 # TODO: [PIPELINE SPLIT 4] - Determine which classifier to use and how to initialise it

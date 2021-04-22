@@ -1,4 +1,5 @@
 import math
+from nltk.corpus import reuters
 from Parameters.AllThemes import ALL_THEMES_LIST
 
 
@@ -48,8 +49,13 @@ def encodeThemesToValues(themes):
     return targetMask
 
 
-def encodePrimaryThemeToValue(themes):
-    for i in range(len(ALL_THEMES_LIST)):
-        if ALL_THEMES_LIST[i] == themes[0]:
-            return i
+def encodePrimaryThemeToValue(themes, useReuters, reutersCategories):
+    if useReuters:
+        for i in range(len(reutersCategories)):
+            if reutersCategories[i] == themes[0]:
+                return i
+    else:
+        for i in range(len(ALL_THEMES_LIST)):
+            if ALL_THEMES_LIST[i] == themes[0]:
+                return i
 

@@ -14,7 +14,8 @@ def validateInput(userInput, validOptions):
 
     # If input is invalid, prompt the user to enter a valid option
     while not valid:
-        print("\n\nPlease select a valid option from the following list:", validOptions)
+        print("\n\nYou entered invalid option - \"" + userInput + "\"")
+        print("\nPlease select a valid option from the following list:", validOptions)
         userInput = input('')
         if userInput in validOptions:
             valid = True

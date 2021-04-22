@@ -1,6 +1,7 @@
 # ------------------------------------------ GENERAL PARAMETERS --------------------------------------------------
 DATA_FILE_PATH = "C:\\Users\\Chris\\Desktop\\Data\\lfeDataNamesRemoved.xlsx"
-USE_CLI_ARGUMENTS = True     # Enable/Disable the CLI argument parser for overwriting these parameters
+USE_CLI_ARGUMENTS = False     # Enable/Disable the CLI argument parser for overwriting these parameters
+USE_REUTERS = True          # Choose to test the pipeline using the Reuters-21578 dataset
 
 # --------------------------------------- PRE PROCESSING PARAMETERS ----------------------------------------------
 REMOVE_NUMERIC = True            # Remove any numeric characters or numeric punctuation from the text
@@ -21,7 +22,7 @@ KEYWORD_THRESHOLD = 4     # Value for the threshold at which keywords will be ig
 
 # ----------------------------------------- CLASSIFIER PARAMETERS ------------------------------------------------
 # General Classifier parameters
-CLASSIFIER_NAME = 'cnb'                 # Type of classifier to use. VALID: 'knn', 'cnb', 'nn', 'svm', 'km'
+CLASSIFIER_NAME = 'knn'                 # Type of classifier to use. VALID: 'knn', 'cnb', 'nn', 'svm', 'km'
 USE_MULTI_LABEL_CLASSIFICATION = False   # Allow multiple labels to be assigned per item
 TEST_GROUP_SIZE = 0.25                  # Fraction to split into the test group when performing a test/train split
 RANDOM_STATE = None                     # Seed used for random number generation VALID: None, Int
@@ -50,10 +51,10 @@ KM_N_INIT = 10             # Number of times to run the algorithm starting with 
 # ------------------------------------------ TESTING PARAMETERS -------------------------------------------------
 CROSS_VALIDATE = True   # Should cross validation be used (False - results in a test train split)
 CV_FOLDS = 5            # Number of folds to use in k cross fold validation
-TEST_RUNS = 3           # Number of tests performed in a single program run
+TEST_RUNS = 1           # Number of tests performed in a single program run
 EPOCHS = 200            # Number of iterations within a single test (re-split data, retrain classifier, and re-predict)
 PRINT_PROGRESS = True   # Print the current test progress details to the console
 
 # ------------------------------------- RESULTS AND STATS PARAMETERS --------------------------------------------
 SAVE_STATS_TO_FILE = True          # Should the resultant statistics be written to a CSV file
-SAVE_FILE_NAME = "testCVStats.csv"   # Filename where results are written (found in "./Output/<SAVE_FILE_NAME>)
+SAVE_FILE_NAME = "testCVStatsREUTERS.csv"   # Filename where results are written (found in "./Output/<SAVE_FILE_NAME>)

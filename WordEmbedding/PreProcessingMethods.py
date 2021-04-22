@@ -4,8 +4,12 @@ import string
 import copy
 import spacy
 
-nlp = spacy.load('en_core_web_sm')
-stanza.download('en')
+try:
+    nlp = spacy.load('en_core_web_sm')
+    stanza.download('en')
+except:
+    print("CONNECTION ERROR WARNING!")
+    pass
 
 
 def stanfordNLPPreProcessor(themePairs):
