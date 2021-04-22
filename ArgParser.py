@@ -110,7 +110,7 @@ def collectCommandLineArguments():
     parser.add_argument('-ne', '--nnEpochs',
                         help='The amount of epochs used in a single NN training fit',
                         type=int,
-                        default=5)
+                        default=25)
 
     # SVM arguments
     parser.add_argument('-sk', '--svmKernel',

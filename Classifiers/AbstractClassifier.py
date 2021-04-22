@@ -27,7 +27,8 @@ class AbstractClassifier:
             train_test_split(self.X, self.y, test_size=self.testSize, random_state=self.randomState)
 
     def crossValidate(self, cv):
-        scoringMetrics = ['accuracy', 'precision_macro', 'recall_macro', 'f1_macro']
+        scoringMetrics = ['accuracy', 'precision_micro', 'precision_macro', 'recall_micro', 'recall_macro',
+                          'f1_micro', 'f1_macro']
         cvResults = cross_validate(self.classifier, self.X, self.y, cv=cv, scoring=scoringMetrics)
 
         # Take the average of each of the scoring metrics, package them together and return

@@ -1,6 +1,6 @@
 # ------------------------------------------ GENERAL PARAMETERS --------------------------------------------------
 DATA_FILE_PATH = "C:\\Users\\Chris\\Desktop\\Data\\lfeDataNamesRemoved.xlsx"
-USE_CLI_ARGUMENTS = False     # Enable/Disable the CLI argument parser for overwriting these parameters
+USE_CLI_ARGUMENTS = True     # Enable/Disable the CLI argument parser for overwriting these parameters
 
 # --------------------------------------- PRE PROCESSING PARAMETERS ----------------------------------------------
 REMOVE_NUMERIC = True            # Remove any numeric characters or numeric punctuation from the text
@@ -21,7 +21,7 @@ KEYWORD_THRESHOLD = 4     # Value for the threshold at which keywords will be ig
 
 # ----------------------------------------- CLASSIFIER PARAMETERS ------------------------------------------------
 # General Classifier parameters
-CLASSIFIER_NAME = 'nn'                 # Type of classifier to use. VALID: 'knn', 'cnb', 'nn', 'svm', 'km'
+CLASSIFIER_NAME = 'cnb'                 # Type of classifier to use. VALID: 'knn', 'cnb', 'nn', 'svm', 'km'
 USE_MULTI_LABEL_CLASSIFICATION = False   # Allow multiple labels to be assigned per item
 TEST_GROUP_SIZE = 0.25                  # Fraction to split into the test group when performing a test/train split
 RANDOM_STATE = None                     # Seed used for random number generation VALID: None, Int
@@ -56,4 +56,4 @@ PRINT_PROGRESS = True   # Print the current test progress details to the console
 
 # ------------------------------------- RESULTS AND STATS PARAMETERS --------------------------------------------
 SAVE_STATS_TO_FILE = True          # Should the resultant statistics be written to a CSV file
-SAVE_FILE_NAME = "testCVNNSKLearn.csv"   # Filename where results are written (found in "./Output/<SAVE_FILE_NAME>)
+SAVE_FILE_NAME = "testCVStats.csv"   # Filename where results are written (found in "./Output/<SAVE_FILE_NAME>)

@@ -96,7 +96,7 @@ def convertClassifierAbbreviation(classifierAbbreviation):
     elif classifierAbbreviation == "cnb":
         return "Compliment Naive Bayes"
     elif classifierAbbreviation == "nn":
-        return "Sequential Neural Network"
+        return "Multi Layer Perceptron"
     elif classifierAbbreviation == "svm":
         return "Support Vector Machine"
     else:
