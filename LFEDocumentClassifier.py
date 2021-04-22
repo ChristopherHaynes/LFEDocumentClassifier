@@ -106,12 +106,18 @@ elif CLASSIFIER_NAME == 'cnb':
                                       RANDOM_STATE)
 
 elif CLASSIFIER_NAME == 'nn':
-    classifier = NeuralNet(featuresMasks, targetMasks,
-                           TEST_GROUP_SIZE,
-                           RANDOM_STATE,
-                           NN_BATCH_SIZE,
-                           NN_INTERNAL_EPOCHS,
-                           NN_BIAS)
+    if NN_USE_KERAS:
+        classifier = MultiLayerPerceptronKeras(featuresMasks, targetMasks,
+                                               TEST_GROUP_SIZE,
+                                               RANDOM_STATE,
+                                               NN_BATCH_SIZE,
+                                               NN_INTERNAL_EPOCHS,
+                                               NN_BIAS)
+    else:
+        classifier = MultiLayerPerceptronSklearn(featuresMasks, targetMasks,
+                                                 TEST_GROUP_SIZE,
+                                                 RANDOM_STATE,
+                                                 NN_BATCH_SIZE)
 
 elif CLASSIFIER_NAME == 'svm':
     classifier = SupportVectorMachine(featuresMasks, targetMasks,

@@ -21,7 +21,7 @@ KEYWORD_THRESHOLD = 4     # Value for the threshold at which keywords will be ig
 
 # ----------------------------------------- CLASSIFIER PARAMETERS ------------------------------------------------
 # General Classifier parameters
-CLASSIFIER_NAME = 'cnb'                 # Type of classifier to use. VALID: 'knn', 'cnb', 'nn', 'svm', 'km'
+CLASSIFIER_NAME = 'nn'                 # Type of classifier to use. VALID: 'knn', 'cnb', 'nn', 'svm', 'km'
 USE_MULTI_LABEL_CLASSIFICATION = False   # Allow multiple labels to be assigned per item
 TEST_GROUP_SIZE = 0.25                  # Fraction to split into the test group when performing a test/train split
 RANDOM_STATE = None                     # Seed used for random number generation VALID: None, Int
@@ -32,6 +32,7 @@ KNN_WEIGHTS = 'uniform'     # Determine how distance from neighbours is measured
 KNN_ALGORITHM = 'auto'      # Type of algorithm used. VALID: 'auto', 'ball_tree', 'kd_tree', 'brute'
 
 # Neural Network parameters
+NN_USE_KERAS = False       # Should the more detailed keras approach be used (SKLearn will be used if False)
 NN_BATCH_SIZE = 64         # Number of items to be batched for one training sample
 NN_INTERNAL_EPOCHS = 5     # Number of epochs to be performed in a single training fit
 NN_BIAS = -5.62            # For setting the bias when training, should be log(posCases/negCases) for dual class
@@ -55,4 +56,4 @@ PRINT_PROGRESS = True   # Print the current test progress details to the console
 
 # ------------------------------------- RESULTS AND STATS PARAMETERS --------------------------------------------
 SAVE_STATS_TO_FILE = True          # Should the resultant statistics be written to a CSV file
-SAVE_FILE_NAME = "testCVStats.csv"   # Filename where results are written (found in "./Output/<SAVE_FILE_NAME>)
+SAVE_FILE_NAME = "testCVNNSKLearn.csv"   # Filename where results are written (found in "./Output/<SAVE_FILE_NAME>)

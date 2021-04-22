@@ -7,7 +7,7 @@ from sklearn.metrics import silhouette_score
 from .AbstractClassifier import *
 
 
-def writeScoresToCSV(clusters, score, fileName='kmeanSilhouettes2.csv'):
+def writeScoresToCSV(clusters, score, fileName='kmeanSilhouettes3.csv'):
     # If an "Output" directory doesn't exist in the working directory, then create one
     rootPath = Path(__file__).parent
     outputDirPath = (rootPath / "./Output").resolve()

@@ -4,7 +4,7 @@ from keras.layers import Dense, Dropout
 from .AbstractClassifier import *
 
 
-class NeuralNet(AbstractClassifier):
+class MultiLayerPerceptronKeras(AbstractClassifier):
 
     def __init__(self, featureData, targetData, testSize=0.25, randomState=None, batchSize=32, epochs=10, bias=-5):
         super().__init__(featureData, targetData, testSize, randomState)
@@ -15,7 +15,7 @@ class NeuralNet(AbstractClassifier):
         self.bias = bias
 
         self.classifier = self.createModel()
-        self.name = "Sequential Neural Network"
+        self.name = "Multi-layer-perceptron (Keras)"
         self.y = self.vectorEncodeTargets(self.y)
 
     def createModel(self):

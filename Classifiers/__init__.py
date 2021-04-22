@@ -3,5 +3,6 @@ from .KNearestNeighbor import *
 from .KMeans import *
 from .ExpectationMaximisation import *
 from .NaiveBayes import *
-from .NeuralNet import *
+from .MultiLayerPerceptronKeras import *
+from .MultiLayerPerceptronSklearn import *
 from .SupportVectorMachine import *
