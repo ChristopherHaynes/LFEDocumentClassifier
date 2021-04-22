@@ -59,11 +59,11 @@ def writeDictionaryToCSV(testStats, fileName, classifierAbbreviation, wordEmbedd
         pass
 
     # Generate headers from fixed information and dict keys
-    generatedHeader = ["ClassifierName", "WordEmbeddingMethod", "StopWordsRemoved", "WordsStemmed"] + list(testStats.keys())
+    generatedHeader = ["ClassifierName", "WordScoringMethod", "StopWordsRemoved", "WordsStemmed"] + list(testStats.keys())
 
     # Add the general information to the dict
     testStats["ClassifierName"] = convertClassifierAbbreviation(classifierAbbreviation)
-    testStats["WordEmbeddingMethod"] = convertWordEmbeddingAbbreviation(wordEmbeddingMethod)
+    testStats["WordScoringMethod"] = convertWordEmbeddingAbbreviation(wordEmbeddingMethod)
     testStats["StopWordsRemoved"] = str(removeStopwords)
     testStats["WordsStemmed"] = str(stemText)
 
