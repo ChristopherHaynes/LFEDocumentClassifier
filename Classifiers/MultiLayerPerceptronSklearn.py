@@ -7,25 +7,21 @@ class MultiLayerPerceptronSklearn(AbstractClassifier):
     def __init__(self,
                  featureData,
                  targetData,
+                 categoryCount,
                  isMultiLabelClassification=False,
                  testSize=0.25,
                  randomState=None):
         super().__init__(featureData, targetData, testSize, randomState)
         self.name = "Multi-layer-perceptron (SKLearn)"
+        self.categoryCount = categoryCount
         self.isMultiLabelClassification = isMultiLabelClassification
-        self.classifier = MLPClassifier(hidden_layer_sizes=(len(featureData),
-                                                            len(featureData),
-                                                            len(featureData),
-                                                            len(ALL_THEMES_LIST)),
+        self.classifier = MLPClassifier(hidden_layer_sizes=(int((len(featureData) + categoryCount) / 2)),
                                         random_state=randomState,
                                         early_stopping=True)
 
     def train(self):
         super().train()
-        self.classifier = MLPClassifier(hidden_layer_sizes=(len(self.X),
-                                                            len(self.X),
-                                                            len(self.X),
-                                                            len(ALL_THEMES_LIST)),
+        self.classifier = MLPClassifier(hidden_layer_sizes=(int((len(self.XTrain) + len(self.categoryCount)) / 2)),
                                         random_state=self.randomState,
                                         early_stopping=True)
 

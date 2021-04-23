@@ -41,9 +41,11 @@ featuresMasks = []     # Feature mask per entry to match with the bagOfWords str
 targetMasks = []       # Target value (class) per entry, aligns with features mask
 classifier = None      # Placeholder for the classifier object generated later in the pipeline
 reutersClasses = None  # Placeholder for reuters categories (if reuters is being used, remains None otherwise)
+categoryCount = 0      # Number of classes/themes/categories (len(set(y)))
 
 if USE_REUTERS:
     themePairs, reutersClasses = getReutersFeatureClassPairs()
+    categoryCount = len(reutersClasses)
 else:
     # Read raw .XLSX file and store as pandas data-frame
     dataFile = pd.read_excel(DATA_FILE_PATH, engine='openpyxl')
@@ -52,6 +54,7 @@ else:
     # Apply all pre-processing to clean text and themes
     ic = InputCleaner(dataFile, themePairs, GENERATE_1D_THEMES)
     ic.cleanText(REMOVE_NUMERIC, REMOVE_SINGLE_LETTERS, REMOVE_KEYWORDS, REMOVE_EXTRA_SPACES)
+    categoryCount = len(ALL_THEMES_LIST)
 
 # TODO: [PIPELINE SPLIT 2] - Finish determination of word embedding method
 if WORD_EMBEDDING_METHOD == 'rake':
@@ -124,6 +127,7 @@ elif CLASSIFIER_NAME == 'nn':
                                                NN_BIAS)
     else:
         classifier = MultiLayerPerceptronSklearn(featuresMasks, targetMasks,
+                                                 categoryCount,
                                                  TEST_GROUP_SIZE,
                                                  RANDOM_STATE,
                                                  NN_BATCH_SIZE)
