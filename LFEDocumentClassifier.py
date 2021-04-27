@@ -40,13 +40,13 @@ bagOfWords = []        # List of all the words making up the bag of words (for f
 featuresMasks = []     # Feature mask per entry to match with the bagOfWords structure/order
 targetMasks = []       # Target value (class) per entry, aligns with features mask
 classifier = None      # Placeholder for the classifier object generated later in the pipeline
-reutersClasses = None  # Placeholder for reuters categories (if reuters is being used, remains None otherwise)
+otherCategories = None  # Placeholder for reuters categories (if reuters is being used, remains None otherwise)
 categoryCount = 0      # Number of classes/themes/categories (len(set(y)))
 
 # TODO: [PIPELINE SPLIT 1] - Determine stop list and stemming method (or disable these options)
 if USE_REUTERS:
-    themePairs, reutersClasses = getReutersFeatureClassPairs()
-    categoryCount = len(reutersClasses)
+    themePairs, otherCategories = getReutersFeatureClassPairs()
+    categoryCount = len(otherCategories)
 elif USE_TWITTER:
     dataFile = pd.read_csv(TWITTER_FILE_PATH)
 
@@ -54,6 +54,7 @@ elif USE_TWITTER:
     ic = InputCleaner(dataFile, themePairs, 'OriginalTweet', 'Sentiment', GENERATE_1D_THEMES, USE_TWITTER)
     ic.cleanText(REMOVE_NUMERIC, REMOVE_SINGLE_LETTERS, REMOVE_KEYWORDS, REMOVE_EXTRA_SPACES)
     categoryCount = len(ic.primaryThemesCount.keys())
+    otherCategories = list(ic.primaryThemesCount.keys())
 
 else:
     # Read raw .XLSX file and store as pandas data-frame
@@ -104,7 +105,7 @@ for pair in themePairs:
     if USE_MULTI_LABEL_CLASSIFICATION:
         targetMasks.append(encodeThemesToValues(pair[1]))
     else:
-        targetMasks.append(encodePrimaryThemeToValue(pair[1], USE_REUTERS, reutersClasses))
+        targetMasks.append(encodePrimaryThemeToValue(pair[1], USE_REUTERS, USE_TWITTER, otherCategories))
 
 
 # TODO: [PIPELINE SPLIT 4] - Determine which classifier to use and how to initialise it

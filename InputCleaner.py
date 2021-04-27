@@ -1,5 +1,6 @@
 import pandas as pd
 import string
+import re
 from Parameters.AllThemes import ALL_THEMES_LIST
 
 
@@ -42,7 +43,12 @@ class InputCleaner:
                 newText = self.removeKeywordsFromText(newText)
             if removeExtraSpaces:
                 newText = self.removeExtraSpacesFromText(newText)
-            pair[0] = newText
+
+            # If the cleaning has removed all the text, then remove the theme pair tuple from the original list
+            if len(newText) > 0 and not newText.isspace():
+                pair[0] = newText
+            else:
+                self.themePairs.remove(pair)
 
     def extractThemePairs(self, textColumnName, categoryColumnName):
         fullTexts = pd.DataFrame(self.rawDataFile, columns=[textColumnName])
@@ -110,6 +116,7 @@ class InputCleaner:
                     self.primaryThemesCount[themesList] = 1
                 else:
                     self.primaryThemesCount[themesList] += 1
+                pair[1] = [pair[1]]
 
     def cullEmptyEntries(self):
         for pair in self.themePairs:
@@ -117,7 +124,8 @@ class InputCleaner:
                 self.themePairs.remove(pair)
                 self.totalCulledEntries = self.totalCulledEntries + 1
 
-    def removeNumericCharactersFromText(self, rawText):
+    @staticmethod
+    def removeNumericCharactersFromText(rawText):
         newText = ''
         for i in range(0, len(rawText)):
             character = rawText[i]
@@ -132,7 +140,8 @@ class InputCleaner:
             newText = newText + character
         return newText
 
-    def removeSingleLettersFromText(self, rawText):
+    @staticmethod
+    def removeSingleLettersFromText(rawText):
         newText = ''
         for i in range(0, len(rawText)):
             # If the character is a valid letter and surrounded by whitespace then remove it
@@ -142,12 +151,17 @@ class InputCleaner:
             newText = newText + rawText[i]
         return newText
 
-    def removeKeywordsFromText(self, rawText):
-        #  TODO - Create method for removing certain keywords (also consider keyword list generation (names, titles))
-        pass
-        return rawText
+    @staticmethod
+    def removeKeywordsFromText(rawText):
+        newText = re.sub(r"http\S+", "", rawText)
+        newText = re.sub(r"@\S+", "", newText)
+        newText = re.sub(r"#", "", newText)
+        newText = re.sub(r"\n", " ", newText)
+        newText = re.sub(r"\x92", "'", newText)
+        return newText
 
-    def removeExtraSpacesFromText(self, rawText):
+    @staticmethod
+    def removeExtraSpacesFromText(rawText):
         punctuationWithoutPrecedingSpaces = [',', '.', '!', '?']
         newText = ''
         for i in range(0, len(rawText)):

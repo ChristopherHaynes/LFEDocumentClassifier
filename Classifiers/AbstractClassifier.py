@@ -37,6 +37,10 @@ class AbstractClassifier:
             metricName = "test_" + metric
             averageResults[metric] = sum(cvResults[metricName]) / len(cvResults[metricName])
 
+        # Keep the fit and "score" times
+        averageResults['fit_time'] = sum(cvResults['fit_time']) / len(cvResults['fit_time'])
+        averageResults['score_time'] = sum(cvResults['score_time']) / len(cvResults['score_time'])
+
         return averageResults
 
     def train(self):

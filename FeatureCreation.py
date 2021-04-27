@@ -49,10 +49,10 @@ def encodeThemesToValues(themes):
     return targetMask
 
 
-def encodePrimaryThemeToValue(themes, useReuters, reutersCategories):
-    if useReuters:
-        for i in range(len(reutersCategories)):
-            if reutersCategories[i] == themes[0]:
+def encodePrimaryThemeToValue(themes, useReuters, useTwitter, otherCategories):
+    if useReuters or useTwitter:
+        for i in range(len(otherCategories)):
+            if otherCategories[i] == themes[0]:
                 return i
     else:
         for i in range(len(ALL_THEMES_LIST)):

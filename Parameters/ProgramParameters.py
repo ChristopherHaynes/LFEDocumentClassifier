@@ -8,13 +8,13 @@ USE_TWITTER = False         # Choose to test the pipeline using the Twitter data
 # --------------------------------------- PRE PROCESSING PARAMETERS ----------------------------------------------
 REMOVE_NUMERIC = True            # Remove any numeric characters or numeric punctuation from the text
 REMOVE_SINGLE_LETTERS = True     # Remove any single letters (name abbreviations and prepositions) from the text
-REMOVE_KEYWORDS = False          # Remove any listed keywords from the text
+REMOVE_KEYWORDS = True           # Remove any listed keywords from the text (twitter hashtags and links)
 REMOVE_EXTRA_SPACES = True       # Remove any extra spaces, new line characters etc from the text
 GENERATE_1D_THEMES = False       # Split multi label themes into single one dimensional pairs (duplicate X for each y)
 
 # --------------------------------------- WORD EMBEDDING PARAMETERS ----------------------------------------------
 WORD_EMBEDDING_METHOD = 'tf_idf'    # VALID: 'rake', 'text_rank', 'word_count', 'tf_idf'
-REMOVE_STOPWORDS = False            # Use the chosen stop word list to purge these words from the text (not for rake)
+REMOVE_STOPWORDS = True            # Use the chosen stop word list to purge these words from the text (not for rake)
 STEM_TEXT = False                   # Use the chosen stemming algorithm to stem the text (not for rake)
 
 # -------------------------------------- FEATURE CREATION PARAMETERS ---------------------------------------------
