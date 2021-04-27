@@ -4,7 +4,7 @@ from Parameters.AllThemes import ALL_THEMES_LIST
 
 
 class InputCleaner:
-    def __init__(self, dataFile, themePairs, generateOneDimensionalThemes):
+    def __init__(self, dataFile, themePairs, textColumnName, categoryColumnName, generateOneDimensionalThemes, useTwitter=False):
         self.rawDataFile = dataFile
         self.themePairs = themePairs  # List of tuples, first item is the text (features), second item is the theme (categories)
         self.themesCount = dict()  # Key is theme, value is number of occurrences
@@ -14,10 +14,11 @@ class InputCleaner:
         self.totalCulledEntries = 0  # TESTING - Keep track of how many entries are invalid and removed
 
         # Generate the theme pair list from the data file and discard any invalid entries
-        self.extractThemePairs()
+        self.extractThemePairs(textColumnName, categoryColumnName)
 
         # Convert the raw theme string into a list of strings in the theme pairs list
-        self.convertThemesToList()
+        if not useTwitter:
+            self.convertThemesToList()
 
         # Remove any further entries which are now empty or invalid (lacking in either valid feature text or category)
         self.cullEmptyEntries()
@@ -39,9 +40,9 @@ class InputCleaner:
         if removeExtraSpaces:
             self.removeExtraSpacesFromText()
 
-    def extractThemePairs(self):
-        fullTexts = pd.DataFrame(self.rawDataFile, columns=['excellenceText'])
-        themesDataFrame = pd.DataFrame(self.rawDataFile, columns=['themeExcellence'])
+    def extractThemePairs(self, textColumnName, categoryColumnName):
+        fullTexts = pd.DataFrame(self.rawDataFile, columns=[textColumnName])
+        themesDataFrame = pd.DataFrame(self.rawDataFile, columns=[categoryColumnName])
         self.totalEntries = len(themesDataFrame.index)
 
         for i in range(0, len(themesDataFrame.index) - 1):
@@ -87,18 +88,24 @@ class InputCleaner:
         for pair in self.themePairs:
             themesList = pair[1]
 
-            # First theme listed is the "primary" theme for that document
-            if themesList[0] not in self.primaryThemesCount.keys():
-                self.primaryThemesCount[themesList[0]] = 1
-            else:
-                self.primaryThemesCount[themesList[0]] = self.primaryThemesCount[themesList[0]] + 1
-
-            for theme in themesList:
-                # Add to theme dictionary for maintaining count of themes
-                if theme not in self.themesCount.keys():
-                    self.themesCount[theme] = 1
+            if isinstance(themesList, list):
+                # First theme listed is the "primary" theme for that document
+                if themesList[0] not in self.primaryThemesCount.keys():
+                    self.primaryThemesCount[themesList[0]] = 1
                 else:
-                    self.themesCount[theme] = self.themesCount[theme] + 1
+                    self.primaryThemesCount[themesList[0]] += 1
+
+                for theme in themesList:
+                    # Add to theme dictionary for maintaining count of themes
+                    if theme not in self.themesCount.keys():
+                        self.themesCount[theme] = 1
+                    else:
+                        self.themesCount[theme] += 1
+            elif isinstance(themesList, str):
+                if themesList not in self.primaryThemesCount.keys():
+                    self.primaryThemesCount[themesList] = 1
+                else:
+                    self.primaryThemesCount[themesList] += 1
 
     def cullEmptyEntries(self):
         for pair in self.themePairs:
