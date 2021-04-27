@@ -3,7 +3,7 @@ DATA_FILE_PATH = "C:\\Users\\Chris\\Desktop\\Data\\LFE\\lfeDataNamesRemoved.xlsx
 TWITTER_FILE_PATH = "C:\\Users\\Chris\\Desktop\\Data\\LFE\\Corona_NLP_tweets.csv"
 USE_CLI_ARGUMENTS = False    # Enable/Disable the CLI argument parser for overwriting these parameters
 USE_REUTERS = False          # Choose to test the pipeline using the Reuters-21578 dataset
-USE_TWITTER = True         # Choose to test the pipeline using the Twitter dataset
+USE_TWITTER = False         # Choose to test the pipeline using the Twitter dataset
 
 # --------------------------------------- PRE PROCESSING PARAMETERS ----------------------------------------------
 REMOVE_NUMERIC = True            # Remove any numeric characters or numeric punctuation from the text

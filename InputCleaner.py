@@ -30,15 +30,19 @@ class InputCleaner:
         if generateOneDimensionalThemes:
             self.restructurePairsForMultiLabelOneDimension()
 
-    def cleanText(self, removeNumeric=True, removeSingleLetters=True, removeKeywords=True, removeExtraSpaces=True):
-        if removeNumeric:
-            self.removeNumericCharactersFromText()
-        if removeSingleLetters:
-            self.removeSingleLettersFromText()
-        if removeKeywords:
-            self.removeKeywordsFromText()
-        if removeExtraSpaces:
-            self.removeExtraSpacesFromText()
+    def cleanText(self, removeNumeric=True, removeSingleLetters=True,
+                  removeKeywords=False, removeExtraSpaces=True, removePunctuation=True):
+        for pair in self.themePairs:
+            newText = pair[0]
+            if removeNumeric:
+                newText = self.removeNumericCharactersFromText(newText)
+            if removeSingleLetters:
+                newText = self.removeSingleLettersFromText(newText)
+            if removeKeywords:
+                newText = self.removeKeywordsFromText(newText)
+            if removeExtraSpaces:
+                newText = self.removeExtraSpacesFromText(newText)
+            pair[0] = newText
 
     def extractThemePairs(self, textColumnName, categoryColumnName):
         fullTexts = pd.DataFrame(self.rawDataFile, columns=[textColumnName])
@@ -113,53 +117,45 @@ class InputCleaner:
                 self.themePairs.remove(pair)
                 self.totalCulledEntries = self.totalCulledEntries + 1
 
-    def removeNumericCharactersFromText(self):
-        for pair in self.themePairs:
-            rawText = pair[0]
-            newText = ''
+    def removeNumericCharactersFromText(self, rawText):
+        newText = ''
+        for i in range(0, len(rawText)):
+            character = rawText[i]
 
-            for i in range(0, len(rawText)):
-                character = rawText[i]
+            if character.isnumeric():
+                continue
 
-                if character.isnumeric():
+            # Check the next character for being a decimal point or other numeric punctuation
+            if character in string.punctuation and i + 1 < len(rawText) and rawText[i + 1].isnumeric():
+                continue
+
+            newText = newText + character
+        return newText
+
+    def removeSingleLettersFromText(self, rawText):
+        newText = ''
+        for i in range(0, len(rawText)):
+            # If the character is a valid letter and surrounded by whitespace then remove it
+            if rawText[i] in string.ascii_letters and i + 1 < len(rawText):
+                if rawText[i - 1].isspace() and rawText[i + 1].isspace():
                     continue
+            newText = newText + rawText[i]
+        return newText
 
-                # Check the next character for being a decimal point or other numeric punctuation
-                if character in string.punctuation and i + 1 < len(rawText) and rawText[i + 1].isnumeric():
-                    continue
-
-                newText = newText + character
-            pair[0] = newText
-
-    def removeSingleLettersFromText(self):
-        for pair in self.themePairs:
-            rawText = pair[0]
-            newText = ''
-
-            for i in range(0, len(rawText)):
-                # If the character is a valid letter and surrounded by whitespace then remove it
-                if rawText[i] in string.ascii_letters and i + 1 < len(rawText):
-                    if rawText[i - 1].isspace() and rawText[i + 1].isspace():
-                        continue
-                newText = newText + rawText[i]
-            pair[0] = newText
-
-    def removeKeywordsFromText(self):
+    def removeKeywordsFromText(self, rawText):
         #  TODO - Create method for removing certain keywords (also consider keyword list generation (names, titles))
         pass
+        return rawText
 
-    def removeExtraSpacesFromText(self):
+    def removeExtraSpacesFromText(self, rawText):
         punctuationWithoutPrecedingSpaces = [',', '.', '!', '?']
-        for pair in self.themePairs:
-            rawText = pair[0]
-            newText = ''
-
-            for i in range(0, len(rawText)):
-                if rawText[i].isspace() and i + 1 < len(rawText):
-                    if rawText[i + 1].isspace() or rawText[i + 1] in punctuationWithoutPrecedingSpaces:
-                        continue
-                newText = newText + rawText[i]
-            pair[0] = newText
+        newText = ''
+        for i in range(0, len(rawText)):
+            if rawText[i].isspace() and i + 1 < len(rawText):
+                if rawText[i + 1].isspace() or rawText[i + 1] in punctuationWithoutPrecedingSpaces:
+                    continue
+            newText = newText + rawText[i]
+        return newText
 
     def restructurePairsForMultiLabelOneDimension(self):
         newThemePairs = []
