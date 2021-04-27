@@ -3,7 +3,8 @@ DATA_FILE_PATH = "C:\\Users\\Chris\\Desktop\\Data\\LFE\\lfeDataNamesRemoved.xlsx
 TWITTER_FILE_PATH = "C:\\Users\\Chris\\Desktop\\Data\\LFE\\Corona_NLP_tweets.csv"
 USE_CLI_ARGUMENTS = False    # Enable/Disable the CLI argument parser for overwriting these parameters
 USE_REUTERS = False          # Choose to test the pipeline using the Reuters-21578 dataset
-USE_TWITTER = False         # Choose to test the pipeline using the Twitter dataset
+USE_TWITTER = True        # Choose to test the pipeline using the Twitter dataset
+FREE_RESOURCES = True       # Clean up unused resources (Lower memory footprint, less debugging data)
 
 # --------------------------------------- PRE PROCESSING PARAMETERS ----------------------------------------------
 REMOVE_NUMERIC = True            # Remove any numeric characters or numeric punctuation from the text
@@ -59,4 +60,4 @@ PRINT_PROGRESS = True   # Print the current test progress details to the console
 
 # ------------------------------------- RESULTS AND STATS PARAMETERS --------------------------------------------
 SAVE_STATS_TO_FILE = False          # Should the resultant statistics be written to a CSV file
-SAVE_FILE_NAME = "testCVNNSMALL.csv"   # Filename where results are written (found in "./Output/<SAVE_FILE_NAME>)
+SAVE_FILE_NAME = "testCVManualTwitter.csv"   # Filename where results are written (found in "./Output/<SAVE_FILE_NAME>)

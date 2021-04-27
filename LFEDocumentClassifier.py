@@ -1,3 +1,4 @@
+import gc
 import pandas as pd
 from rake_nltk import Rake
 
@@ -107,6 +108,12 @@ for pair in themePairs:
     else:
         targetMasks.append(encodePrimaryThemeToValue(pair[1], USE_REUTERS, USE_TWITTER, otherCategories))
 
+# Clear unused items from memory if required
+if FREE_RESOURCES:
+    del dataFile
+    del themePairs
+    del wordEmbeddings
+    gc.collect()
 
 # TODO: [PIPELINE SPLIT 4] - Determine which classifier to use and how to initialise it
 # Populate "classifier" with the chosen classifier and initialise any hyper-parameters
