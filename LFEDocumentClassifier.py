@@ -52,7 +52,7 @@ elif USE_TWITTER:
     dataFile = pd.read_csv(TWITTER_FILE_PATH)
 
     # Apply all pre-processing to clean text and themes
-    ic = InputCleaner(dataFile, themePairs, 'OriginalTweet', 'Sentiment', GENERATE_1D_THEMES, USE_TWITTER)
+    ic = InputCleaner(dataFile, themePairs, 'text', 'type', GENERATE_1D_THEMES, USE_TWITTER)
     ic.cleanText(REMOVE_NUMERIC, REMOVE_SINGLE_LETTERS, REMOVE_KEYWORDS, REMOVE_EXTRA_SPACES)
     categoryCount = len(ic.primaryThemesCount.keys())
     otherCategories = list(ic.primaryThemesCount.keys())
@@ -89,6 +89,12 @@ else:
     print("ERROR - Invalid Keyword IDing method chosen")
     breakpoint()
 
+# DATA GATHERING!
+print("average raw character length: " + str(getAverageTextLength(themePairs, True)))
+print("average final character length: " + str(getAverageTextLength(wordEmbeddings, False)))
+print("average final word count: " + str(getAverageWordCount(wordEmbeddings)))
+print("total items count: " + str(len(themePairs)))
+
 # TODO: [PIPELINE SPLIT 3] - Build features from keywords/text
 bagOfWords = generateBagOfWords(wordEmbeddings, USE_THRESHOLD, KEYWORD_THRESHOLD)
 print("Total Features: " + str(len(bagOfWords)))
@@ -113,6 +119,12 @@ if FREE_RESOURCES:
     del dataFile
     del themePairs
     del wordEmbeddings
+    if not USE_REUTERS:
+        del ic
+    if WORD_EMBEDDING_METHOD == 'text_rank':
+        del tr
+    elif WORD_EMBEDDING_METHOD == 'tf_idf' or WORD_EMBEDDING_METHOD == 'word_count':
+        del tf
     gc.collect()
 
 # TODO: [PIPELINE SPLIT 4] - Determine which classifier to use and how to initialise it

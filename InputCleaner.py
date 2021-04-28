@@ -153,8 +153,9 @@ class InputCleaner:
 
     @staticmethod
     def removeKeywordsFromText(rawText):
-        newText = re.sub(r"http\S+", "", rawText)
-        newText = re.sub(r"@\S+", "", newText)
+        newText = re.sub(r"https?:\/\/\S+", "", rawText)
+        newText = re.sub(r"@[A-Za-z0–9]+", "", newText)
+        newText = re.sub(r"RT[\s]+", "", newText)
         newText = re.sub(r"#", "", newText)
         newText = re.sub(r"\n", " ", newText)
         newText = re.sub(r"\x92", "'", newText)

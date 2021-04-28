@@ -1,9 +1,9 @@
 # ------------------------------------------ GENERAL PARAMETERS --------------------------------------------------
 DATA_FILE_PATH = "C:\\Users\\Chris\\Desktop\\Data\\LFE\\lfeDataNamesRemoved.xlsx"
-TWITTER_FILE_PATH = "C:\\Users\\Chris\\Desktop\\Data\\LFE\\Corona_NLP_tweets.csv"
+TWITTER_FILE_PATH = "C:\\Users\\Chris\\Desktop\\Data\\LFE\\twitter_mediatype_data.csv"
 USE_CLI_ARGUMENTS = False    # Enable/Disable the CLI argument parser for overwriting these parameters
 USE_REUTERS = False          # Choose to test the pipeline using the Reuters-21578 dataset
-USE_TWITTER = True        # Choose to test the pipeline using the Twitter dataset
+USE_TWITTER = False        # Choose to test the pipeline using the Twitter dataset
 FREE_RESOURCES = True       # Clean up unused resources (Lower memory footprint, less debugging data)
 
 # --------------------------------------- PRE PROCESSING PARAMETERS ----------------------------------------------
@@ -15,7 +15,7 @@ GENERATE_1D_THEMES = False       # Split multi label themes into single one dime
 
 # --------------------------------------- WORD EMBEDDING PARAMETERS ----------------------------------------------
 WORD_EMBEDDING_METHOD = 'tf_idf'    # VALID: 'rake', 'text_rank', 'word_count', 'tf_idf'
-REMOVE_STOPWORDS = True            # Use the chosen stop word list to purge these words from the text (not for rake)
+REMOVE_STOPWORDS = False           # Use the chosen stop word list to purge these words from the text (not for rake)
 STEM_TEXT = False                   # Use the chosen stemming algorithm to stem the text (not for rake)
 
 # -------------------------------------- FEATURE CREATION PARAMETERS ---------------------------------------------

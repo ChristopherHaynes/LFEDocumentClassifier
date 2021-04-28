@@ -189,3 +189,21 @@ def getMultiThemePerfectAccuracy(predictions, actualResults):
                 correctPredictions += 1/shortestListLength
 
     return (correctPredictions / len(predictions)) * 100
+
+
+def getAverageTextLength(inputList, inputPaired):
+    textSum = 0
+    for item in inputList:
+        if inputPaired:
+            textSum += len(item[0])
+        else:
+            for wordPair in item:
+                textSum += len(wordPair[1])
+    return textSum / len(inputList)
+
+
+def getAverageWordCount(wordEmbeddings):
+    wordSum = 0
+    for words in wordEmbeddings:
+        wordSum += len(words)
+    return wordSum / len(wordEmbeddings)

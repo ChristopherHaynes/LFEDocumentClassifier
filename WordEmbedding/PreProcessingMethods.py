@@ -28,7 +28,10 @@ def stanfordNLPPreProcessor(themePairs):
                     newWords.append(word)
             newSentences.append(newWords)
         themePairsClone[i][0] = newSentences
-        print(i)  # TESTING SPEED OF OPERATIONS
+
+        # TESTING SPEED OF OPERATIONS
+        if i % 500 == 0:
+            print(i)
 
     return themePairsClone
 
