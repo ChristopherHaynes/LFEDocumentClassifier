@@ -28,7 +28,7 @@ def generateBagOfWordsDict(bagOfWords):
 
 
 def generateFeatureMask(bagOfWords, bagOfWordsDict, scoredText):
-    featureMask = np.zeros(len(bagOfWords))
+    featureMask = np.zeros(len(bagOfWords), dtype=np.float32)
 
     for textScoreTuple in scoredText:
         index = bagOfWordsDict[textScoreTuple[1]]

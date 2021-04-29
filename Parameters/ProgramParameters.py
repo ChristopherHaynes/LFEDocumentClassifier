@@ -4,7 +4,7 @@ TWITTER_FILE_PATH = "C:\\Users\\Chris\\Desktop\\Data\\LFE\\Corona_NLP_train.csv"
 USE_CLI_ARGUMENTS = False    # Enable/Disable the CLI argument parser for overwriting these parameters
 USE_REUTERS = False          # Choose to test the pipeline using the Reuters-21578 dataset
 USE_TWITTER = False       # Choose to test the pipeline using the Twitter dataset
-FREE_RESOURCES = True       # Clean up unused resources (Lower memory footprint, less debugging data)
+FREE_RESOURCES = False       # Clean up unused resources (Lower memory footprint, less debugging data)
 
 # --------------------------------------- PRE PROCESSING PARAMETERS ----------------------------------------------
 REMOVE_NUMERIC = True            # Remove any numeric characters or numeric punctuation from the text
@@ -15,8 +15,8 @@ GENERATE_1D_THEMES = False       # Split multi label themes into single one dime
 
 # --------------------------------------- WORD EMBEDDING PARAMETERS ----------------------------------------------
 WORD_EMBEDDING_METHOD = 'tf_idf'    # VALID: 'rake', 'text_rank', 'word_count', 'tf_idf'
-REMOVE_STOPWORDS = False           # Use the chosen stop word list to purge these words from the text (not for rake)
-STEM_TEXT = False                   # Use the chosen stemming algorithm to stem the text (not for rake)
+REMOVE_STOPWORDS = True           # Use the chosen stop word list to purge these words from the text (not for rake)
+STEM_TEXT = True                   # Use the chosen stemming algorithm to stem the text (not for rake)
 
 # -------------------------------------- FEATURE CREATION PARAMETERS ---------------------------------------------
 # Bag of words parameters
@@ -48,8 +48,8 @@ SVM_CLASS_WEIGHT = None       # None - no balancing of classes, 'balanced' - aut
 SVM_DECISION_SHAPE = 'ovr'    # Whether to return a "one vs rest" ('ovr') or a "one vs one" ('ovo') decision function
 
 # K-Means parameters
-KM_CLUSTERS = 50            # Number of clusters to fit to when training
-KM_N_INIT = 10             # Number of times to run the algorithm starting with different centroids
+KM_CLUSTERS = 16            # Number of clusters to fit to when training
+KM_N_INIT = 15             # Number of times to run the algorithm starting with different centroids
 
 # ------------------------------------------ TESTING PARAMETERS -------------------------------------------------
 CROSS_VALIDATE = True   # Should cross validation be used (False - results in a test train split)

@@ -7,7 +7,7 @@ from sklearn.metrics import silhouette_score
 from .AbstractClassifier import *
 
 
-def writeScoresToCSV(clusters, score, fileName='kmeanSilhouettes3.csv'):
+def writeScoresToCSV(clusters, score=None, fileName='kmeanLFEClustersK150_SS.csv'):
     # If an "Output" directory doesn't exist in the working directory, then create one
     rootPath = Path(__file__).parent
     outputDirPath = (rootPath / "./Output").resolve()
@@ -21,7 +21,11 @@ def writeScoresToCSV(clusters, score, fileName='kmeanSilhouettes3.csv'):
     isExistingFile = filePath.is_file()
     with open(filePath, 'a', newline='') as file:
         csvWriter = csv.writer(file)
-        csvWriter.writerow([str(clusters), str(score)])
+        if score is None:
+            for oneCluster in clusters:
+                csvWriter.writerow([str(oneCluster)])
+        else:
+            csvWriter.writerow([str(clusters), str(score)])
 
 
 class KMeans(AbstractClassifier):
@@ -43,11 +47,14 @@ class KMeans(AbstractClassifier):
     def train(self):
         super().train()
         self.classifier = cluster.KMeans(n_clusters=self.nClusters, n_init=self.nInit)
-        clusterLabels = self.classifier.fit_predict(self.XTrain)
+        clusterLabels = self.classifier.fit_predict(self.X)
 
-        print("Testing Cluster Size: " + str(self.nClusters))
-        silhouetteAverage = silhouette_score(self.XTrain, clusterLabels)
-        writeScoresToCSV(self.nClusters, silhouetteAverage)
+        # writeScoresToCSV(clusterLabels)
+        # pass
+
+        # print("Testing Cluster Size: " + str(self.nClusters))
+        # silhouetteAverage = silhouette_score(self.XTrain, clusterLabels)
+        # writeScoresToCSV(self.nClusters, silhouetteAverage)
 
     def classifySingleClass(self):
         return super().classifySingleClass()

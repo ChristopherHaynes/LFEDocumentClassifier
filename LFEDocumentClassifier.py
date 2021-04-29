@@ -116,6 +116,8 @@ for pair in themePairs:
     else:
         targetMasks.append(encodePrimaryThemeToValue(pair[1], USE_REUTERS, USE_TWITTER, otherCategories))
 
+writeEmbeddedWordsToFile(wordEmbeddings, "wordEmbeddingsRecombined")
+
 # Clear unused items from memory if required
 if FREE_RESOURCES:
     del dataFile

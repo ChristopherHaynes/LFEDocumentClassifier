@@ -49,6 +49,63 @@ def generateRowData(testStats, rowID, classifierAbbreviation, wordEmbeddingMetho
     return rowData
 
 
+def writeSingleValuesToFile(valuesList, fileName):
+    # If an "Output" directory doesn't exist in the working directory, then create one
+    rootPath = Path(__file__).parent
+    outputDirPath = (rootPath / "./Output").resolve()
+    try:
+        os.mkdir(outputDirPath)
+    except OSError:
+        pass
+
+    # If a results file already exists then open it, otherwise create a new file and write the headers
+    filePath = (rootPath / "./Output/" / fileName).resolve()
+    isExistingFile = filePath.is_file()
+    with open(filePath, 'a', newline='') as file:
+        csvWriter = csv.writer(file)
+        for value in valuesList:
+            csvWriter.writerow([value])
+
+
+def writeEmbeddedWordsToFile(embeddedWords, fileName):
+    # If an "Output" directory doesn't exist in the working directory, then create one
+    rootPath = Path(__file__).parent
+    outputDirPath = (rootPath / "./Output").resolve()
+    try:
+        os.mkdir(outputDirPath)
+    except OSError:
+        pass
+
+    # If a results file already exists then open it, otherwise create a new file and write the headers
+    filePath = (rootPath / "./Output/" / fileName).resolve()
+    isExistingFile = filePath.is_file()
+    with open(filePath, 'a', newline='') as file:
+        csvWriter = csv.writer(file)
+        for item in embeddedWords:
+            textRecombined = ""
+            for wordPair in item:
+                textRecombined += wordPair[1] + " "
+            csvWriter.writerow([textRecombined.strip()])
+
+
+def writeTuplesToFile(tupleList, fileName):
+    # If an "Output" directory doesn't exist in the working directory, then create one
+    rootPath = Path(__file__).parent
+    outputDirPath = (rootPath / "./Output").resolve()
+    try:
+        os.mkdir(outputDirPath)
+    except OSError:
+        pass
+
+    # If a results file already exists then open it, otherwise create a new file and write the headers
+    filePath = (rootPath / "./Output/" / fileName).resolve()
+    isExistingFile = filePath.is_file()
+    with open(filePath, 'a', newline='') as file:
+        csvWriter = csv.writer(file)
+        for pair in tupleList:
+            csvWriter.writerow([pair[0], pair[1]])
+
+
 def writeDictionaryToCSV(testStats, fileName, classifierAbbreviation, wordEmbeddingMethod, removeStopwords, stemText):
     # If an "Output" directory doesn't exist in the working directory, then create one
     rootPath = Path(__file__).parent
