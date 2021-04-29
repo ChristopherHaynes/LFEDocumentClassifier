@@ -1,9 +1,9 @@
 # ------------------------------------------ GENERAL PARAMETERS --------------------------------------------------
 DATA_FILE_PATH = "C:\\Users\\Chris\\Desktop\\Data\\LFE\\lfeDataNamesRemoved.xlsx"
-TWITTER_FILE_PATH = "C:\\Users\\Chris\\Desktop\\Data\\LFE\\twitter_mediatype_data.csv"
+TWITTER_FILE_PATH = "C:\\Users\\Chris\\Desktop\\Data\\LFE\\Corona_NLP_train.csv"
 USE_CLI_ARGUMENTS = False    # Enable/Disable the CLI argument parser for overwriting these parameters
 USE_REUTERS = False          # Choose to test the pipeline using the Reuters-21578 dataset
-USE_TWITTER = False        # Choose to test the pipeline using the Twitter dataset
+USE_TWITTER = False       # Choose to test the pipeline using the Twitter dataset
 FREE_RESOURCES = True       # Clean up unused resources (Lower memory footprint, less debugging data)
 
 # --------------------------------------- PRE PROCESSING PARAMETERS ----------------------------------------------

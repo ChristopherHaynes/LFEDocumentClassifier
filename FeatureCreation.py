@@ -1,5 +1,6 @@
 import math
 from nltk.corpus import reuters
+import numpy as np
 from Parameters.AllThemes import ALL_THEMES_LIST
 
 
@@ -14,10 +15,29 @@ def generateBagOfWords(documentList, useThreshold=False, keywordPerItemThreshold
             else:
                 bagOfWords.add(featureList[i][1])
 
-    return bagOfWords
+    return list(bagOfWords)
 
 
-def generateFeatureMask(bagOfWords, scoredText):
+def generateBagOfWordsDict(bagOfWords):
+    bagOfWordsDict = dict()
+
+    for i in range(len(bagOfWords)):
+        bagOfWordsDict[bagOfWords[i]] = i
+
+    return bagOfWordsDict
+
+
+def generateFeatureMask(bagOfWords, bagOfWordsDict, scoredText):
+    featureMask = np.zeros(len(bagOfWords))
+
+    for textScoreTuple in scoredText:
+        index = bagOfWordsDict[textScoreTuple[1]]
+        featureMask[index] = textScoreTuple[0]
+
+    return featureMask
+
+
+def DEPRECIATED_generateFeatureMask(bagOfWords, scoredText):
     featureMask = []
     scores = []
     words = []

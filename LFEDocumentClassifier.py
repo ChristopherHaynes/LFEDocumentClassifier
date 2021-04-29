@@ -35,14 +35,15 @@ if USE_CLI_ARGUMENTS:
     SVM_CLASS_WEIGHT = None if args.svmClassWeight is False else 'balanced'
 
 # GLOBAL VARIABLES
-themePairs = []        # List of tuples, where the first item contains text and the second contains corresponding themes
-wordEmbeddings = []    # List of words and their embedded scores per entry (words, keywords, TF-IDF etc)
-bagOfWords = []        # List of all the words making up the bag of words (for feature creation)
-featuresMasks = []     # Feature mask per entry to match with the bagOfWords structure/order
-targetMasks = []       # Target value (class) per entry, aligns with features mask
-classifier = None      # Placeholder for the classifier object generated later in the pipeline
-otherCategories = None  # Placeholder for reuters categories (if reuters is being used, remains None otherwise)
-categoryCount = 0      # Number of classes/themes/categories (len(set(y)))
+themePairs = []          # List of tuples, where the first item contains text and the second contains corresponding themes
+wordEmbeddings = []      # List of words and their embedded scores per entry (words, keywords, TF-IDF etc)
+bagOfWords = []          # List of all the words making up the bag of words (for feature creation)
+bagOfWordsDict = dict()  # Dict for quick indexing of BOW
+featuresMasks = []       # Feature mask per entry to match with the bagOfWords structure/order
+targetMasks = []         # Target value (class) per entry, aligns with features mask
+classifier = None        # Placeholder for the classifier object generated later in the pipeline
+otherCategories = None   # Placeholder for reuters categories (if reuters is being used, remains None otherwise)
+categoryCount = 0        # Number of classes/themes/categories (len(set(y)))
 
 # TODO: [PIPELINE SPLIT 1] - Determine stop list and stemming method (or disable these options)
 if USE_REUTERS:
@@ -52,7 +53,7 @@ elif USE_TWITTER:
     dataFile = pd.read_csv(TWITTER_FILE_PATH)
 
     # Apply all pre-processing to clean text and themes
-    ic = InputCleaner(dataFile, themePairs, 'text', 'type', GENERATE_1D_THEMES, USE_TWITTER)
+    ic = InputCleaner(dataFile, themePairs, 'OriginalTweet', 'Sentiment', GENERATE_1D_THEMES, USE_TWITTER)
     ic.cleanText(REMOVE_NUMERIC, REMOVE_SINGLE_LETTERS, REMOVE_KEYWORDS, REMOVE_EXTRA_SPACES)
     categoryCount = len(ic.primaryThemesCount.keys())
     otherCategories = list(ic.primaryThemesCount.keys())
@@ -97,12 +98,13 @@ print("total items count: " + str(len(themePairs)))
 
 # TODO: [PIPELINE SPLIT 3] - Build features from keywords/text
 bagOfWords = generateBagOfWords(wordEmbeddings, USE_THRESHOLD, KEYWORD_THRESHOLD)
+bagOfWordsDict = generateBagOfWordsDict(bagOfWords)
 print("Total Features: " + str(len(bagOfWords)))
 
 # Generate the feature masks which will make up the training features for classification
 TESTING = 0
 for scoredPairs in wordEmbeddings:
-    featuresMasks.append(generateFeatureMask(bagOfWords, scoredPairs))
+    featuresMasks.append(generateFeatureMask(bagOfWords, bagOfWordsDict, scoredPairs))
     TESTING += 1
     if TESTING % 100 == 0:
         print(TESTING)
