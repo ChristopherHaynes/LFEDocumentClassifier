@@ -13,7 +13,8 @@ class SupportVectorMachine(AbstractClassifier):
                  kernel='rbf',
                  degree=3,
                  classWeight=None,
-                 decisionShape='ovr'):
+                 decisionShape='ovr',
+                 verbose=True):
         super().__init__(featureData, targetData, testSize, randomState)
         self.name = "Support Vector Machine"
         self.isMultiLabelClassification = isMultiLabelClassification
@@ -21,17 +22,20 @@ class SupportVectorMachine(AbstractClassifier):
         self.degree = degree
         self.classWeight = classWeight
         self.decisionShape = decisionShape
+        self.verbose = verbose
         self.classifier = svm.SVC(kernel=self.kernel,
                                   degree=self.degree,
                                   class_weight=self.classWeight,
-                                  decision_function_shape=self.decisionShape)
+                                  decision_function_shape=self.decisionShape,
+                                  verbose=self.verbose)
 
     def train(self):
         super().train()
         self.classifier = svm.SVC(kernel=self.kernel,
                                   degree=self.degree,
                                   class_weight=self.classWeight,
-                                  decision_function_shape=self.decisionShape)
+                                  decision_function_shape=self.decisionShape,
+                                  verbose=self.verbose)
         if self.isMultiLabelClassification:
             self.classifier.fit(self.XTrain, [item[0] for item in self.yTrain])
         else:

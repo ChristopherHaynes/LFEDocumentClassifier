@@ -9,10 +9,12 @@ class ComplementNaiveBayes(AbstractClassifier):
                  targetData,
                  isMultiLabelClassification=False,
                  testSize=0.25,
-                 randomState=None):
+                 randomState=None,
+                 verbose=True):
         super().__init__(featureData, targetData, testSize, randomState)
         self.name = "Complement Naive Bayes"
         self.isMultiLabelClassification = isMultiLabelClassification
+        self.verbose = verbose
         self.classifier = naive_bayes.ComplementNB()
 
     def train(self):

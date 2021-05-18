@@ -6,13 +6,14 @@ from Parameters import ALL_THEMES_LIST
 
 class AbstractClassifier:
 
-    def __init__(self, featureData, targetData, testSize=0.25, randomState=None):
+    def __init__(self, featureData, targetData, testSize=0.25, randomState=None, verbose=True):
         # Classifier initialisation variables (only mutable on construction)
         self.name = "ABSTRACT"          # Classifier name used for reference in results
         self.X = np.array(featureData)  # Convert the feature mask to a numpy array [item, feature mask]
         self.y = np.array(targetData)   # Convert the target labels to a numpy array [item, feature mask]
         self.testSize = testSize        # float representing the fraction of data to be split into test
         self.randomState = randomState  # Int or None to seed random number generator
+        self.verbose = verbose          # Print progress in cross validation
 
         # Single classification variables (mutable after construction)
         self.classifier = None  # Placeholder for classifier to be built into in concrete classes
@@ -29,7 +30,7 @@ class AbstractClassifier:
     def crossValidate(self, cv):
         scoringMetrics = ['accuracy', 'precision_micro', 'precision_macro', 'recall_micro', 'recall_macro',
                           'f1_micro', 'f1_macro']
-        cvResults = cross_validate(self.classifier, self.X, self.y, cv=cv, scoring=scoringMetrics)
+        cvResults = cross_validate(self.classifier, self.X, self.y, cv=cv, scoring=scoringMetrics, verbose=self.verbose)
 
         # Take the average of each of the scoring metrics, package them together and return
         averageResults = dict()

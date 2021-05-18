@@ -13,17 +13,22 @@ class KNNClassifier(AbstractClassifier):
                  randomState=None,
                  nNeighbours=15,
                  weights='uniform',
-                 algorithm='auto'):
+                 algorithm='auto',
+                 verbose=True):
         super().__init__(featureData, targetData, testSize, randomState)
         self.name = "K Nearest Neighbor"
         self.useMultiLabelClassification = useMultiLabelClassification
         self.nNeighbours = nNeighbours
         self.weights = weights
         self.algorithm = algorithm
+        self.verbose = verbose
         if self.useMultiLabelClassification:
             self.classifier = MLkNN(self.nNeighbours)
         else:
-            self.classifier = neighbors.KNeighborsClassifier(self.nNeighbours, weights=self.weights, algorithm=self.algorithm)
+            self.classifier = neighbors.KNeighborsClassifier(self.nNeighbours,
+                                                             weights=self.weights,
+                                                             algorithm=self.algorithm,
+                                                             verbose=self.verbose)
 
     def train(self):
         super().train()
@@ -31,13 +36,16 @@ class KNNClassifier(AbstractClassifier):
             self.classifier = MLkNN(self.nNeighbours)
             self.classifier.fit(self.XTrain, self.encodeThemeIndicesToMatrix(self.yTrain))
         else:
-            self.classifier = neighbors.KNeighborsClassifier(self.nNeighbours, weights=self.weights, algorithm=self.algorithm)
+            self.classifier = neighbors.KNeighborsClassifier(self.nNeighbours,
+                                                             weights=self.weights,
+                                                             algorithm=self.algorithm,
+                                                             verbose=self.verbose)
             self.classifier.fit(self.XTrain, self.yTrain)
 
     def classifySingleClass(self):
         return super().classifySingleClass()
 
-    # TODO: Confusing approach (calling single class in abstract) consider refactor (also look into spacey sparse matrix)
+    # TODO: Confusing approach (calling single class in abstract) consider refactor
     def classifyMultiClass(self):
         packagedResults = super().classifySingleClass()
         return [packagedResults[0].rows, packagedResults[1]]

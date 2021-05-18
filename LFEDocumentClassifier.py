@@ -47,8 +47,9 @@ bagOfWordsDict = dict()  # Dict for quick indexing of BOW
 featuresMasks = []       # Feature mask per entry to match with the bagOfWords structure/order
 targetMasks = []         # Target value (class) per entry, aligns with features mask
 classifier = None        # Placeholder for the classifier object generated later in the pipeline
-otherCategories = None   # Placeholder for reuters categories (if reuters is being used, remains None otherwise)
+otherCategories = None   # Placeholder for reuters categories (if reuters/raw CSV is being used, remains None otherwise)
 categoryCount = 0        # Number of classes/themes/categories (len(set(y)))
+
 
 # TODO: [PIPELINE SPLIT 1] - Take input data and spilt into input and target, pre-process and clean
 if USE_REUTERS:
@@ -62,7 +63,6 @@ elif USE_RAW_CSV:
     ic.cleanText(REMOVE_NUMERIC, REMOVE_SINGLE_LETTERS, REMOVE_KEYWORDS, REMOVE_EXTRA_SPACES)
     categoryCount = len(ic.primaryThemesCount.keys())
     otherCategories = list(ic.primaryThemesCount.keys())
-
 else:
     # Read raw .XLSX file and store as pandas data-frame
     dataFile = pd.read_excel(LFE_DATA_FILE_PATH, engine='openpyxl')
@@ -146,13 +146,15 @@ if CLASSIFIER_NAME == 'knn':
                                RANDOM_STATE,
                                KNN_NEIGHBOURS,
                                KNN_WEIGHTS,
-                               KNN_ALGORITHM)
+                               KNN_ALGORITHM,
+                               PRINT_PROGRESS)
 
 elif CLASSIFIER_NAME == 'cnb':
     classifier = ComplementNaiveBayes(featuresMasks, targetMasks,
                                       USE_MULTI_LABEL_CLASSIFICATION,
                                       TEST_GROUP_SIZE,
-                                      RANDOM_STATE)
+                                      RANDOM_STATE,
+                                      PRINT_PROGRESS)
 
 elif CLASSIFIER_NAME == 'nn':
     if NN_USE_KERAS:
@@ -167,7 +169,8 @@ elif CLASSIFIER_NAME == 'nn':
                                                  categoryCount,
                                                  TEST_GROUP_SIZE,
                                                  RANDOM_STATE,
-                                                 NN_BATCH_SIZE)
+                                                 NN_BATCH_SIZE,
+                                                 PRINT_PROGRESS)
 
 elif CLASSIFIER_NAME == 'svm':
     classifier = SupportVectorMachine(featuresMasks, targetMasks,
@@ -177,7 +180,8 @@ elif CLASSIFIER_NAME == 'svm':
                                       SVM_KERNEL,
                                       SVM_DEGREE,
                                       SVM_CLASS_WEIGHT,
-                                      SVM_DECISION_SHAPE)
+                                      SVM_DECISION_SHAPE,
+                                      PRINT_PROGRESS)
 
 elif CLASSIFIER_NAME == "km":
     classifier = KMeans(featuresMasks, targetMasks,

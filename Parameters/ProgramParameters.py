@@ -3,10 +3,16 @@ LFE_DATA_FILE_PATH = "C:\\Users\\Chris\\Desktop\\Data\\LFE\\lfeDataNamesRemoved.
 CSV_FILE_PATH = "C:\\Users\\Chris\\Desktop\\Data\\LFE\\twitter_mediatype_data.csv"
 CSV_INPUT_COL = 'text'      # Name of the header of the column for the input data
 CSV_TARGET_COL = 'type'     # Name of the header of the column for the target data
-USE_CLI_ARGUMENTS = True    # Enable/Disable the CLI argument parser for overwriting these parameters
+USE_CLI_ARGUMENTS = False    # Enable/Disable the CLI argument parser for overwriting these parameters
 USE_REUTERS = False         # Choose to test the pipeline using the Reuters-21578 dataset
 USE_RAW_CSV = False         # Choose to test the pipeline using the Twitter dataset
 FREE_RESOURCES = False       # Clean up unused resources (Lower memory footprint, less debugging data)
+
+# ----------------------------------------- VALIDATION PARAMETERS ------------------------------------------------
+VALIDATION_FILE_PATH = ""
+VALIDATION_INPUT_COL = ""
+VALIDATION_TARGET_COL = ""
+USE_VALIDATION = True
 
 # --------------------------------------- PRE PROCESSING PARAMETERS ----------------------------------------------
 REMOVE_NUMERIC = True            # Remove any numeric characters or numeric punctuation from the text
@@ -16,7 +22,7 @@ REMOVE_EXTRA_SPACES = True       # Remove any extra spaces, new line characters 
 GENERATE_1D_THEMES = False       # Split multi label themes into single one dimensional pairs (duplicate X for each y)
 
 # --------------------------------------- WORD EMBEDDING PARAMETERS ----------------------------------------------
-WORD_EMBEDDING_METHOD = 'rake'    # VALID: 'rake', 'text_rank', 'word_count', 'tf_idf'
+WORD_EMBEDDING_METHOD = 'tf_idf'   # VALID: 'rake', 'text_rank', 'word_count', 'tf_idf'
 REMOVE_STOPWORDS = False           # Use the chosen stop word list to purge these words from the text (not for rake)
 STEM_TEXT = False                  # Use the chosen stemming algorithm to stem the text (not for rake)
 
@@ -27,7 +33,7 @@ KEYWORD_THRESHOLD = 4     # Value for the threshold at which keywords will be ig
 
 # ----------------------------------------- CLASSIFIER PARAMETERS ------------------------------------------------
 # General Classifier parameters
-CLASSIFIER_NAME = 'cnb'                 # Type of classifier to use. VALID: 'knn', 'cnb', 'nn', 'svm', 'km'
+CLASSIFIER_NAME = 'nn'                 # Type of classifier to use. VALID: 'knn', 'cnb', 'nn', 'svm', 'km'
 USE_MULTI_LABEL_CLASSIFICATION = False   # Allow multiple labels to be assigned per item
 TEST_GROUP_SIZE = 0.25                  # Fraction to split into the test group when performing a test/train split
 RANDOM_STATE = None                     # Seed used for random number generation VALID: None, Int
