@@ -1,5 +1,4 @@
 import math
-from nltk.corpus import reuters
 import numpy as np
 from Parameters.AllThemes import ALL_THEMES_LIST
 

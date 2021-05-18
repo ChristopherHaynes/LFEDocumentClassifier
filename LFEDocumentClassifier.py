@@ -14,6 +14,11 @@ from FileIO import *
 # Handle command line arguments and set program parameters
 if USE_CLI_ARGUMENTS:
     args = collectCommandLineArguments()
+    USE_REUTERS = args.useReuters
+    USE_RAW_CSV = args.useCSV
+    CSV_FILE_PATH = args.csvPath
+    CSV_INPUT_COL = args.inputName
+    CSV_TARGET_COL = args.targetName
     CLASSIFIER_NAME = args.classifier
     WORD_EMBEDDING_METHOD = args.wordEmbedding
     TEST_RUNS = args.testRuns
@@ -45,29 +50,29 @@ classifier = None        # Placeholder for the classifier object generated later
 otherCategories = None   # Placeholder for reuters categories (if reuters is being used, remains None otherwise)
 categoryCount = 0        # Number of classes/themes/categories (len(set(y)))
 
-# TODO: [PIPELINE SPLIT 1] - Determine stop list and stemming method (or disable these options)
+# TODO: [PIPELINE SPLIT 1] - Take input data and spilt into input and target, pre-process and clean
 if USE_REUTERS:
     themePairs, otherCategories = getReutersFeatureClassPairs()
     categoryCount = len(otherCategories)
-elif USE_TWITTER:
-    dataFile = pd.read_csv(TWITTER_FILE_PATH)
+elif USE_RAW_CSV:
+    dataFile = pd.read_csv(CSV_FILE_PATH)
 
     # Apply all pre-processing to clean text and themes
-    ic = InputCleaner(dataFile, themePairs, 'OriginalTweet', 'Sentiment', GENERATE_1D_THEMES, USE_TWITTER)
+    ic = InputCleaner(dataFile, themePairs, CSV_INPUT_COL, CSV_TARGET_COL, GENERATE_1D_THEMES, USE_RAW_CSV)
     ic.cleanText(REMOVE_NUMERIC, REMOVE_SINGLE_LETTERS, REMOVE_KEYWORDS, REMOVE_EXTRA_SPACES)
     categoryCount = len(ic.primaryThemesCount.keys())
     otherCategories = list(ic.primaryThemesCount.keys())
 
 else:
     # Read raw .XLSX file and store as pandas data-frame
-    dataFile = pd.read_excel(DATA_FILE_PATH, engine='openpyxl')
+    dataFile = pd.read_excel(LFE_DATA_FILE_PATH, engine='openpyxl')
 
     # Apply all pre-processing to clean text and themes
     ic = InputCleaner(dataFile, themePairs, 'excellenceText', 'themeExcellence', GENERATE_1D_THEMES)
     ic.cleanText(REMOVE_NUMERIC, REMOVE_SINGLE_LETTERS, REMOVE_KEYWORDS, REMOVE_EXTRA_SPACES)
     categoryCount = len(ALL_THEMES_LIST)
 
-# TODO: [PIPELINE SPLIT 2] - Finish determination of word embedding method
+# TODO: [PIPELINE SPLIT 2] - Use word embedding or other metrics to score input text
 if WORD_EMBEDDING_METHOD == 'rake':
     r = Rake()
     for i in range(len(themePairs)):
@@ -94,6 +99,8 @@ else:
 print("average raw character length: " + str(getAverageTextLength(themePairs, True)))
 print("average final character length: " + str(getAverageTextLength(wordEmbeddings, False)))
 print("average final word count: " + str(getAverageWordCount(wordEmbeddings)))
+minWords, maxWords = getMinAndMaxWordCount(wordEmbeddings)
+print("min words: " + str(minWords) + "max words: " + str(maxWords))
 print("total items count: " + str(len(themePairs)))
 
 # TODO: [PIPELINE SPLIT 3] - Build features from keywords/text
@@ -114,9 +121,7 @@ for pair in themePairs:
     if USE_MULTI_LABEL_CLASSIFICATION:
         targetMasks.append(encodeThemesToValues(pair[1]))
     else:
-        targetMasks.append(encodePrimaryThemeToValue(pair[1], USE_REUTERS, USE_TWITTER, otherCategories))
-
-writeEmbeddedWordsToFile(wordEmbeddings, "wordEmbeddingsRecombined")
+        targetMasks.append(encodePrimaryThemeToValue(pair[1], USE_REUTERS, USE_RAW_CSV, otherCategories))
 
 # Clear unused items from memory if required
 if FREE_RESOURCES:

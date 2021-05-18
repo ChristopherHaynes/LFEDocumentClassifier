@@ -9,6 +9,9 @@ def getReutersFeatureClassPairs():
     # List of all used categories
     categories = []
 
+    #TEST DICT
+    catCount = dict()
+
     # Iterate through all the files IDs
     for fileID in reuters.fileids():
         # Only consider the single-class items
@@ -17,6 +20,10 @@ def getReutersFeatureClassPairs():
             continue
         else:
             themePairs.append([reuters.raw(fileID), classification])
+            if classification[0] not in catCount.keys():
+                catCount[classification[0]] = 1
+            else:
+                catCount[classification[0]] += 1
             if classification[0] not in categories:
                 categories.append(classification[0])
 
@@ -24,6 +31,9 @@ def getReutersFeatureClassPairs():
     themePairs = removeNumericCharactersFromText(themePairs)
     themePairs = removeSingleLettersFromText(themePairs)
     themePairs = removeExtraSpacesFromText(themePairs)
+
+    test = [[key, value] for key, value in catCount.items()]
+    test.sort(key=lambda pair: pair[1])
 
     return themePairs, categories
 

@@ -5,7 +5,7 @@ from Parameters.AllThemes import ALL_THEMES_LIST
 
 
 class InputCleaner:
-    def __init__(self, dataFile, themePairs, textColumnName, categoryColumnName, generateOneDimensionalThemes, useTwitter=False):
+    def __init__(self, dataFile, themePairs, textColumnName, categoryColumnName, generateOneDimensionalThemes, useRawCSV=False):
         self.rawDataFile = dataFile
         self.themePairs = themePairs  # List of tuples, first item is the text (features), second item is the theme (categories)
         self.themesCount = dict()  # Key is theme, value is number of occurrences
@@ -18,7 +18,7 @@ class InputCleaner:
         self.extractThemePairs(textColumnName, categoryColumnName)
 
         # Convert the raw theme string into a list of strings in the theme pairs list
-        if not useTwitter:
+        if not useRawCSV:
             self.convertThemesToList()
 
         # Remove any further entries which are now empty or invalid (lacking in either valid feature text or category)
@@ -31,8 +31,7 @@ class InputCleaner:
         if generateOneDimensionalThemes:
             self.restructurePairsForMultiLabelOneDimension()
 
-    def cleanText(self, removeNumeric=True, removeSingleLetters=True,
-                  removeKeywords=False, removeExtraSpaces=True, removePunctuation=True):
+    def cleanText(self, removeNumeric=True, removeSingleLetters=True, removeKeywords=True, removeExtraSpaces=True):
         for pair in self.themePairs:
             newText = pair[0]
             if removeNumeric:

@@ -2,10 +2,8 @@ import nltk as nltk
 import stanza
 import string
 import copy
-import spacy
 
 try:
-    nlp = spacy.load('en_core_web_sm')
     stanza.download('en')
 except:
     print("CONNECTION ERROR WARNING!")
@@ -82,7 +80,7 @@ def DEPRECIATED_stemText(themePairs):
 def DEPRECIATED_splitOnSentenceAndWords(themePairs):
     themePairsClone = copy.deepcopy(themePairs)
     for i in range(len(themePairsClone)):
-        doc = nlp(themePairsClone[i][0])
+        # doc = nlp(themePairsClone[i][0]) SpaCy no longer used
         sentences = []
         for sent in doc.sents:
             selectedWords = []

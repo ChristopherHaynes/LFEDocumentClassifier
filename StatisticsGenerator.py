@@ -207,3 +207,14 @@ def getAverageWordCount(wordEmbeddings):
     for words in wordEmbeddings:
         wordSum += len(words)
     return wordSum / len(wordEmbeddings)
+
+
+def getMinAndMaxWordCount(wordEmbeddings):
+    minCount = 100000
+    maxCount = 0
+    for words in wordEmbeddings:
+        if len(words) < minCount:
+            minCount = len(words)
+        if len(words) > maxCount:
+            maxCount = len(words)
+    return minCount, maxCount

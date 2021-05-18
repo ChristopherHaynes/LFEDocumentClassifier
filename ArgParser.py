@@ -27,6 +27,24 @@ def collectCommandLineArguments():
     # Create an argument parser for performing an experiment on the agent
     parser = argparse.ArgumentParser(description='Determining Experiment Parameters')
 
+    # Dataset selection arguments
+    parser.add_argument('-ure', '--useReuters',
+                        help='Should the reuters dataset be used',
+                        default=False,
+                        action='store_const',
+                        const=True)
+    parser.add_argument('-ucsv', '--useCSV',
+                        help='Should a generic csv dataset be used',
+                        default=False,
+                        action='store_const',
+                        const=True)
+    parser.add_argument('-path', '--csvPath',
+                        help='The path to the raw CSV data file')
+    parser.add_argument('-inam', '--inputName',
+                        help='The name of the column containing the input data')
+    parser.add_argument('-tnam', '--targetName',
+                        help='The name of the column containing the target data')
+
     # General arguments for determining overall experiment structure
     parser.add_argument('-c', '--classifier',
                         help='The name of the classifier to use' + str(classifierNames))
@@ -98,7 +116,7 @@ def collectCommandLineArguments():
     parser.add_argument('-kn', '--knnNeighbours',
                         help='The value of "n" for the KNN algorithm',
                         type=int,
-                        default=15)
+                        default=23)
     parser.add_argument('-kw', '--knnWeight',
                         help='The type of weighting used for the KNN algorithm' + str(classifierNames),
                         default='uniform')
@@ -116,11 +134,11 @@ def collectCommandLineArguments():
     # SVM arguments
     parser.add_argument('-sk', '--svmKernel',
                         help='The type of kernel used for SVM' + str(svmKernels),
-                        default='rbf')
+                        default='linear')
     parser.add_argument('-sd', '--svmDegree',
                         help='The initial degree used with the polynomial kernel',
                         type=int,
-                        default=3)
+                        default=24)
     parser.add_argument('-sc', '--svmClassWeight',
                         help='Should the class weights be proportional balanced',
                         default=False,
