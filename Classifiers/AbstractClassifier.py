@@ -55,8 +55,13 @@ class AbstractClassifier:
     def classifyMultiClass(self):
         pass
 
-    def validate(self):
-        # TODO: Consider how validation dataset should be run/returned
+    def validate(self, validationInputs):
+        # Train a classifier using the FULL test/training set
+            # Set self.XTrain to be ALL the data (self.X)
+            # Call self.train() - in concrete class
+        # Run the validation results through the trained model
+        # Record the actual results from validation set
+        # ?? Save results to file ?? Should be handled at higher level
         pass
 
     def packageResults(self):

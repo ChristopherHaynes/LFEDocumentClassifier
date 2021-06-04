@@ -21,6 +21,10 @@ def runTests(classifier, epochs, useMultiLabelClassification, crossValidate, fol
     return results
 
 
+def runValidation(classifier, validationInputs):
+    return classifier.validate(validationInputs)
+
+
 def getMultiLabelTestStats(results, epochs):
     testStats = dict()
 

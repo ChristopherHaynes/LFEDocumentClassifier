@@ -109,12 +109,8 @@ bagOfWordsDict = generateBagOfWordsDict(bagOfWords)
 print("Total Features: " + str(len(bagOfWords)))
 
 # Generate the feature masks which will make up the training features for classification
-TESTING = 0
 for scoredPairs in wordEmbeddings:
     featuresMasks.append(generateFeatureMask(bagOfWords, bagOfWordsDict, scoredPairs))
-    TESTING += 1
-    if TESTING % 100 == 0:
-        print(TESTING)
 
 # Encode the target themes into numeric values for classification
 for pair in themePairs:
@@ -135,6 +131,22 @@ if FREE_RESOURCES:
     elif WORD_EMBEDDING_METHOD == 'tf_idf' or WORD_EMBEDDING_METHOD == 'word_count':
         del tf
     gc.collect()
+
+# TODO: [VALIDATION SPLIT] - If using a validation set, perform preprocessing and generate feature masks
+validationThemePairs = []
+validationFeatureMasks = []
+if USE_VALIDATION:
+    validationDataFile = pd.read_csv(VALIDATION_FILE_PATH)
+    # Apply all pre-processing to clean validation set text
+    val_ic = InputCleaner(validationDataFile, validationThemePairs, VALIDATION_INPUT_COL, "", GENERATE_1D_THEMES, isValidation=USE_VALIDATION)
+    validationThemePairs = val_ic.cleanText(REMOVE_NUMERIC, REMOVE_SINGLE_LETTERS, REMOVE_KEYWORDS, REMOVE_EXTRA_SPACES)
+    # Crete word embeddings
+    val_tf = TermFrequency(validationThemePairs, REMOVE_STOPWORDS, STEM_TEXT)
+    val_we = val_tf.generateAllTFIDFValues()
+    # Generate feature masks
+    for scoredPairs in val_we:
+        validationFeatureMasks.append(generateFeatureMask(bagOfWords, bagOfWordsDict, scoredPairs))
+
 
 # TODO: [PIPELINE SPLIT 4] - Determine which classifier to use and how to initialise it
 # Populate "classifier" with the chosen classifier and initialise any hyper-parameters
@@ -196,30 +208,33 @@ else:
     breakpoint()
 
 # TODO: [PIPELINE SPLIT 5] - Run tests using the classifier, output results and statistics
-for test in range(TEST_RUNS):
-    results = runTests(classifier,
-                       EPOCHS,
-                       USE_MULTI_LABEL_CLASSIFICATION,
-                       CROSS_VALIDATE,
-                       CV_FOLDS,
-                       PRINT_PROGRESS)
+if USE_VALIDATION:
+    results = decodeValueToPrimaryTheme(runValidation(classifier, validationFeatureMasks))
+else:
+    for test in range(TEST_RUNS):
+        results = runTests(classifier,
+                           EPOCHS,
+                           USE_MULTI_LABEL_CLASSIFICATION,
+                           CROSS_VALIDATE,
+                           CV_FOLDS,
+                           PRINT_PROGRESS)
 
-    if CROSS_VALIDATE:
-        testStats = results
-    else:
-        if USE_MULTI_LABEL_CLASSIFICATION:
-            testStats = getMultiLabelTestStats(results, EPOCHS)
-        else:
-            testStats = getTestStats(results, EPOCHS)
-
-    if PRINT_PROGRESS:
-        for name, value in testStats.items():
-            print(name + ": " + str(value))
-
-    if SAVE_STATS_TO_FILE:
         if CROSS_VALIDATE:
-            writeDictionaryToCSV(testStats, SAVE_FILE_NAME, CLASSIFIER_NAME, WORD_EMBEDDING_METHOD, REMOVE_STOPWORDS, STEM_TEXT)
+            testStats = results
         else:
-            writeStatsToFile(testStats, SAVE_FILE_NAME, CLASSIFIER_NAME, WORD_EMBEDDING_METHOD, REMOVE_STOPWORDS, STEM_TEXT)
+            if USE_MULTI_LABEL_CLASSIFICATION:
+                testStats = getMultiLabelTestStats(results, EPOCHS)
+            else:
+                testStats = getTestStats(results, EPOCHS)
+
+        if PRINT_PROGRESS:
+            for name, value in testStats.items():
+                print(name + ": " + str(value))
+
+        if SAVE_STATS_TO_FILE:
+            if CROSS_VALIDATE:
+                writeDictionaryToCSV(testStats, SAVE_FILE_NAME, CLASSIFIER_NAME, WORD_EMBEDDING_METHOD, REMOVE_STOPWORDS, STEM_TEXT)
+            else:
+                writeStatsToFile(testStats, SAVE_FILE_NAME, CLASSIFIER_NAME, WORD_EMBEDDING_METHOD, REMOVE_STOPWORDS, STEM_TEXT)
 
 pass

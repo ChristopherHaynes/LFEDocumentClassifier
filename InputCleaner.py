@@ -5,7 +5,7 @@ from Parameters.AllThemes import ALL_THEMES_LIST
 
 
 class InputCleaner:
-    def __init__(self, dataFile, themePairs, textColumnName, categoryColumnName, generateOneDimensionalThemes, useRawCSV=False):
+    def __init__(self, dataFile, themePairs, textColumnName, categoryColumnName, generateOneDimensionalThemes, useRawCSV=False, isValidation=False):
         self.rawDataFile = dataFile
         self.themePairs = themePairs  # List of tuples, first item is the text (features), second item is the theme (categories)
         self.themesCount = dict()  # Key is theme, value is number of occurrences
@@ -15,17 +15,22 @@ class InputCleaner:
         self.totalCulledEntries = 0  # TESTING - Keep track of how many entries are invalid and removed
 
         # Generate the theme pair list from the data file and discard any invalid entries
-        self.extractThemePairs(textColumnName, categoryColumnName)
+        if isValidation:
+            self.extractInputText(textColumnName)
+        else:
+            self.extractThemePairs(textColumnName, categoryColumnName)
 
         # Convert the raw theme string into a list of strings in the theme pairs list
-        if not useRawCSV:
+        if not useRawCSV or isValidation:
             self.convertThemesToList()
 
         # Remove any further entries which are now empty or invalid (lacking in either valid feature text or category)
-        self.cullEmptyEntries()
+        if not isValidation:
+            self.cullEmptyEntries()
 
         # Process the counts of all themes and primary themes for each pair in the theme pairs list
-        self.getThemesCounts()
+        if not isValidation:
+            self.getThemesCounts()
 
         # Split multi labels into single one dimensional pairs
         if generateOneDimensionalThemes:
@@ -49,12 +54,14 @@ class InputCleaner:
             else:
                 self.themePairs.remove(pair)
 
+        return self.themePairs
+
     def extractThemePairs(self, textColumnName, categoryColumnName):
         fullTexts = pd.DataFrame(self.rawDataFile, columns=[textColumnName])
         themesDataFrame = pd.DataFrame(self.rawDataFile, columns=[categoryColumnName])
         self.totalEntries = len(themesDataFrame.index)
 
-        for i in range(0, len(themesDataFrame.index) - 1):
+        for i in range(0, len(themesDataFrame.index)):
             fullText = fullTexts.loc[i].max()
             theme = themesDataFrame.loc[i].max()
             if isinstance(fullText, str) and len(fullText) > 0 and not fullText.lower() == 'x' \
@@ -62,6 +69,17 @@ class InputCleaner:
                 self.themePairs.append([fullText.lower(), theme])
             else:
                 self.totalCulledEntries = self.totalCulledEntries + 1
+
+    def extractInputText(self, textColumnName):
+        fullTexts = pd.DataFrame(self.rawDataFile, columns=[textColumnName])
+        self.totalEntries = len(fullTexts.index)
+
+        for i in range(0, len(fullTexts.index)):
+            fullText = fullTexts.loc[i].max()
+            if isinstance(fullText, str) and len(fullText) > 0 and not fullText.lower() == 'x':
+                self.themePairs.append([fullText.lower(), ""])
+            else:
+                self.themePairs.append(["NULL ENTRY", ""])
 
     def convertThemesToList(self):
         for pair in self.themePairs:
@@ -147,6 +165,13 @@ class InputCleaner:
             if rawText[i] in string.ascii_letters and i + 1 < len(rawText):
                 if rawText[i - 1].isspace() and rawText[i + 1].isspace():
                     continue
+                # Edge case: First character
+                elif i == 0 and rawText[i + 1].isspace():
+                    continue
+                # Edge case: Last character
+                elif i == len(rawText) - 1 and rawText[i - 1].isspace():
+                    continue
+
             newText = newText + rawText[i]
         return newText
 

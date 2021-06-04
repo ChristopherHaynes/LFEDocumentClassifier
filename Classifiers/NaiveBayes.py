@@ -44,3 +44,13 @@ class ComplementNaiveBayes(AbstractClassifier):
             self.predictions.append(topThreeClasses)
 
         return self.packageResults()
+
+    def validate(self, validationInputs):
+        # Use all the training and testing set for training
+        self.XTrain = self.X
+        self.yTrain = self.y
+        self.train()
+
+        # Run the validation results through the trained model
+        self.predictions = self.classifier.predict(validationInputs)
+        return self.predictions

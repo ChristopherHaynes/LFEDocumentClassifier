@@ -30,8 +30,11 @@ def generateFeatureMask(bagOfWords, bagOfWordsDict, scoredText):
     featureMask = np.zeros(len(bagOfWords), dtype=np.float32)
 
     for textScoreTuple in scoredText:
-        index = bagOfWordsDict[textScoreTuple[1]]
-        featureMask[index] = textScoreTuple[0]
+        try:
+            index = bagOfWordsDict[textScoreTuple[1]]
+            featureMask[index] = textScoreTuple[0]
+        except:
+            pass
 
     return featureMask
 
@@ -78,3 +81,9 @@ def encodePrimaryThemeToValue(themes, useReuters, useTwitter, otherCategories):
             if ALL_THEMES_LIST[i] == themes[0]:
                 return i
 
+
+def decodeValueToPrimaryTheme(themes):
+    decodedThemes = []
+    for theme in themes:
+        decodedThemes.append(ALL_THEMES_LIST[theme])
+    return decodedThemes

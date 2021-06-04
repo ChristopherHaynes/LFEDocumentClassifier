@@ -9,9 +9,8 @@ USE_RAW_CSV = False         # Choose to test the pipeline using the Twitter data
 FREE_RESOURCES = False       # Clean up unused resources (Lower memory footprint, less debugging data)
 
 # ----------------------------------------- VALIDATION PARAMETERS ------------------------------------------------
-VALIDATION_FILE_PATH = ""
-VALIDATION_INPUT_COL = ""
-VALIDATION_TARGET_COL = ""
+VALIDATION_FILE_PATH = "C:\\Users\\Chris\\Desktop\\Data\\LFE\\lfeData2020.csv"
+VALIDATION_INPUT_COL = "Input_Col"
 USE_VALIDATION = True
 
 # --------------------------------------- PRE PROCESSING PARAMETERS ----------------------------------------------
@@ -33,7 +32,7 @@ KEYWORD_THRESHOLD = 4     # Value for the threshold at which keywords will be ig
 
 # ----------------------------------------- CLASSIFIER PARAMETERS ------------------------------------------------
 # General Classifier parameters
-CLASSIFIER_NAME = 'nn'                 # Type of classifier to use. VALID: 'knn', 'cnb', 'nn', 'svm', 'km'
+CLASSIFIER_NAME = 'cnb'                 # Type of classifier to use. VALID: 'knn', 'cnb', 'nn', 'svm', 'km'
 USE_MULTI_LABEL_CLASSIFICATION = False   # Allow multiple labels to be assigned per item
 TEST_GROUP_SIZE = 0.25                  # Fraction to split into the test group when performing a test/train split
 RANDOM_STATE = None                     # Seed used for random number generation VALID: None, Int
